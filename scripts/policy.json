@@ -1,5 +1,5 @@
 {
-  "_readme": "Single source of truth for scored-web-search.",
+  "_readme": "Single source of truth for scored-web-search. Academic profile; modes/*.json overlay onto this.",
   "version": "2.0.0",
 
   "defaults": {

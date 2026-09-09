@@ -1,5 +1,5 @@
 {
-  "_readme": "For GitHub repos, engineering blog posts and technical postings rather than papers. Citations/peer-review stay on - a post can still link a paper - but engagement (stars, HN points) is weighted more heavily, and the Hacker News lookup is no longer restricted to tier <=3 sources. Default field switches to `cs`.",
+  "_readme": "For GitHub repos and engineering blogs. Citations/peer-review stay on; engagement weighted higher and the HN lookup is no longer restricted to tier <=3. Default field: cs.",
 
   "defaults": { "field": "cs" },
 

@@ -80,37 +80,35 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
 
-Close the report with one line: `62 sources collected → 11 passed → 9 read (avg 78)`.
+Close the report with one line: `n sources collected → m passed → l read`.
 
 ## Scoring Policy
 
-The tier (domain rating) sets the base score first; secondary indicators (citations, community-engagement, etc) adjust it up or down.
+The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it.
 
-### First pass: domain tier (base score)
-
-| Tier | Base | Definition |
+| Tier | Base | Trust level |
 |---|---|---|
-| 1 | 88 | Academic journals, official statistics, standards bodies |
-| 2 | 74 | Reputable journals, major institutions and universities |
-| 3 | 60 | Preprints, major research-lab and vendor engineering blogs |
-| 4 | 46 | Trade media, well-known individual technical blogs |
-| 5 | 32 | General media, community sites, aggregators (default for unregistered domains) |
-| 6 | 14 | SEO content farms, unsourced listicles, market-research spam |
-| block | 0 | Scrapers, mirrors, plagiarism hosts. Always BLOCKED |
+| 1 | 88 | The primary source itself |
+| 2 | 74 | Original work from a vetted institution |
+| 3 | 60 | Original work with no review process, or commentary on a primary source |
+| 4 | 46 | Second-hand relay. Cross-checking only |
+| 5 | 32 | No basis for trust (default for unregistered domains) |
+| 6 | 14 | Low quality / spam |
+| block | 0 | Always BLOCKED |
 
-This is the *academic* reading of the table. `community-opinion`, `news` and `official-docs` re-file some domains and, in `news`, re-base tier 3 — a mode is a different question, not a discount on the same one. The mode file's `_readme` states its own reading.
+The same domain sits at different tiers in different modes, because a mode asks a different question. Read the actual placement off the score table.
 
 ## Modes
 
-`--mode` can be used for goal of web search
+`--mode` sets the goal of the search.
 
-| Mode | File | What changes |
-|---|---|---|
-| `academic` (default) | `modes/academic.json` | Empty overlay — `policy.json` itself is the academic profile. |
-| `non-academic` | `modes/non_academic.json` | GitHub repos / engineering blogs / technical postings. Engagement (stars, HN) weighted higher; HN lookup no longer restricted to tier ≤3; default field `cs`. |
-| `community-opinion` | `modes/community_opinion.json` | Reddit/forum/X/HN discussion. Peer-review scoring off; engagement weighted highest; a short `opinion` half-life (0.75y) becomes the default field; a post/profile link from a known reliable expert (`trusted_people` list in the mode file) gets a flat +12 bonus. Discussion hosts are re-filed as tier 1, with an `engagement_floor` that drops a thread nobody read back below the pass mark. |
-| `news` | `modes/news.json` | News coverage. Peer-review off; a fast `news` half-life (0.2y) with tight fresh-article windows becomes the dominant signal; engagement (HN discussion) stays on. Own tier ladder: gazette/court/regulator (1) > wire services and papers of record (2) > re-report and analysis, e.g. law-firm alerts and think tanks (3, re-based 60→66) > general and tech trade media (4). |
-| `official-docs` | `modes/official_docs.json` | Product/framework docs (docs.python.org, docs.anthropic.com, ...). Recency decay, peer-review and engagement all off — docs are evergreen and credibility rests on domain tier alone. Official documentation and specifications are re-filed as tier 1; vendor engineering blogs are not. |
+| Mode | What changes |
+|---|---|
+| `academic` (default) | Base policy as-is |
+| `non-academic` | GitHub / engineering blogs. Engagement (stars, HN) weighted higher |
+| `community-opinion` | Discussion threads. Peer-review off, engagement weighted highest, short half-life, discussion hosts treated as primary sources |
+| `news` | Reporting. Peer-review off, recency dominant, own tier ladder |
+| `official-docs` | Product/framework docs. Recency, peer-review and engagement all off; official docs treated as primary sources |
 
 ## Error handling
 If script fails, report it and stop; do not fall back to unscored reading.
