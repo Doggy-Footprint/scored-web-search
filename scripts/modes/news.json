@@ -1,11 +1,18 @@
 {
-  "_readme": "For news coverage rather than papers. There is no established citation/peer-review signal for news, so that scoring is switched off. Recency becomes the dominant signal instead: a fast 'news' half-life is added and made the default field, the decay grace period shrinks from 2 years to 3 days, and the fresh-article bonus windows are tightened to reward same-day/same-week coverage over the old 1yr/2yr windows. Engagement (HN discussion of the article) stays on - it's a real signal for whether a piece of news actually mattered.",
+  "_readme": "For news coverage rather than papers. There is no established citation/peer-review signal for news, so that scoring is switched off. Recency becomes the dominant signal instead: a fast 'news' half-life is added and made the default field, the decay grace period shrinks from 2 years to 3 days, and the fresh-article bonus windows are tightened to reward same-day/same-week coverage over the old 1yr/2yr windows. Engagement (HN discussion of the article) stays on - it's a real signal for whether a piece of news actually mattered. Like community_opinion and official_docs, this mode needs its OWN reading of the tier table, and for the same reason: the base table is the academic reading, under which a wire report is supporting material for a paper (reuters.com and apnews.com sit at tier 4 / 46, SKIM) and a law-firm client alert is nothing at all. Under the question this mode asks - what happened, and is this the account to trust - that ordering is wrong twice over. The ladder here is: tier 1 (88, unchanged) the instrument itself, i.e. the gazette, court, regulator or statistical office that IS the event (eur-lex, curia, federalregister, sec.gov, ecb - all already registered in the base table, which is why this mode adds no tier-1 entries); tier 2 (74) original reporting, i.e. wire services and papers of record whose work other outlets syndicate; tier 3 (66) re-report and analysis of someone else's primary source - law-firm client alerts, policy think tanks, professional associations, trackers; tier 4 (46) general and technology trade media, cross-checking only. The tier-3 base is raised from 60 to 66 because 60 sits BELOW the SUPPORT threshold of 62 - the same unreachable-pass-mark bug the pilot found in official_docs, so re-report had no band to land in and registering those domains would have moved nothing. Raising the base also lifts the base table's other tier-3 residents in this mode (vendor engineering blogs, preprints); for a news question a company's own announcement of its own incident is a defensible SUPPORT, which is why that side effect is accepted rather than remapped away. Primary-vs-re-report is expressed HERE, as a tier convention, and nowhere else: there is no separate source_type signal, because anything the scorer could use to detect one from a URL alone is the domain, and that is what the tier table already is. Three boundaries the ladder draws, written down because none of them is obvious from the domain list alone. (a) Tier 2 is 'files its own original reporting, and other outlets syndicate it' - so wire services and papers of record are promoted, while general and technology consumer media (cnn, techcrunch, forbes, businessinsider) stay where the base table left them. Where an outlet publishes under more than one host, every host it uses must be listed or the same story scores 42 points apart depending on which one search returned (bbc.com/bbc.co.uk, theguardian.com/guardian.co.uk). (b) Tier 3 is 'analysis OF someone else's primary source, written by the publisher'. Syndication aggregators of law-firm content (jdsupra, lexology, natlawreview) are therefore NOT promoted: they redistribute other firms' alerts rather than write them, their topic pages are undifferentiated indexes, and tier 5's label names aggregators explicitly - they stay at trade-media tier 4, cross-checking only. The same test demotes the base table's think tanks and professional associations FROM tier 2 to tier 3 (brookings, rand, carnegie, csis, chatham house, cfr, bruegel, piie, urban, ifs, cepr, fpf, ada lovelace, ai now, turing, cloud security alliance, iapp) - the ladder demotes as well as promotes, and commentary on a regulation is not the regulation. Organisations that publish their own original data rather than commentary on someone else's (pewresearch, nber, ourworldindata) keep tier 2, because for a news question a survey they ran IS the reporting. (c) The tier-3 re-base to 66 lifts every base tier-3 resident in this mode, which is intended for vendor engineering blogs and preprints but NOT for market-research firms selling the analysis (gartner, forrester, idc) or a pay-to-publish venue (mdpi); those are pinned back to tier 4 so they cannot share a verdict band with a wire report.",
 
   "signals": { "peer_review": false },
 
   "defaults": { "field": "news" },
 
   "field_halflife_years": { "news": 0.2 },
+
+  "tiers": {
+    "3": {
+      "base": 66,
+      "label": "Re-report and analysis: law-firm client alerts, policy think tanks, professional associations, trackers"
+    }
+  },
 
   "recency": {
     "fresh_bonuses": [
@@ -19,5 +26,109 @@
 
   "engagement": {
     "hackernews": { "coefficient": 4.5, "cap": 14.0, "min_tier": 1 }
+  },
+
+  "domain_overrides": {
+    "reuters.com": "2",
+    "apnews.com": "2",
+    "afp.com": "2",
+    "bloomberg.com": "2",
+    "ft.com": "2",
+    "wsj.com": "2",
+    "nytimes.com": "2",
+    "washingtonpost.com": "2",
+    "theguardian.com": "2",
+    "guardian.co.uk": "2",
+    "economist.com": "2",
+    "bbc.com": "2",
+    "bbc.co.uk": "2",
+    "npr.org": "2",
+    "aljazeera.com": "2",
+    "politico.com": "2",
+    "politico.eu": "2",
+    "theinformation.com": "2",
+    "latimes.com": "2",
+    "thetimes.co.uk": "2",
+    "lemonde.fr": "2",
+    "spiegel.de": "2",
+    "elpais.com": "2",
+    "asahi.com": "2",
+    "nikkei.com": "2",
+    "japantimes.co.jp": "2",
+    "scmp.com": "2",
+    "straitstimes.com": "2",
+    "france24.com": "2",
+    "dw.com": "2",
+
+    "brookings.edu": "3",
+    "rand.org": "3",
+    "carnegieendowment.org": "3",
+    "csis.org": "3",
+    "chathamhouse.org": "3",
+    "cfr.org": "3",
+    "bruegel.org": "3",
+    "piie.com": "3",
+    "urban.org": "3",
+    "ifs.org.uk": "3",
+    "cepr.org": "3",
+    "fpf.org": "3",
+    "adalovelaceinstitute.org": "3",
+    "ainowinstitute.org": "3",
+    "turing.ac.uk": "3",
+    "cloudsecurityalliance.org": "3",
+    "iapp.org": "3",
+
+    "lawfaremedia.org": "3",
+    "scotusblog.com": "3",
+    "law360.com": "3",
+    "mlex.com": "3",
+    "globalcompetitionreview.com": "3",
+    "courthousenews.com": "3",
+
+    "gartner.com": "4",
+    "forrester.com": "4",
+    "idc.com": "4",
+    "mdpi.com": "4",
+
+    "gibsondunn.com": "3",
+    "whitecase.com": "3",
+    "morganlewis.com": "3",
+    "dlapiper.com": "3",
+    "knowledge.dlapiper.com": "3",
+    "insideprivacy.com": "3",
+    "globalpolicywatch.com": "3",
+    "insideglobaltech.com": "3",
+    "klgates.com": "3",
+    "loyensloeff.com": "3",
+    "stibbe.com": "3",
+    "traverssmith.com": "3",
+    "jonesday.com": "3",
+    "orrick.com": "3",
+    "mayerbrown.com": "3",
+    "wsgr.com": "3",
+    "quinnemanuel.com": "3",
+    "cooley.com": "3",
+    "lw.com": "3",
+    "sidley.com": "3",
+    "hoganlovells.com": "3",
+    "freshfields.com": "3",
+    "linklaters.com": "3",
+    "cliffordchance.com": "3",
+    "aoshearman.com": "3",
+    "bakermckenzie.com": "3",
+    "nortonrosefulbright.com": "3",
+    "skadden.com": "3",
+    "debevoise.com": "3",
+    "ropesgray.com": "3",
+    "paulweiss.com": "3",
+    "kirkland.com": "3",
+    "wilmerhale.com": "3",
+    "arnoldporter.com": "3",
+    "steptoe.com": "3",
+    "perkinscoie.com": "3",
+    "fieldfisher.com": "3",
+    "taylorwessing.com": "3",
+    "osborneclarke.com": "3",
+    "twobirds.com": "3"
   }
 }
