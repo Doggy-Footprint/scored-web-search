@@ -1,0 +1,80 @@
+{
+  "_readme": "Policy validation question set. These are NOT golden cases — there is no expected output. Each question is a live web search whose result set is used to measure how scripts/policy.json + scripts/modes/*.json behave on real URLs. 'stress' says what the question is meant to expose. 'field' is passed to srcscore.py --field.",
+  "modes": {
+    "academic": {
+      "field_default": "ai",
+      "questions": [
+        { "id": "ac1", "field": "ai", "q": "Do chain-of-thought traces faithfully reflect the model's actual reasoning process?",
+          "stress": "arXiv preprints dominate. Tests whether preprint tier 3 + citation boost lands them correctly, and whether recent (uncited) but important work gets dropped." },
+        { "id": "ac2", "field": "med", "q": "What is the measured efficacy of GLP-1 receptor agonists for weight maintenance after discontinuation?",
+          "stress": "Vendor interest is heavy (pharma). Journals vs. pharma-funded sites vs. health content farms. 6y half-life." },
+        { "id": "ac3", "field": "bio", "q": "How reproducible are organoid models of human brain development?",
+          "stress": "Reproducibility-critique literature often lives in commentary/letters, not high-tier research articles. Recall risk." },
+        { "id": "ac4", "field": "policy", "q": "What does the evidence say about the labor market effects of minimum wage increases?",
+          "stress": "Contested field with think tanks on both sides. Tests whether tier assignment encodes a political lean." },
+        { "id": "ac5", "field": "cs", "q": "What are the known limitations of differential privacy in production deployments?",
+          "stress": "Best sources split between papers and vendor engineering blogs. Tests the academic/industry boundary." }
+      ]
+    },
+    "non-academic": {
+      "field_default": "cs",
+      "questions": [
+        { "id": "na1", "field": "cs", "q": "How do teams handle database migrations with zero downtime in production?",
+          "stress": "Best material is individual engineering blogs (tier 4) and GitHub. Direct test of whether engagement weighting rescues tier 4." },
+        { "id": "na2", "field": "cs", "q": "Which vector database should be used for a mid-scale RAG system?",
+          "stress": "VENDOR TRAP. Every vendor publishes a benchmark showing itself winning. Replicates the harness-tool finding." },
+        { "id": "na3", "field": "cs", "q": "What are the practical failure modes of Kubernetes autoscaling?",
+          "stress": "Postmortems and incident writeups, often on personal blogs or company blogs of non-famous companies." },
+        { "id": "na4", "field": "cs", "q": "How is Rust async runtime performance compared across tokio, async-std, and smol?",
+          "stress": "GitHub-heavy. Tests star-count engagement vs. archived/stale repos." },
+        { "id": "na5", "field": "ai", "q": "What techniques reduce LLM inference cost in production serving?",
+          "stress": "Research-lab blogs (tier 3) vs. startup marketing. Tests the tier 3 band's internal spread." }
+      ]
+    },
+    "community-opinion": {
+      "field_default": "opinion",
+      "questions": [
+        { "id": "co1", "field": "opinion", "q": "What do practitioners say about whether AI coding assistants actually improve their productivity?",
+          "stress": "HN/Reddit core case. Tests engagement weighting and the 0.75y half-life." },
+        { "id": "co2", "field": "opinion", "q": "How do developers feel about the shift from REST to GraphQL after several years in production?",
+          "stress": "Retrospective opinion — the best takes are often OLD. Directly antagonizes the short half-life." },
+        { "id": "co3", "field": "opinion", "q": "What is the community reaction to recent open-weight model licensing changes?",
+          "stress": "Fresh, X/Twitter-heavy. Tests the trusted_people +12 bonus and whether it distorts." },
+        { "id": "co4", "field": "opinion", "q": "Do developers find monorepos worth the tooling cost at mid-size companies?",
+          "stress": "Low-engagement but high-quality comments vs. high-engagement hot takes. Engagement/quality divergence." },
+        { "id": "co5", "field": "opinion", "q": "What are practitioners' complaints about the current state of MLOps tooling?",
+          "stress": "Vendor-adjacent astroturf risk in community channels." }
+      ]
+    },
+    "news": {
+      "field_default": "news",
+      "questions": [
+        { "id": "nw1", "field": "news", "q": "What is the current status of the EU AI Act implementation timeline?",
+          "stress": "Primary source (official EU) vs. secondary reporting. Tests tier 1 dominance and the re-report problem." },
+        { "id": "nw2", "field": "news", "q": "What happened in the most recent major cloud provider outage and what was the root cause?",
+          "stress": "Breaking news. Official postmortem vs. fast aggregators. Tests the 0.2y half-life and fresh-article windows." },
+        { "id": "nw3", "field": "news", "q": "How have semiconductor export restrictions changed in the past year?",
+          "stress": "Geopolitics — outlet lean matters. Tests whether tier encodes a national/political bias." },
+        { "id": "nw4", "field": "news", "q": "What are the reported terms of recent large AI infrastructure investments?",
+          "stress": "Financial reporting where the only source is often a single paywalled outlet or a press release." },
+        { "id": "nw5", "field": "news", "q": "What is the current regulatory stance on AI use in hiring decisions?",
+          "stress": "Regulatory news mixed with law-firm marketing content (tier ambiguous, commercially motivated)." }
+      ]
+    },
+    "official-docs": {
+      "field_default": "ai",
+      "questions": [
+        { "id": "od1", "field": "cs", "q": "How does Python's asyncio handle task cancellation and cleanup?",
+          "stress": "Clean case. docs.python.org should dominate. Baseline sanity check." },
+        { "id": "od2", "field": "ai", "q": "What are the rate limits and retry semantics of the Anthropic Messages API?",
+          "stress": "Official docs vs. third-party tutorials restating them. Tests re-report detection." },
+        { "id": "od3", "field": "cs", "q": "How is authentication configured in the current version of Next.js App Router?",
+          "stress": "VERSION ROT. Official docs are evergreen-by-assumption, but framework docs are not. Recency-off is a real risk here." },
+        { "id": "od4", "field": "cs", "q": "What does the PostgreSQL documentation specify about transaction isolation levels?",
+          "stress": "Spec-quality docs. Tests whether tier alone suffices when engagement/recency are all off." },
+        { "id": "od5", "field": "cs", "q": "How do you configure retries and timeouts in the AWS SDK for Python?",
+          "stress": "Vendor docs are simultaneously authoritative AND marketing. Tests the tier-1-by-default assumption for vendor docs." }
+      ]
+    }
+  }
+}
