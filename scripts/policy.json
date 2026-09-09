@@ -103,21 +103,40 @@
       "oecd.org", "who.int", "cdc.gov", "nih.gov", "pubmed.ncbi.nlm.nih.gov",
       "eurostat.ec.europa.eu", "kostat.go.kr", "bok.or.kr", "kdi.re.kr",
       "law.go.kr", "sec.gov", "eur-lex.europa.eu", "uspto.gov", "epo.org",
-      "clinicaltrials.gov", "cochranelibrary.com"
+      "clinicaltrials.gov", "cochranelibrary.com",
+      "ncbi.nlm.nih.gov", "europepmc.org", "fda.gov", "ema.europa.eu",
+      "ecdc.europa.eu", "nice.org.uk", "medlineplus.gov", "kdca.go.kr", "mfds.go.kr",
+      "congress.gov", "govinfo.gov", "federalregister.gov", "ecfr.gov",
+      "supremecourt.gov", "legislation.gov.uk", "curia.europa.eu", "echr.coe.int",
+      "un.org", "wto.org", "ilo.org", "wipo.int",
+      "ccourt.go.kr", "scourt.go.kr", "moleg.go.kr", "assembly.go.kr", "kipo.go.kr",
+      "bis.org", "ecb.europa.eu", "stlouisfed.org", "fred.stlouisfed.org",
+      "bea.gov", "treasury.gov", "bankofengland.co.uk", "boj.or.jp",
+      "stats.oecd.org", "kosis.kr", "index.go.kr", "dart.fss.or.kr", "fss.or.kr",
+      "fsc.go.kr", "krx.co.kr", "aeaweb.org",
+      "nvd.nist.gov", "cve.org", "cve.mitre.org", "cwe.mitre.org", "attack.mitre.org",
+      "cisa.gov", "ncsc.gov.uk", "enisa.europa.eu", "first.org", "kisa.or.kr",
+      "iec.ch", "itu.int", "ansi.org", "ecma-international.org", "unicode.org",
+      "khronos.org", "jedec.org", "3gpp.org", "tc39.es", "whatwg.org"
     ],
     "2": [
       "springer.com", "link.springer.com", "sciencedirect.com", "wiley.com",
       "onlinelibrary.wiley.com", "tandfonline.com", "sagepub.com",
-      "journals.plos.org", "elifesciences.org", "frontiersin.org",
-      "mdpi.com", "openreview.net",
-      "nber.org", "brookings.edu", "rand.org", "pewresearch.org",
-      "gartner.com", "forrester.com", "idc.com", "mckinsey.com",
-      "bcg.com", "bain.com", "deloitte.com", "pwc.com",
-      "statista.com", "ourworldindata.org",
+      "journals.plos.org", "elifesciences.org", "frontiersin.org", "openreview.net",
+      "nber.org", "brookings.edu", "rand.org", "pewresearch.org", "ourworldindata.org",
       "cmu.edu", "mit.edu", "stanford.edu", "berkeley.edu", "ox.ac.uk",
       "cam.ac.uk", "ethz.ch", "kaist.ac.kr", "snu.ac.kr",
       "nasa.gov", "esa.int", "energy.gov", "europa.eu", "go.kr", "korea.kr",
-      "semanticscholar.org", "doi.org", "crossref.org"
+      "semanticscholar.org", "doi.org", "crossref.org",
+      "academic.oup.com", "annualreviews.org", "embopress.org", "ahajournals.org",
+      "uptodate.com", "cochrane.org", "mayoclinic.org", "hopkinsmedicine.org",
+      "courtlistener.com", "jstor.org", "heinonline.org", "harvardlawreview.org",
+      "yalelawjournal.org", "columbialawreview.org",
+      "carnegieendowment.org", "csis.org", "chathamhouse.org", "cfr.org",
+      "bruegel.org", "piie.com", "urban.org", "ifs.org.uk",
+      "cepr.org", "kiep.go.kr", "kli.re.kr", "nabo.go.kr",
+      "owasp.org", "sei.cmu.edu", "openssf.org", "sans.org",
+      "nngroup.com", "webaim.org", "baymard.com"
     ],
     "3": [
       "arxiv.org", "biorxiv.org", "medrxiv.org", "ssrn.com", "osf.io",
@@ -135,7 +154,25 @@
       "distill.pub", "lilianweng.github.io", "karpathy.github.io",
       "colah.github.io", "sebastianraschka.com", "epoch.ai", "epochai.org",
       "lmsys.org", "eleuther.ai", "allenai.org", "bair.berkeley.edu",
-      "thegradient.pub", "jalammar.github.io"
+      "thegradient.pub", "jalammar.github.io",
+      "mdpi.com", "gartner.com", "forrester.com", "idc.com",
+      "redhat.com", "access.redhat.com", "apache.org", "kafka.apache.org",
+      "postgresql.org", "sqlite.org", "mysql.com", "redis.io", "elastic.co",
+      "prometheus.io", "kubernetes.io", "hashicorp.com", "terraform.io",
+      "go.dev", "rust-lang.org", "doc.rust-lang.org", "nodejs.org", "llvm.org",
+      "gcc.gnu.org", "cppreference.com", "isocpp.org", "openjdk.org",
+      "docs.oracle.com", "learn.microsoft.com", "developer.apple.com",
+      "developer.android.com", "web.dev", "chromium.org", "webkit.org",
+      "python.org", "typescriptlang.org", "react.dev", "vuejs.org", "svelte.dev",
+      "angular.dev", "nextjs.org", "spring.io", "numpy.org", "pandas.pydata.org",
+      "scikit-learn.org", "scipy.org",
+      "googleprojectzero.blogspot.com", "security.googleblog.com",
+      "msrc.microsoft.com", "portswigger.net", "blog.trailofbits.com",
+      "m3.material.io", "material.io", "carbondesignsystem.com",
+      "polaris.shopify.com", "atlassian.design", "primer.style",
+      "spectrum.adobe.com", "a11yproject.com",
+      "scrum.org", "agilealliance.org", "thoughtworks.com", "12factor.net",
+      "refactoring.com", "shopify.engineering"
     ],
     "4": [
       "arstechnica.com", "theverge.com", "wired.com", "technologyreview.com",
@@ -144,9 +181,14 @@
       "apnews.com", "nytimes.com", "washingtonpost.com", "theguardian.com",
       "semianalysis.com", "stratechery.com", "importai.substack.com",
       "simonwillison.net", "martinfowler.com", "danluu.com",
-      "acoup.blog", "astralcodexten.com", "lesswrong.com",
-      "infoq.com", "thenewstack.io", "theregister.com",
-      "news.ycombinator.com", "github.com"
+      "acoup.blog", "astralcodexten.com",
+      "infoq.com", "thenewstack.io", "theregister.com", "github.com",
+      "statista.com", "mckinsey.com", "bcg.com", "bain.com", "deloitte.com", "pwc.com",
+      "statnews.com", "medscape.com", "scotusblog.com", "lawfaremedia.org",
+      "krebsonsecurity.com", "schneier.com", "bleepingcomputer.com", "darkreading.com",
+      "smashingmagazine.com", "alistapart.com", "interaction-design.org",
+      "lawsofux.com", "uxmatters.com", "svpg.com",
+      "mindtheproduct.com", "atlassian.com/agile"
     ],
     "5": [
       "medium.com", "towardsdatascience.com", "dev.to", "hashnode.com",
@@ -158,7 +200,9 @@
       "businessinsider.com", "techcrunch.com", "venturebeat.com",
       "zdnet.com", "cnet.com", "engadget.com", "mashable.com",
       "hankyung.com", "mk.co.kr", "chosun.com", "joongang.co.kr",
-      "etnews.com", "zdnet.co.kr", "bloter.net"
+      "etnews.com", "zdnet.co.kr", "bloter.net",
+      "academia.edu", "news.ycombinator.com", "lesswrong.com",
+      "thehackernews.com", "lennysnewsletter.com", "reforge.com", "uxdesign.cc"
     ],
     "6": [
       "geeksforgeeks.org", "w3schools.com", "tutorialspoint.com",
@@ -176,13 +220,18 @@
       "paperswithcode.com/paper/mirror", "semantic-scholar-mirror.com",
       "arxiv-sanity-lite.com/mirror", "chatgptdetector.co",
       "coursehero.com", "scribd.com", "studocu.com", "slideshare.net",
-      "issuu.com", "academia.edu"
+      "issuu.com"
     ]
   },
 
   "notes": [
     "mdpi / frontiers vary a lot per journal: kept at tier 2 but leaning heavily on citation adjustment.",
     "github.com sits at tier 4 and is moved mostly by actual star count.",
-    "wikipedia is tier 5; SKILL.md instructs using it only to walk footnotes back to primary sources."
+    "wikipedia is tier 5; SKILL.md instructs using it only to walk footnotes back to primary sources.",
+    "consulting/market decks (mckinsey, bcg, bain, deloitte, pwc) moved to tier 4 and statista to tier 4: they are marketing-facing secondary aggregation, not primary research. gartner/forrester/idc kept one notch higher at tier 3 because they are the cited source of record in enterprise IT.",
+    "mdpi moved to tier 3: per-journal quality varies too much to sit alongside springer/wiley.",
+    "news.ycombinator.com and lesswrong moved to tier 5 (aggregator/community); actual signal comes from the hackernews engagement term, which community_opinion mode weights heavily.",
+    "academia.edu unblocked to tier 5: it is author self-archiving, not a scraper mirror.",
+    "vendor/language/framework documentation sits at tier 3 (primary but self-interested); standards bodies and CVE/vulnerability registries at tier 1."
   ]
 }

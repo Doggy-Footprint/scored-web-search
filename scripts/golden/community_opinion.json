@@ -30,9 +30,9 @@
         }
       },
       "expect": {
-        "score": 64.0,
-        "verdict": "SUPPORT",
-        "tier": "4"
+        "score": 50.0,
+        "verdict": "SKIM",
+        "tier": "5"
       }
     },
     {
@@ -47,6 +47,21 @@
       "expect": {
         "score": 58.9,
         "verdict": "SKIM",
+        "tier": "5"
+      }
+    },
+    {
+      "name": "trusted researcher's post carried by a very hot HN thread",
+      "url": "https://x.com/simonw/status/555000111",
+      "field": "opinion",
+      "inject": {
+        "hn": {
+          "points": 5000
+        }
+      },
+      "expect": {
+        "score": 62.0,
+        "verdict": "SUPPORT",
         "tier": "5"
       }
     },
