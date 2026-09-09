@@ -3,16 +3,20 @@
 from __future__ import annotations
 
 import math
+import re
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
-from .fetchers import FETCH_FAILED, arxiv_lookup, github_repo, hn_points, openalex_by_doi, \
-    openalex_by_pmid
-from .identifiers import arxiv_id_age_years, extract_ids, extract_person_handle
+from .fetchers import FETCH_FAILED, arxiv_lookup, github_repo, hn_item, hn_points, \
+    openalex_by_doi, openalex_by_pmid
+from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, \
+    extract_person_handle
 from .policy import blocked_name, signal_enabled, tier_base, verdict_for
 from .util import age_years, host_matches, host_path, human, norm_host
 
 __all__ = [
     "match_tier", "citation_points", "recency_points", "engagement_points",
+    "engagement_floor_points", "path_penalty", "version_penalty",
     "trusted_person_points", "score_one", "score_many",
 ]
 
@@ -94,6 +98,109 @@ def engagement_points(policy: dict, gh, hn):
     return pts, notes
 
 
+def path_penalty(url: str, patterns, cfg):
+    """One flat penalty if the URL *path* carries a marker listed in `patterns`.
+    Shared by the SEO-slug and stale-version checks: the same deterministic read
+    of the path, differing only in what it reads for.
+
+    Only the path is read, never the query or fragment: `?next=/docs/13/x` is a
+    redirect target, not a claim about the page being served, and redirect
+    parameters are common on exactly the auth/docs URLs this fires on.
+    Returns (points, flag) or (0.0, None)."""
+    if not cfg:
+        return 0.0, None
+    low = _path_of(url)
+    if not any(str(frag).lower() in low for frag in (patterns or [])):
+        return 0.0, None
+    return float(cfg["points"]), cfg.get("flag")
+
+
+def _path_of(url: str) -> str:
+    """Lowercased path with a guaranteed leading and trailing slash, so that
+    `/legacy/` style patterns match a trailing segment too."""
+    try:
+        path = urllib.parse.urlsplit(url if "//" in url else "https://" + url).path
+    except ValueError:
+        path = ""
+    return ("/" + (path or "").strip("/") + "/").lower()
+
+
+def version_penalty(policy: dict, url: str, doc_versions: dict = None):
+    """Penalty for documentation that is not the version the reader is on.
+
+    Two readings of the same captured version segment:
+
+    * The reader pinned this domain with `--doc-version <domain>=<v>`: anything
+      that is not that version is the wrong manual, older or newer. That is the
+      only reading that can be right in general -- which release is current is a
+      fact about the world on the day you ask, and the policy has no business
+      asserting it.
+    * Nothing pinned: fall back to the shape that reads as superseded on its own,
+      a bare major line (`/docs/13/`, `/docs/v2/`) kept alongside a newer one. A
+      precise release (`/doc/2.1/`, `/docs/1.7.0/`) is left alone, because that is
+      how numpy and others publish the *current* release.
+
+    A URL with no version segment at all (`/docs/`, `/doc/stable/`, `/latest/`)
+    is the site's own pointer at what is current, and is never penalised.
+    Returns (points, flag) or (0.0, None).
+    """
+    if doc_versions is None:
+        doc_versions = policy.get("doc_versions")
+    cfg = policy["penalties"].get("version_path")
+    rx = policy.get("version_path_regex")
+    if not cfg or not rx:
+        return 0.0, None
+    m = re.search(rx, _path_of(url))
+    if not m:
+        return 0.0, None
+    found = m.group(1).lstrip("vV")
+    pinned = None
+    host = norm_host(url)
+    for dom, want in (doc_versions or {}).items():
+        if host_matches(host, str(dom).lower()):
+            pinned = str(want).lstrip("vV")
+            break
+    if pinned is not None:
+        if found == pinned:
+            return 0.0, None
+        return float(cfg["points"]), cfg.get("flag")
+    if "." in found:  # a precise release is usually the current one
+        return 0.0, None
+    return float(cfg["points"]), cfg.get("flag")
+
+
+def engagement_floor_points(policy: dict, tier: str, gh, hn, measurable: bool = True):
+    """Penalty for a source whose tier says "this venue is where the answer
+    lives" while its engagement says nobody was there.
+
+    community_opinion promotes discussion hosts to tier 1, which makes the tier
+    a statement about the *venue* rather than about the thread. Without a floor
+    a two-point thread would score identically to the one everybody read. This
+    is the only downward engagement term in the policy, and it applies solely to
+    the tiers the mode names -- see modes/community_opinion.json.
+
+    `measurable` is False when no lookup happened or the lookup failed; the
+    floor then does not fire at all.
+    """
+    cfg = policy.get("engagement_floor")
+    if not cfg or str(tier) not in {str(t) for t in cfg["tiers"]}:
+        return 0.0, None
+    if not measurable:
+        # "we could not ask" is not "nobody was there". The pilot ran with HN
+        # returning 429 on most lookups, and scoring a rate limit as silence
+        # would repeat, inside this term, the F1 mistake of applying the
+        # absence of a judgment as if it were one.
+        return 0.0, None
+    measured = 0
+    if hn:
+        measured = max(measured, int(hn.get("points") or 0))
+    if gh:
+        measured = max(measured, int(gh.get("stars") or 0))
+    if measured >= int(cfg["min_points"]):
+        return 0.0, None
+    return float(cfg["penalty"]), cfg.get("flag")
+
+
 def trusted_person_points(policy: dict, url: str):
     """Bonus for a URL that is the profile/post of a known reliable person,
     per `policy["trusted_people"]` (community-opinion mode only - see
@@ -147,14 +254,17 @@ def score_one(item: dict, policy: dict, cache, field: str,
     peer_review_on = signal_enabled(policy, "peer_review")
     engagement_on = signal_enabled(policy, "engagement")
 
-    # SEO path penalty
-    low = url.lower()
-    seo = policy["penalties"]["seo_path"]
-    for frag in policy["seo_path_patterns"]:
-        if frag in low:
-            adj += float(seo["points"])
-            flags.append(seo["flag"])
-            break
+    # URL-path signals: SEO slug, and documentation that is not the current
+    # (or the requested) version.
+    for pts, flag in (
+            path_penalty(url, policy["seo_path_patterns"],
+                         policy["penalties"]["seo_path"]),
+            path_penalty(url, policy.get("version_path_patterns"),
+                         policy["penalties"].get("version_path")),
+            version_penalty(policy, url)):
+        if flag and flag not in flags:
+            adj += pts
+            flags.append(flag)
 
     ids = extract_ids(url)
     injected = injected or {}
@@ -176,7 +286,9 @@ def score_one(item: dict, policy: dict, cache, field: str,
         min_tier = int(policy["engagement"]["hackernews"]["min_tier"])
         if (engagement_on and hn is None and sch is None and gh is None
                 and tier.isdigit() and int(tier) >= min_tier):
-            hn = hn_points(url, cache, timeout)
+            item_id = extract_hn_item_id(url)
+            hn = (hn_item(item_id, cache, timeout) if item_id
+                  else hn_points(url, cache, timeout))
         if FETCH_FAILED in (sch, gh, hn):
             flags.append("lookup-failed")
         sch = None if sch is FETCH_FAILED else sch
@@ -250,6 +362,15 @@ def score_one(item: dict, policy: dict, cache, field: str,
         ep, enotes = engagement_points(policy, gh, hn)
         adj += ep
         notes.extend(enotes)
+        # Measurable means we got an answer, not that the answer was large: a
+        # successful lookup that finds no discussion is real silence, while an
+        # unreachable or skipped lookup is no evidence either way.
+        measurable = (gh is not None or hn is not None
+                      or (use_net and "lookup-failed" not in flags))
+        fp, fflag = engagement_floor_points(policy, tier, gh, hn, measurable)
+        adj += fp
+        if fflag:
+            flags.append(fflag)
 
     tp_pts, tp_notes = trusted_person_points(policy, url)
     adj += tp_pts

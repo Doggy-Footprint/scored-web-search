@@ -9,7 +9,8 @@ from .util import age_years, host_path, norm_host
 
 __all__ = [
     "ARXIV_RE", "DOI_RE", "GITHUB_RE", "PUBMED_RE", "OPENREVIEW_RE", "BIORXIV_RE",
-    "GITHUB_NON_REPO", "extract_ids", "arxiv_id_age_years", "extract_person_handle",
+    "GITHUB_NON_REPO", "HN_ITEM_RE", "extract_ids", "arxiv_id_age_years",
+    "extract_hn_item_id", "extract_person_handle",
 ]
 
 ARXIV_RE = re.compile(
@@ -21,7 +22,21 @@ OPENREVIEW_RE = re.compile(r"openreview\.net/(?:forum|pdf)\?id=([A-Za-z0-9_\-]+)
 BIORXIV_RE = re.compile(
     r"(?:bio|med)rxiv\.org/content/(10\.\d{4,9}/[^\s?#]+?)(?:v\d+)?(?:\.full|$|[?#])", re.I)
 
+HN_ITEM_RE = re.compile(r"news\.ycombinator\.com/item\?(?:[^#]*&)?id=(\d+)")
+
 GITHUB_NON_REPO = ("orgs", "features", "about", "topics", "collections", "sponsors")
+
+
+def extract_hn_item_id(url: str):
+    """The HN story id for a thread permalink, or None.
+
+    An HN thread carries the *article's* URL, never its own, so the Algolia
+    url-attribute search that `hn_points` runs can never find a thread by its
+    permalink. community-opinion mode reads threads as primary sources, so the
+    thread's own score has to be reachable -- by object id, not by search.
+    """
+    m = HN_ITEM_RE.search(url)
+    return m.group(1) if m else None
 
 
 def extract_ids(url: str) -> dict:

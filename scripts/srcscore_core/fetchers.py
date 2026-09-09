@@ -21,7 +21,7 @@ CACHE_DIR = os.environ.get(
 __all__ = [
     "VERSION", "UA", "MAILTO", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
     "http_json", "openalex_by_doi", "openalex_by_pmid", "s2_by_arxiv", "arxiv_lookup",
-    "github_repo", "hn_points",
+    "github_repo", "hn_item", "hn_points",
 ]
 
 
@@ -226,6 +226,23 @@ def github_repo(owner: str, repo: str, cache: Cache, timeout: float):
             "forks": j.get("forks_count") or 0,
             "archived": bool(j.get("archived")),
         }
+    cache.put(key, out or {})
+    return out
+
+
+def hn_item(item_id: str, cache: Cache, timeout: float):
+    """Points/comments for an HN thread addressed by its own id."""
+    key = "hnitem:" + str(item_id)
+    hit = cache.get(key)
+    if hit is not None:
+        return hit or None
+    j = http_json("https://hn.algolia.com/api/v1/items/%s" % item_id, timeout)
+    if j is FETCH_FAILED:
+        return FETCH_FAILED
+    out = None
+    if isinstance(j, dict) and (j.get("points") or 0) > 0:
+        out = {"points": j.get("points") or 0,
+               "comments": len(j.get("children") or [])}
     cache.put(key, out or {})
     return out
 

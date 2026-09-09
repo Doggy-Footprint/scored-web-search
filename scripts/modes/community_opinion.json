@@ -1,34 +1,105 @@
 {
-  "_readme": "For Reddit/forum threads, X posts and HN discussion itself, where the point is reading the room, not citing a scholarly record. Peer-review scoring is switched off (these URLs are never preprint hosts, but the switch also stops a stray DOI/arXiv link on a discussion page from getting academic treatment). Engagement caps go up further than non_academic, and a short 'opinion' half-life is added and made the default field since discussions age fast.",
-
-  "signals": { "peer_review": false },
-
-  "defaults": { "field": "opinion" },
-
-  "field_halflife_years": { "opinion": 0.75 },
-
-  "engagement": {
-    "github": { "coefficient": 5.4, "cap": 24.0, "archived_penalty": -4.0 },
-    "hackernews": { "coefficient": 6.0, "cap": 18.0, "min_tier": 1 }
+  "_readme": "For Reddit/forum threads, X posts and HN discussion itself, where the point is reading the room, not citing a scholarly record. Peer-review scoring is switched off (these URLs are never preprint hosts, but the switch also stops a stray DOI/arXiv link on a discussion page from getting academic treatment). Engagement caps go up further than non_academic, and a short 'opinion' half-life is added and made the default field since discussions age fast. `domain_overrides` re-files the discussion hosts as tier 1: the question this mode asks is what practitioners actually ran into, and for that question a thread IS the primary source. Under the base (academic) tier reading they sit at tier 5 / 32, which capped a thread at 50 against a SUPPORT threshold of 62 - the pilot measured 0/60 passing, i.e. the mode could not pass the material it exists to find. Promotion alone would overcorrect, so tier and engagement are given different jobs here: the tier says the VENUE is where the answer lives, `engagement_floor` says whether anyone was actually in the room. A thread nobody read is not evidence, so it drops back below the pass mark.",
+  "signals": {
+    "peer_review": false
   },
-
+  "defaults": {
+    "field": "opinion"
+  },
+  "field_halflife_years": {
+    "opinion": 0.75
+  },
+  "engagement": {
+    "github": {
+      "coefficient": 5.4,
+      "cap": 24.0,
+      "archived_penalty": -4.0
+    },
+    "hackernews": {
+      "coefficient": 6.0,
+      "cap": 18.0,
+      "min_tier": 1
+    }
+  },
   "trusted_people": {
     "_readme": "Flat bonus (added on top of tier + engagement) when the URL is a profile or post by a well-known domain expert with a track record of reliable public commentary. Matching is URL-pattern-only (see identifiers.extract_person_handle): x.com/twitter.com profile and status links, and reddit.com/u/<name> profile links - a reddit discussion-thread URL never carries the author's name in its path, so reddit is left empty rather than guessed. Handles are public figures' own accounts, not affiliation endorsements; re-verify periodically since handles can change hands or go inactive.",
     "bonus": 12.0,
     "hosts": {
       "x.com": [
-        "karpathy", "ylecun", "goodfellow_ian", "jeffdean", "fchollet",
-        "andrewyng", "drfeifei", "demishassabis", "ilyasut",
-        "soumithchintala", "hardmaru", "rasbt", "simonw", "lexfridman",
-        "gdb", "sama"
+        "karpathy",
+        "ylecun",
+        "goodfellow_ian",
+        "jeffdean",
+        "fchollet",
+        "andrewyng",
+        "drfeifei",
+        "demishassabis",
+        "ilyasut",
+        "soumithchintala",
+        "hardmaru",
+        "rasbt",
+        "simonw",
+        "lexfridman",
+        "gdb",
+        "sama"
       ],
       "twitter.com": [
-        "karpathy", "ylecun", "goodfellow_ian", "jeffdean", "fchollet",
-        "andrewyng", "drfeifei", "demishassabis", "ilyasut",
-        "soumithchintala", "hardmaru", "rasbt", "simonw", "lexfridman",
-        "gdb", "sama"
+        "karpathy",
+        "ylecun",
+        "goodfellow_ian",
+        "jeffdean",
+        "fchollet",
+        "andrewyng",
+        "drfeifei",
+        "demishassabis",
+        "ilyasut",
+        "soumithchintala",
+        "hardmaru",
+        "rasbt",
+        "simonw",
+        "lexfridman",
+        "gdb",
+        "sama"
       ],
       "reddit.com": []
     }
+  },
+  "domain_overrides": {
+    "reddit.com": "1",
+    "news.ycombinator.com": "1",
+    "stackoverflow.com": "1",
+    "stackexchange.com": "1",
+    "x.com": "1",
+    "twitter.com": "1",
+    "lobste.rs": "1",
+    "serverfault.com": "1",
+    "superuser.com": "1",
+    "askubuntu.com": "1",
+    "mathoverflow.net": "1",
+    "discuss.python.org": "1",
+    "users.rust-lang.org": "1",
+    "internals.rust-lang.org": "1",
+    "discourse.julialang.org": "1",
+    "forum.djangoproject.com": "1",
+    "elixirforum.com": "1",
+    "discuss.kubernetes.io": "1",
+    "forums.docker.com": "1",
+    "community.grafana.com": "1",
+    "discuss.pytorch.org": "1",
+    "discuss.huggingface.co": "1",
+    "tildes.net": "1",
+    "lesswrong.com": "2",
+    "clien.net": "2",
+    "okky.kr": "2",
+    "quora.com": "4"
+  },
+  "engagement_floor": {
+    "_readme": "A tier-1 discussion host with no measurable engagement is a venue, not evidence. `min_points` is read against HN points or GitHub stars, whichever is higher, and the penalty is set so that nothing below the floor can reach SUPPORT even with the engagement bonus it does earn (at 9 points: 88 + 6.0 - 36 = 58, SKIM). The step at `min_points` is deliberate: the claim is categorical - below the floor the thread is not evidence, above it the venue tier stands - so a ramp would blur the line the mode draws. The known cost of the step is that this mode has almost no SUPPORT band for threads: a thread is either below the floor (SKIM) or carries the full tier-1 base (PRIMARY). The floor does not fire when no lookup happened or the lookup failed - a rate limit is not evidence of silence.",
+    "min_points": 10,
+    "penalty": -36.0,
+    "flag": "low-engagement",
+    "tiers": [
+      "1"
+    ]
   }
 }

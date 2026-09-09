@@ -36,6 +36,12 @@ def main(argv=None):
     ap.add_argument("--mode", choices=MODES, default="academic",
                     help="scoring profile, loaded from scripts/modes/<mode>.json "
                          "and merged onto --policy (default: academic)")
+    ap.add_argument("--doc-version", action="append", default=[], metavar="DOMAIN=VERSION",
+                    help="the documentation version you are on, e.g. nextjs.org=14 "
+                         "(repeatable). Any other version of that domain's docs is "
+                         "penalised as the wrong manual; pages with no version in the "
+                         "path are left alone. Without this, only a bare major-version "
+                         "path (/docs/13/) is read as superseded.")
     ap.add_argument("--modes-dir", default=None, help="override scripts/modes/ location")
     ap.add_argument("--version", action="version", version=VERSION)
     a = ap.parse_args(argv)
@@ -48,6 +54,22 @@ def main(argv=None):
     except PolicyError as e:
         print("srcscore: %s" % e, file=sys.stderr)
         return 3
+
+    doc_versions = {}
+    for spec in a.doc_version:
+        dom, sep, ver = spec.partition("=")
+        if not sep or not dom.strip() or not ver.strip():
+            print("srcscore: --doc-version expects DOMAIN=VERSION, got %r" % spec,
+                  file=sys.stderr)
+            return 2
+        doc_versions[dom.strip().lower()] = ver.strip()
+    if doc_versions:
+        policy = dict(policy, doc_versions=doc_versions)
+        try:
+            validate_policy(policy, "merged policy + --doc-version")
+        except PolicyError as e:
+            print("srcscore: %s" % e, file=sys.stderr)
+            return 3
 
     field = a.field or policy["defaults"]["field"]
     if field not in policy["field_halflife_years"]:

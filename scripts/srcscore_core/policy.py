@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # scripts/
 POLICY_PATH = os.environ.get("SRCSCORE_POLICY", os.path.join(HERE, "policy.json"))
@@ -21,7 +22,8 @@ MODES_DIR = os.environ.get("SRCSCORE_MODES_DIR", os.path.join(HERE, "modes"))
 __all__ = [
     "PolicyError", "REQUIRED_KEYS", "POLICY_PATH", "MODES_DIR",
     "load_policy", "validate_policy", "tier_base", "verdict_for", "blocked_name",
-    "deep_merge", "load_mode_overlay", "apply_mode", "signal_enabled",
+    "deep_merge", "load_mode_overlay", "apply_mode", "apply_domain_overrides",
+    "signal_enabled",
 ]
 
 
@@ -111,6 +113,51 @@ def validate_policy(p: dict, path: str = "policy") -> None:
             not isinstance(signals.get(k, True), bool) for k in DEFAULT_SIGNALS):
         bad("signals.* must be booleans")
 
+    ov = p.get("domain_overrides")
+    if ov is not None:
+        if not isinstance(ov, dict):
+            bad("domain_overrides must be an object")
+        for pat, tier_name in ov.items():
+            if str(tier_name) not in tiers:
+                bad("domain_overrides[%r] targets tier %r, which has no tier definition"
+                    % (pat, tier_name))
+
+    floor = p.get("engagement_floor")
+    if floor is not None:
+        if not isinstance(floor, dict):
+            bad("engagement_floor must be an object")
+        for k in ("min_points", "penalty"):
+            if not isinstance(floor.get(k), (int, float)):
+                bad("engagement_floor needs a numeric %r" % k)
+        if not isinstance(floor.get("tiers"), list):
+            bad("engagement_floor needs a 'tiers' list")
+        for t in floor["tiers"]:
+            if str(t) not in tiers:
+                bad("engagement_floor.tiers references unknown tier %r" % t)
+
+    vp = p.get("penalties", {}).get("version_path")
+    if vp is not None:
+        if not isinstance(vp.get("points"), (int, float)):
+            bad("penalties.version_path needs numeric 'points'")
+        if not isinstance(p.get("version_path_patterns"), list):
+            bad("penalties.version_path is set but version_path_patterns is not a list")
+        rx = p.get("version_path_regex", "")
+        if not isinstance(rx, str):
+            bad("version_path_regex must be a string")
+        if rx:
+            try:
+                if re.compile(rx).groups != 1:
+                    bad("version_path_regex must have exactly one capture group "
+                        "(the version string)")
+            except re.error as e:
+                bad("version_path_regex is not a valid regex: %s" % e)
+
+    dv = p.get("doc_versions")
+    if dv is not None:
+        if not isinstance(dv, dict) or any(
+                not isinstance(v, str) or not v for v in dv.values()):
+            bad("doc_versions must map a domain to a non-empty version string")
+
 
 def tier_base(policy: dict, tier: str) -> float:
     return float(policy["tiers"][tier]["base"])
@@ -167,6 +214,33 @@ def load_mode_overlay(mode: str, modes_dir: str = None) -> dict:
     return overlay
 
 
+def apply_domain_overrides(policy: dict) -> dict:
+    """Move the domains named in `policy["domain_overrides"]` to the tier they
+    name, removing them from whatever tier the base policy filed them under.
+
+    A mode is a different question, not a discount on the same one: reddit is a
+    tier-5 aggregator when the question is scholarly and a tier-1 primary source
+    when the question is what practitioners actually hit. Expressing that as a
+    remap rather than as an overlay `domains` block matters twice over --
+    `deep_merge` replaces lists wholesale, so redefining a tier list would delete
+    the base entries, and `validate_policy` rejects a domain filed under two
+    tiers, so the old entry has to go. The result is an ordinary `domains` dict,
+    which is why `match_tier` needs no knowledge of any of this.
+    """
+    overrides = policy.get("domain_overrides")
+    if not overrides:
+        return policy
+    wanted = {str(pat).lower(): str(tier) for pat, tier in overrides.items()}
+    domains = {tier: list(pats) for tier, pats in policy["domains"].items()}
+    for tier_name, patterns in domains.items():
+        domains[tier_name] = [p for p in patterns if str(p).lower() not in wanted]
+    for pat, tier_name in overrides.items():
+        domains.setdefault(str(tier_name), []).append(pat)
+    out = dict(policy)
+    out["domains"] = domains
+    return out
+
+
 def apply_mode(policy: dict, mode: str, modes_dir: str = None) -> dict:
     overlay = load_mode_overlay(mode, modes_dir)
-    return deep_merge(policy, overlay)
+    return apply_domain_overrides(deep_merge(policy, overlay))

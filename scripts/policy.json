@@ -73,6 +73,7 @@
 
   "penalties": {
     "seo_path": { "points": -6.0, "flag": "seo-path" },
+    "version_path": { "points": -28.0, "flag": "stale-version" },
     "no_index": {
       "points": -5.0,
       "flag": "no-index",
@@ -85,6 +86,13 @@
     "/everything-you-need-to-know", "-in-2023", "-in-2024",
     "/what-is-", "/complete-guide-to", "/beginners-guide"
   ],
+
+  "version_path_patterns": [
+    "/legacy/", "/archive/", "/archived/", "/deprecated/", "/previous/",
+    "/older/", "/old/", "/superseded/", "/eol/"
+  ],
+
+  "version_path_regex": "/(?:docs|doc|reference|guide|guides|manual)/(v?[0-9]+(?:\\.[0-9]+)*(?:\\.x)?)/",
 
   "preprint_hosts": [
     "arxiv.org", "biorxiv.org", "medrxiv.org", "chemrxiv.org",
@@ -136,7 +144,10 @@
       "bruegel.org", "piie.com", "urban.org", "ifs.org.uk",
       "cepr.org", "kiep.go.kr", "kli.re.kr", "nabo.go.kr",
       "owasp.org", "sei.cmu.edu", "openssf.org", "sans.org",
-      "nngroup.com", "webaim.org", "baymard.com"
+      "nngroup.com", "webaim.org", "baymard.com",
+      "clevelandclinic.org", "kaiserpermanente.org", "mountsinai.org",
+      "massgeneral.org", "stanfordhealthcare.org", "cancer.gov", "cancer.org",
+      "heart.org", "diabetes.org", "psychiatry.org", "aap.org"
     ],
     "3": [
       "arxiv.org", "biorxiv.org", "medrxiv.org", "ssrn.com", "osf.io",
@@ -172,7 +183,44 @@
       "polaris.shopify.com", "atlassian.design", "primer.style",
       "spectrum.adobe.com", "a11yproject.com",
       "scrum.org", "agilealliance.org", "thoughtworks.com", "12factor.net",
-      "refactoring.com", "shopify.engineering"
+      "refactoring.com", "shopify.engineering",
+
+      "supabase.com", "encore.dev", "milvus.io", "weaviate.io", "qdrant.tech",
+      "pinecone.io", "chromadb.com", "docs.trychroma.com",
+      "docs.djangoproject.com", "flask.palletsprojects.com", "fastapi.tiangolo.com",
+      "docs.rubyonrails.org", "laravel.com", "symfony.com", "expressjs.com",
+      "nestjs.com", "remix.run", "astro.build", "nuxt.com", "solidjs.com",
+      "vite.dev", "vitejs.dev", "webpack.js.org", "esbuild.github.io",
+      "docs.deno.com", "bun.sh", "eslint.org", "prettier.io", "jestjs.io",
+      "vitest.dev", "playwright.dev", "docs.cypress.io", "pytest.org",
+      "docs.pytest.org", "docs.astral.sh", "packaging.python.org", "pypi.org",
+      "docs.npmjs.com", "docs.rs", "crates.io", "pkg.go.dev", "maven.apache.org",
+      "gradle.org", "docs.docker.com", "helm.sh", "istio.io", "envoyproxy.io",
+      "grpc.io", "protobuf.dev", "graphql.org", "openapis.org", "swagger.io",
+      "docs.aws.amazon.com",      "docs.github.com", "docs.gitlab.com", "git-scm.com",
+      "opentelemetry.io", "grafana.com/docs", "docs.datadoghq.com",
+      "mongodb.com/docs", "docs.mongodb.com", "clickhouse.com/docs",
+      "duckdb.org", "docs.confluent.io",
+      "dbt.com", "docs.getdbt.com", "docs.snowflake.com",
+      "docs.stripe.com", "developers.google.com", "developers.cloudflare.com",
+      "docs.langchain.com", "python.langchain.com", "docs.llamaindex.ai",
+      "sqlalchemy.org", "docs.sqlalchemy.org", "prisma.io", "typeorm.io",
+      "tailwindcss.com", "getbootstrap.com", "mui.com", "ui.shadcn.com",
+      "docs.flutter.dev", "kotlinlang.org", "swift.org", "docs.swift.org",
+      "dart.dev", "elixir-lang.org", "hexdocs.pm", "erlang.org",
+      "haskell.org", "ocaml.org", "julialang.org", "docs.julialang.org",
+      "php.net", "ruby-lang.org", "docs.ruby-lang.org",
+      "perl.org", "lua.org", "zig.guide", "ziglang.org", "nim-lang.org",
+      "linux.die.net", "man7.org", "freebsd.org", "openbsd.org",
+      "nginx.org", "docs.nginx.com", "caddyserver.com",
+      "rabbitmq.com", "nats.io", "temporal.io", "docs.celeryq.dev",
+      "keras.io", "lightning.ai", "docs.ray.io", "onnx.ai", "openvino.ai",
+      "docs.nvidia.com", "docs.vllm.ai", "docs.ollama.com",
+      "modelcontextprotocol.io", "sdk.vercel.ai", "vercel.com/docs",
+      "netlify.com/docs", "docs.railway.app", "fly.io/docs",
+      "auth0.com/docs", "clerk.com/docs", "authjs.dev", "lucia-auth.com", "better-auth.com", "docs.workos.com", "docs.logto.io",
+      "keycloak.org", "docs.ory.sh", "firebase.google.com/docs", "developers.facebook.com",
+      "developer.chrome.com", "electronjs.org", "tauri.app", "shopify.dev"
     ],
     "4": [
       "arstechnica.com", "theverge.com", "wired.com", "technologyreview.com",
@@ -188,7 +236,11 @@
       "krebsonsecurity.com", "schneier.com", "bleepingcomputer.com", "darkreading.com",
       "smashingmagazine.com", "alistapart.com", "interaction-design.org",
       "lawsofux.com", "uxmatters.com", "svpg.com",
-      "mindtheproduct.com", "atlassian.com/agile"
+      "mindtheproduct.com", "atlassian.com/agile",
+      "theconversation.com", "opensourceconnections.com", "increment.com",
+      "queue.acm.org", "lwn.net", "phoronix.com",
+      "jvns.ca", "brendangregg.com", "eli.thegreenplace.net",
+      "rachelbythebay.com", "blog.pragmaticengineer.com"
     ],
     "5": [
       "medium.com", "towardsdatascience.com", "dev.to", "hashnode.com",
@@ -202,7 +254,14 @@
       "hankyung.com", "mk.co.kr", "chosun.com", "joongang.co.kr",
       "etnews.com", "zdnet.co.kr", "bloter.net",
       "academia.edu", "news.ycombinator.com", "lesswrong.com",
-      "thehackernews.com", "lennysnewsletter.com", "reforge.com", "uxdesign.cc"
+      "thehackernews.com", "lennysnewsletter.com", "reforge.com", "uxdesign.cc",
+      "lobste.rs", "serverfault.com", "superuser.com", "askubuntu.com",
+      "mathoverflow.net", "discuss.python.org", "users.rust-lang.org",
+      "internals.rust-lang.org", "discourse.julialang.org", "forum.djangoproject.com",
+      "elixirforum.com", "discuss.kubernetes.io", "forums.docker.com",
+      "community.grafana.com", "discuss.pytorch.org", "discuss.huggingface.co",
+      "tildes.net", "slashdot.org", "bsky.app", "mastodon.social",
+      "clien.net", "okky.kr", "dcinside.com", "fmkorea.com", "ruliweb.com"
     ],
     "6": [
       "geeksforgeeks.org", "w3schools.com", "tutorialspoint.com",
@@ -232,6 +291,9 @@
     "mdpi moved to tier 3: per-journal quality varies too much to sit alongside springer/wiley.",
     "news.ycombinator.com and lesswrong moved to tier 5 (aggregator/community); actual signal comes from the hackernews engagement term, which community_opinion mode weights heavily.",
     "academia.edu unblocked to tier 5: it is author self-archiving, not a scraper mirror.",
-    "vendor/language/framework documentation sits at tier 3 (primary but self-interested); standards bodies and CVE/vulnerability registries at tier 1."
+    "vendor/language/framework documentation sits at tier 3 (primary but self-interested); standards bodies and CVE/vulnerability registries at tier 1.",
+    "round A: the tier table here is the ACADEMIC reading of the web. A mode that asks a different question re-files specific domains via its own `domain_overrides` (see modes/community_opinion.json, modes/official_docs.json) rather than being given a bonus on top of this one. reddit is a tier-5 aggregator for a scholarly question and a tier-1 primary source for 'what did practitioners actually hit' - both are true, because they are different questions.",
+    "round A: unregistered domains stay at tier 5 / 32 on purpose. The project's premise is that a trustworthy source leaves a trace somewhere, and in this policy the trace is registration - so the answer to a coverage gap is to register the domain, not to give unknown domains a way to earn a passing score. The domain list is meant to grow.",
+    "round A: version_path is the docs counterpart to seo_path - a deterministic path read, no fetch. -28 drops an archived doc two bands, out of the citable range entirely (88 -> 60 / SKIM in official-docs). -14 (one band, still SUPPORT) was tried first and the pilot re-run rejected it: the judge labelled the archived nextjs.org/docs/13/ page junk because following superseded instructions is actively misleading, not merely non-canonical. Known limits: it only fires on a version segment directly under /docs|/reference|/guide (so nextjs.org/docs/13/ is caught, docs.djangoproject.com/en/4.2/ is not), and it only reads a bare major version (/docs/13/, /docs/v2/), never a precise release (/doc/2.1/, /docs/1.7.0/). Two deliberate exclusions, both found by re-measuring against real URLs: /api/vN/ is normally the current API, and a project that publishes its current release under a precise version (numpy.org/doc/2.1/) would otherwise be penalised for saying which release you are reading. The cost is that a genuinely superseded /docs/1.2.3/ goes unflagged; a bare major line kept alongside a newer one is the shape that actually signals 'old'."
   ]
 }

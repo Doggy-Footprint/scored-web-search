@@ -30,9 +30,9 @@
         }
       },
       "expect": {
-        "score": 50.0,
-        "verdict": "SKIM",
-        "tier": "5"
+        "score": 100.0,
+        "verdict": "PRIMARY",
+        "tier": "1"
       }
     },
     {
@@ -45,9 +45,9 @@
         }
       },
       "expect": {
-        "score": 58.9,
-        "verdict": "SKIM",
-        "tier": "5"
+        "score": 100.0,
+        "verdict": "PRIMARY",
+        "tier": "1"
       }
     },
     {
@@ -60,9 +60,9 @@
         }
       },
       "expect": {
-        "score": 62.0,
-        "verdict": "SUPPORT",
-        "tier": "5"
+        "score": 100.0,
+        "verdict": "PRIMARY",
+        "tier": "1"
       }
     },
     {
@@ -70,20 +70,32 @@
       "url": "https://x.com/karpathy/status/1234567890123456789",
       "field": "opinion",
       "expect": {
-        "score": 44.0,
-        "verdict": "WEAK",
-        "tier": "5"
-      }
+        "score": 64.0,
+        "verdict": "SUPPORT",
+        "tier": "1"
+      },
+      "inject": {
+        "hn": {
+          "points": 0
+        }
+      },
+      "_note": "explicit zero, not an absent lookup: this case is about a thread nobody engaged with, and since the round-A follow-up an unasked lookup no longer fires the engagement floor."
     },
     {
       "name": "listicle-style thread on an aggregator",
       "url": "https://www.reddit.com/r/AI/best-ai-tools-in-2024-thread",
       "field": "opinion",
       "expect": {
-        "score": 26.0,
-        "verdict": "DROP",
-        "tier": "5"
-      }
+        "score": 46.0,
+        "verdict": "SKIM",
+        "tier": "1"
+      },
+      "inject": {
+        "hn": {
+          "points": 0
+        }
+      },
+      "_note": "explicit zero, not an absent lookup: this case is about a thread nobody engaged with, and since the round-A follow-up an unasked lookup no longer fires the engagement floor."
     },
     {
       "name": "blocklisted notes-sharing mirror",
@@ -93,6 +105,43 @@
         "score": 0.0,
         "verdict": "BLOCKED",
         "tier": "block"
+      }
+    },
+    {
+      "name": "unregistered forum: the policy has no trace of it, so it stays background reading",
+      "url": "https://some-random-forum.example/thread/12345",
+      "field": "opinion",
+      "inject": {},
+      "expect": {
+        "score": 32.0,
+        "verdict": "WEAK",
+        "tier": "5"
+      }
+    },
+    {
+      "name": "dead thread on a promoted host: tier-1 venue, no one in the room",
+      "url": "https://news.ycombinator.com/item?id=99999999",
+      "field": "opinion",
+      "inject": {
+        "hn": {
+          "points": 2
+        }
+      },
+      "expect": {
+        "score": 54.9,
+        "verdict": "SKIM",
+        "tier": "1"
+      }
+    },
+    {
+      "name": "SEO listicle on an unregistered site, dressed as a discussion",
+      "url": "https://ai-tool-roundup.example/best-ai-agent-frameworks-in-2024/",
+      "field": "opinion",
+      "inject": {},
+      "expect": {
+        "score": 26.0,
+        "verdict": "DROP",
+        "tier": "5"
       }
     }
   ]

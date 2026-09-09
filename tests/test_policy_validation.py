@@ -103,5 +103,53 @@ class ValidatePolicySchemaTests(unittest.TestCase):
             S.validate_policy(p)
 
 
+class DomainOverrideValidationTests(unittest.TestCase):
+    """`domain_overrides` is how a mode states a different reading of the same
+    web (modes/community_opinion.json, modes/official_docs.json). A typo in a
+    tier name there would silently file a domain nowhere, so it fails loudly."""
+
+    def setUp(self):
+        self.policy = load_raw_policy()
+
+    def test_override_targeting_an_undefined_tier_is_rejected(self):
+        p = copy.deepcopy(self.policy)
+        p["domain_overrides"] = {"reddit.com": "99"}
+        with self.assertRaises(S.PolicyError):
+            S.validate_policy(p)
+
+    def test_override_must_be_an_object(self):
+        p = copy.deepcopy(self.policy)
+        p["domain_overrides"] = ["reddit.com"]
+        with self.assertRaises(S.PolicyError):
+            S.validate_policy(p)
+
+    def test_applying_overrides_moves_the_domain_and_leaves_no_duplicate(self):
+        p = copy.deepcopy(self.policy)
+        p["domain_overrides"] = {"reddit.com": "1"}
+        out = S.apply_domain_overrides(p)
+        self.assertIn("reddit.com", out["domains"]["1"])
+        self.assertNotIn("reddit.com", out["domains"]["5"])
+        S.validate_policy(out)  # must still be a legal policy
+
+    def test_overriding_an_unregistered_domain_simply_registers_it(self):
+        p = copy.deepcopy(self.policy)
+        p["domain_overrides"] = {"brand-new-site.example": "2"}
+        out = S.apply_domain_overrides(p)
+        self.assertIn("brand-new-site.example", out["domains"]["2"])
+        S.validate_policy(out)
+
+    def test_engagement_floor_referencing_an_unknown_tier_is_rejected(self):
+        p = copy.deepcopy(self.policy)
+        p["engagement_floor"] = {"min_points": 10, "penalty": -32.0, "tiers": ["nope"]}
+        with self.assertRaises(S.PolicyError):
+            S.validate_policy(p)
+
+    def test_version_path_penalty_without_patterns_is_rejected(self):
+        p = copy.deepcopy(self.policy)
+        del p["version_path_patterns"]
+        with self.assertRaises(S.PolicyError):
+            S.validate_policy(p)
+
+
 if __name__ == "__main__":
     unittest.main()
