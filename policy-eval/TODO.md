@@ -32,8 +32,22 @@ Exit criteria required `basis: fetched` on a majority of judgments and it failed
 of 60–78 per run (HN 429, several sites 403). **F4, F5 and F6 rest on judge labels and are
 provisional until this is redone**; the post-fix numbers inherit the same limitation.
 
+**Resolved: this is not a scored-web-search defect.** The judge runs plain web search with no
+access to `srcscore.py`/`policy.json` (see METHODOLOGY.md) — the choice not to open a page is
+made entirely inside the judge step, before the policy ever sees a URL. Auditing
+`runs/*.judge.json` by `basis` across all 318 judgments: 271 were snippet-basis, and of those
+only 42 were an actual fetch failure (9 × 403, 33 × 429, nearly all HN rate-limiting in `co2`).
+The other 229 were the judge choosing snippet-only because it considered the case obvious
+(mostly `medium.com`, `dev.to`, `arxiv.org`). So the low fetch rate is a property of the judge
+agent's own behaviour during plain search, not of the skill or the policy — but the numbers
+below are still what's provisional, since the *reason* being external doesn't make the
+snippet-basis judgments any less weak on the "looks substantive but is filler" axis:
+
 - Add retry/backoff and pacing to the judge agent prompt; accept a smaller URL set (30 instead
   of 60) in exchange for a high fetch rate. Coverage matters less than judgment quality here.
+  Note this only helps the 42 external-failure cases — the 229 "judge decided it was obvious"
+  cases need an instruction change (e.g. require fetch unless confidence is very high), not
+  retry/backoff.
 - Add a second judge on a subset to get an inter-rater agreement figure. There is currently one
   rater and no reliability estimate — the biggest methodological hole in the whole procedure.
 

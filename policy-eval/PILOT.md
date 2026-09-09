@@ -201,6 +201,12 @@ of reach for a policy that never fetches the page.
   that looks substantive but is filler. F1–F3 and F7–F9 rest on tier arithmetic and code paths
   that snippet-basis cannot affect. **F4, F5 and F6 rest on judge labels and are provisional
   until this is redone.** The before/after numbers inherit the limitation exactly.
+  This is a limitation of the judge step, not of the skill: the judge runs plain web search
+  with no access to the policy, so it — not `scored-web-search` — decides whether to open a
+  page. Of the 271 snippet-basis judgments across all five runs, only 42 were an actual fetch
+  failure (403/429); the other 229 were the judge treating the case as obvious from the
+  snippet alone. Resolved as a scored-web-search question; the weak-basis limitation on
+  F4/F5/F6 itself stands regardless of cause. See TODO.md B.
 - **One rater.** No second judge, so there is no inter-rater agreement figure. This is the
   largest methodological hole.
 - **n=5.** Case studies with a consistent procedure, not a benchmark.
