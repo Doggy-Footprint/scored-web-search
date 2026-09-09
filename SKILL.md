@@ -57,11 +57,14 @@ SCORE VERDICT T  SIGNALS                     URL
 
 Default cap: 8-12 sources. Up to 20 if the user asks for depth.
 
-### Step 4 — Re-search: loop back to 1 when sources are thin
-
-Do not promote sub-WEAK sources becase of low credible sources. Change the keywords and re-run from step 1. Same if reading in step 3 surfaced a new sub-topic worth searching
+If pages you read names keywords to search, do not run the search yourself. Hand it to a new subagent like Step 1.
 
 Two re-search rounds max. Beyond that, **ask the user explicitly** before searching again, and if they decline, state plainly in the answer that the evidence base is thin.
+
+
+### Step 4 — Re-search: loop back to 1 when sources are thin
+
+Do not promote sub-WEAK sources becase of low credible sources. Change the keywords and re-run from step 1.
 
 ### Step 5 — Verify (optional): claims vs. evidence
 

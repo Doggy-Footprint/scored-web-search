@@ -32,7 +32,8 @@ def main():
     ap.add_argument("--field", required=True)
     args = ap.parse_args()
 
-    judged = json.loads((RUNS / f"{args.run_id}.judge.json").read_text())["judged"]
+    judge_doc = json.loads((RUNS / f"{args.run_id}.judge.json").read_text())
+    judged = judge_doc["judged"]
     scored = score(RUNS / f"{args.run_id}.urls.txt", args.mode, args.field)
 
     rows, unscored = [], []
@@ -43,11 +44,12 @@ def main():
             continue
         v = s.get("verdict", "")
         rows.append({**j, "score": s.get("score"), "verdict": v, "tier": s.get("tier"),
-                     "signals": s.get("signals"),
+                     "signals": s.get("signals"), "matched": s.get("matched"),
                      "policy_side": "pos" if v in POS_VERDICTS else "neg" if v in NEG_VERDICTS else "skim"})
 
-    def sel(judgment, side):
-        return [r for r in rows if r["judgment"] == judgment and r["policy_side"] == side]
+    def sel(judgment, side, pool=None):
+        pool = rows if pool is None else pool
+        return [r for r in pool if r["judgment"] == judgment and r["policy_side"] == side]
 
     recall_loss = sel("useful", "neg")
     precision_loss = sel("junk", "pos")
@@ -74,6 +76,28 @@ def main():
                    "cases": vendor_passed},
         "unscored": unscored,
     }
+
+    # Two-round (keyword-expansion) runs only. Absent `round` means a one-shot run and the
+    # block is omitted entirely, so the five pilot files re-run to the same numbers.
+    if any("round" in r for r in rows):
+        by_round = {}
+        for n in sorted({r.get("round", 1) for r in rows}):
+            pool = [r for r in rows if r.get("round", 1) == n]
+            loss, kept = sel("useful", "neg", pool), sel("useful", "pos", pool)
+            by_round[str(n)] = {
+                "n": len(pool),
+                "useful": sum(1 for r in pool if r["judgment"] == "useful"),
+                "recall_loss": {"n": len(loss),
+                                "rate": round(len(loss) / max(1, len(loss) + len(kept)), 3)},
+                # PILOT.md F1: tier 5 is the unregistered default, so the band and the
+                # registration are counted apart -- `matched: null` is the scorer saying the
+                # domain is not in the table at all.
+                "tier5": sum(1 for r in pool if str(r["tier"]) == "5"),
+                "unregistered": sum(1 for r in pool if not r["matched"]),
+            }
+        report["expansion"] = {"keywords": judge_doc.get("expansion_keywords", []),
+                               "by_round": by_round}
+
     (RUNS / f"{args.run_id}.contrast.json").write_text(json.dumps(report, indent=2))
 
     c = report["judge_counts"]
@@ -85,6 +109,10 @@ def main():
     print(f"  precision loss {report['precision_loss']['n']:>1}  (rate {report['precision_loss']['rate']}) "
           f"<- junk the filter promoted")
     print(f"  vendor {report['vendor']['n']} judged, {report['vendor']['passed_filter']} passed filter")
+    for n, b in report.get("expansion", {}).get("by_round", {}).items():
+        print(f"  round {n}  n={b['n']:>3} useful={b['useful']:>3} "
+              f"recall loss {b['recall_loss']['n']:>3} (rate {b['recall_loss']['rate']}) "
+              f"tier5={b['tier5']} unregistered={b['unregistered']}")
 
 
 if __name__ == "__main__":

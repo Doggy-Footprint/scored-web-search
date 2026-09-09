@@ -2,7 +2,7 @@
 
 State: the n=5 pilot has been run, the two mode ceilings it found are fixed, and the same five
 questions have been re-measured. Read `METHODOLOGY.md` first, then `PILOT.md`.
-`questions.json` holds all 25 questions (5 modes x 5); 5 have been run.
+`questions.json` holds all 30 questions (5 modes x 6, the 6th of each being a two-round keyword-expansion question); 5 have been run.
 
 Tracked: `METHODOLOGY.md`, `PILOT.md`, `questions.json`, `contrast.py`, this file.
 Untracked (`.gitignore`): `runs/` — raw judge output, URL lists, contrast joins, and
@@ -66,6 +66,33 @@ re-search) but it is main-agent judgment, unspecified and unmeasured.
    queries were what surfaced the vendor pages at all. Expansion changes the candidate pool the
    policy sees, so measuring the policy on a one-shot pool is a different experiment from
    measuring it in use. Decide which one is being claimed.
+
+**Specified.** Both questions are now answered on paper.
+
+*In the skill* (`SKILL.md`): expansion has one path, and it runs on read text. A term found in
+the **body of a source that passed** goes to a **new subagent** under the same shape as Step 1
+(`SKILL.md` Step 3) — never to a search the main agent runs itself, so the reason to delegate
+Step 1 at all still holds on round two, and the identical prompt skeleton keeps the KV cache.
+The round cap stays at two, with the user asked before a third — unchanged from before this
+round, and now stated in Step 4 where the re-search rule lives rather than mid-Step 3.
+
+The rejected alternative is worth recording: letting the *search* subagent expand from result
+titles. A title is not evidence that a term is the right one — it is exactly the snippet-grade
+material Step 1 exists to keep out — so an expansion decided from titles is a guess made on the
+weakest input in the pipeline, and it fires before anything has been scored.
+
+*In the evaluation*: both experiments are claimed, separately. The 25 original questions stay
+one-shot; five new `expansion: true` questions (`ac6`, `na6`, `co6`, `nw6`, `od6`) are judged in
+two rounds — round 1, keywords taken from the body of round-1 sources the judge actually opened,
+round 2 — with `round` on every judgment and `expansion_keywords` at the top of the judge file
+(`METHODOLOGY.md`). `contrast.py` splits the report by round and counts round-2 tier-5 and
+unregistered landings, which is the F1 interaction below measured rather than asserted. Nothing
+is pooled across the two sets.
+
+**Still to do: run them.** No `expansion: true` question has been judged yet, so there is no
+number here — only a specification and the machinery to score it. These runs also depend on B:
+a keyword can only be derived from a source the judge opened, so a run with the pilot's fetch
+rate would produce almost no round two at all.
 
 Note the interaction with F1: expansion surfaces *more* unregistered domains, so the coverage
 work in A gets more important as search improves, not less.

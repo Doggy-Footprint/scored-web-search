@@ -1,5 +1,5 @@
 {
-  "_readme": "Policy validation question set. These are NOT golden cases — there is no expected output. Each question is a live web search whose result set is used to measure how scripts/policy.json + scripts/modes/*.json behave on real URLs. 'stress' says what the question is meant to expose. 'field' is passed to srcscore.py --field.",
+  "_readme": "Policy validation question set. These are NOT golden cases — there is no expected output. Each question is a live web search whose result set is used to measure how scripts/policy.json + scripts/modes/*.json behave on real URLs. 'stress' says what the question is meant to expose. 'field' is passed to srcscore.py --field. 'expansion': true marks a question where reading a round-1 source is expected to name a better search term; those are judged in two rounds (METHODOLOGY.md), everything else in one.",
   "modes": {
     "academic": {
       "field_default": "ai",
@@ -13,7 +13,10 @@
         { "id": "ac4", "field": "policy", "q": "What does the evidence say about the labor market effects of minimum wage increases?",
           "stress": "Contested field with think tanks on both sides. Tests whether tier assignment encodes a political lean." },
         { "id": "ac5", "field": "cs", "q": "What are the known limitations of differential privacy in production deployments?",
-          "stress": "Best sources split between papers and vendor engineering blogs. Tests the academic/industry boundary." }
+          "stress": "Best sources split between papers and vendor engineering blogs. Tests the academic/industry boundary." },
+        { "id": "ac6", "field": "ai", "q": "Why does fine-tuning a model on a new task make it worse at tasks it already handled?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. Asked in plain words; the literature is indexed under established terms (catastrophic forgetting, alignment tax) that any round-1 paper names in its own text. Round 2 should reach the survey and benchmark papers round 1 misses." }
       ]
     },
     "non-academic": {
@@ -28,7 +31,10 @@
         { "id": "na4", "field": "cs", "q": "How is Rust async runtime performance compared across tokio, async-std, and smol?",
           "stress": "GitHub-heavy. Tests star-count engagement vs. archived/stale repos." },
         { "id": "na5", "field": "ai", "q": "What techniques reduce LLM inference cost in production serving?",
-          "stress": "Research-lab blogs (tier 3) vs. startup marketing. Tests the tier 3 band's internal spread." }
+          "stress": "Research-lab blogs (tier 3) vs. startup marketing. Tests the tier 3 band's internal spread." },
+        { "id": "na6", "field": "cs", "q": "How do teams keep one slow downstream service from taking down the rest of the system?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The operational patterns have standard names (circuit breaker, bulkhead, backpressure, load shedding) that a round-1 postmortem states while describing the fix. Tests whether expansion pulls in engineering blogs and GitHub the plain query never reaches." }
       ]
     },
     "community-opinion": {
@@ -43,7 +49,10 @@
         { "id": "co4", "field": "opinion", "q": "Do developers find monorepos worth the tooling cost at mid-size companies?",
           "stress": "Low-engagement but high-quality comments vs. high-engagement hot takes. Engagement/quality divergence." },
         { "id": "co5", "field": "opinion", "q": "What are practitioners' complaints about the current state of MLOps tooling?",
-          "stress": "Vendor-adjacent astroturf risk in community channels." }
+          "stress": "Vendor-adjacent astroturf risk in community channels." },
+        { "id": "co6", "field": "opinion", "q": "What do practitioners say about junior developers becoming dependent on AI coding assistants?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The community argues this under its own slang (vibe coding, skill atrophy), which shows up inside the threads rather than in the plain phrasing. Tests whether expansion is what reaches the threads the mode exists to find." }
       ]
     },
     "news": {
@@ -58,7 +67,10 @@
         { "id": "nw4", "field": "news", "q": "What are the reported terms of recent large AI infrastructure investments?",
           "stress": "Financial reporting where the only source is often a single paywalled outlet or a press release." },
         { "id": "nw5", "field": "news", "q": "What is the current regulatory stance on AI use in hiring decisions?",
-          "stress": "Regulatory news mixed with law-firm marketing content (tier ambiguous, commercially motivated)." }
+          "stress": "Regulatory news mixed with law-firm marketing content (tier ambiguous, commercially motivated)." },
+        { "id": "nw6", "field": "news", "q": "What is the status of the EU proposal to require messaging services to scan private messages?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. Reported under a nickname (Chat Control); the primary sources are filed under the official designation (CSA Regulation, 2022/0155(COD)), which the re-reports cite in their own body text. Directly pairs with nw1: expansion is the route from re-reports to the primary text." }
       ]
     },
     "official-docs": {
@@ -73,7 +85,10 @@
         { "id": "od4", "field": "cs", "q": "What does the PostgreSQL documentation specify about transaction isolation levels?",
           "stress": "Spec-quality docs. Tests whether tier alone suffices when engagement/recency are all off." },
         { "id": "od5", "field": "cs", "q": "How do you configure retries and timeouts in the AWS SDK for Python?",
-          "stress": "Vendor docs are simultaneously authoritative AND marketing. Tests the tier-1-by-default assumption for vendor docs." }
+          "stress": "Vendor docs are simultaneously authoritative AND marketing. Tests the tier-1-by-default assumption for vendor docs." },
+        { "id": "od6", "field": "cs", "q": "How do you make Kubernetes wait until a container can actually serve traffic before sending it any?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The feature has exact config names (readinessProbe, startupProbe, minReadySeconds) that a round-1 tutorial spells out in its examples. Tests whether expansion moves the pool from tutorials to kubernetes.io reference pages." }
       ]
     }
   }
