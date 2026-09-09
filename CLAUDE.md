@@ -1,6 +1,6 @@
 # Scored Web Search
 
-Web-search skill to provide filtered sources only. It works by policy. Look `SKILL.md` for details.
+Web-search skill to provide filtered sources only. It emphasize precision over recall. It works by policy. Look `SKILL.md` for details.
 
 # Documentation Guide
 
