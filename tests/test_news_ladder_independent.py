@@ -1,25 +1,3 @@
-"""Independent verification of the news-mode tier reading (Round B).
-
-Written from the stated design, not from the implementing agent's tests, and
-deliberately disjoint from scripts/check_policy.py: check_policy re-scores
-recorded golden cases, while these assert the *invariants* a golden file
-cannot state -- that the `tiers` overlay is scoped to one mode, that
-`apply_domain_overrides` conserves the domain set, that the news ladder is
-strictly ordered, and that the tier-3 re-base is what puts re-report inside
-the SUPPORT band.
-
-Everything is offline (NullCache / injected fixtures), same convention as the
-rest of tests/.
-
-One test is marked `unittest.expectedFailure`. It is NOT scaffolding: it states
-a property the design implies but the current policy does not hold, and carries
-the evidence in its docstring. If it starts passing, the underlying gap was
-closed and the decorator should be removed. Two others were marked that way when
-this suite was written and are now ordinary tests, because the gaps they pinned
-(the bbc.com/bbc.co.uk sibling-host spread, and market-research firms riding the
-tier-3 re-base into SUPPORT) were closed in response.
-"""
-
 import copy
 import io
 import json
@@ -139,13 +117,24 @@ class TierOverlayIsolationTests(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# Claim 2: apply_domain_overrides moves, never copies, and conserves the set
+# Claim 2: apply_domain_overrides moves rather than copies, loses nothing from
+# the base table, and keeps a mode-local registration inside its own mode
 # ---------------------------------------------------------------------------
 
 class OverrideInvariantTests(unittest.TestCase):
     def setUp(self):
         self.base = base_policy()
         self.base_set = set(flat_domains(self.base))
+
+    def test_applying_any_mode_does_not_mutate_the_base_policy(self):
+        """The base policy dict is handed to every mode in turn by
+        check_policy; a merge that edited it in place would make mode order
+        decide the result."""
+        snapshot = copy.deepcopy(self.base)
+        for mode in MODES:
+            merged(mode, self.base)
+            merged(mode, self.base)
+        self.assertEqual(self.base, snapshot)
 
     def test_every_mode_validates_after_merge(self):
         for mode in MODES:
@@ -160,21 +149,74 @@ class OverrideInvariantTests(unittest.TestCase):
                 self.assertEqual(dupes, [], "duplicated in %s: %s" % (mode, dupes))
 
     def test_no_registered_domain_is_lost_by_an_override(self):
-        """A remap must not drop an entry: the merged table has to carry the
-        same domain set as the base policy, exactly."""
+        """A remap must not DROP an entry.
+
+        Round A asserted set equality in both directions. Round B gave
+        `domain_overrides` a second job -- registering a domain the base table
+        deliberately does not carry (news outlets, doc hosts, forums,
+        engineering blogs live in the one mode whose question they answer) --
+        so the "invented in <mode>" half is obsolete by design and is covered
+        instead by test_a_mode_local_registration_stays_local. The "lost"
+        half still holds: re-filing reddit must not delete it.
+        """
         for mode in MODES:
             with self.subTest(mode=mode):
                 got = set(flat_domains(merged(mode, self.base)))
                 self.assertEqual(sorted(self.base_set - got), [],
                                  "lost in %s" % mode)
-                self.assertEqual(sorted(got - self.base_set), [],
-                                 "invented in %s" % mode)
 
-    def test_domain_count_is_conserved_exactly(self):
+    def test_every_merged_table_is_a_superset_of_the_base_table(self):
+        """The replacement for the old exact-count invariant: a merge may add
+        mode-local registrations, never remove or silently renumber the base
+        table's entries. Count is therefore >= base count, and the excess is
+        exactly the overlay's unregistered keys."""
         for mode in MODES:
+            overlay_keys = {str(k).lower()
+                            for k in (P.load_mode_overlay(mode).get("domain_overrides") or {})}
+            m = merged(mode, self.base)
+            flat = flat_domains(m)
             with self.subTest(mode=mode):
-                self.assertEqual(len(flat_domains(merged(mode, self.base))),
-                                 len(flat_domains(self.base)))
+                self.assertGreaterEqual(len(flat), len(flat_domains(self.base)))
+                self.assertEqual(sorted(set(flat) - self.base_set),
+                                 sorted(overlay_keys - self.base_set))
+                self.assertEqual(len(flat) - len(flat_domains(self.base)),
+                                 len(overlay_keys - self.base_set))
+
+    def test_a_mode_local_registration_stays_local(self):
+        """A domain registered only in mode X must resolve to the unregistered
+        default tier in a mode that does not register it -- that is what makes
+        the registration mode-local rather than a back door into the base
+        table. fasterthanli.me is evidence about production practice and is
+        not a vetted source for a scholarly claim.
+
+        A broader pattern that the other mode legitimately carries may still
+        match (superset.apache.org falls back to the base table's apache.org,
+        planetscale.com/docs to non-academic's own planetscale.com); what must
+        never happen is the domain's OWN pattern being matched outside the
+        mode that registered it.
+        """
+        default_tier = str(self.base["defaults"]["unregistered_tier"])
+        owners = {}
+        for mode in MODES:
+            for k in (P.load_mode_overlay(mode).get("domain_overrides") or {}):
+                k = str(k).lower()
+                if k in self.base_set:
+                    continue  # a re-file, not a registration
+                owners.setdefault(k, set()).add(mode)
+        self.assertTrue(owners, "round B registers mode-local domains; none found")
+        for domain, registering in sorted(owners.items()):
+            for mode in MODES:
+                if mode in registering:
+                    continue
+                with self.subTest(domain=domain, mode=mode):
+                    tier, matched = SC.match_tier("https://%s/some/page" % domain,
+                                                  merged(mode, self.base))
+                    self.assertNotEqual(
+                        str(matched or "").lower(), domain,
+                        "%s is visible as its own pattern in %s, which does not "
+                        "register it" % (domain, mode))
+                    if matched is None:
+                        self.assertEqual(tier, default_tier)
 
     def test_every_override_lands_in_the_tier_it_names(self):
         for mode in MODES:
@@ -207,13 +249,20 @@ class OverrideInvariantTests(unittest.TestCase):
                 with self.subTest(mode=mode, domain=pat):
                     self.assertIn(str(tier), m["tiers"])
 
-    def test_news_overrides_are_only_registered_domains(self):
-        """The mode remaps the base table; it does not smuggle in new domains.
-        A domain that exists only in an overlay would be invisible to every
-        other mode and to check_policy's domain count."""
+    def test_news_overrides_both_refile_and_register(self):
+        """Round A required every news override to name a base-table domain.
+        Round B inverted that: the news ladder is expected to register outlets
+        the academic table deliberately omits (asserting that koreaherald.com
+        is an academic source would be false), so both jobs must be present --
+        at least one re-file of a base domain and at least one fresh
+        registration -- and every fresh registration must still validate and
+        resolve (covered by the tests above).
+        """
         overrides = P.load_mode_overlay("news")["domain_overrides"]
-        unknown = sorted(k for k in overrides if k.lower() not in self.base_set)
-        self.assertEqual(unknown, [])
+        refiled = [k for k in overrides if k.lower() in self.base_set]
+        registered = [k for k in overrides if k.lower() not in self.base_set]
+        self.assertTrue(refiled, "news no longer re-files any base-table domain")
+        self.assertTrue(registered, "news registers no new outlet of its own")
 
     def test_match_tier_agrees_with_the_merged_table_for_every_override(self):
         """The table is only half the story - match_tier's longest-pattern rule
@@ -542,19 +591,48 @@ class KnownGapTests(unittest.TestCase):
                 self.assertEqual(score(news, a, "news")["tier"],
                                  score(news, b, "news")["tier"])
 
-    @unittest.expectedFailure
     def test_official_docs_does_not_treat_trade_bodies_as_documentation(self):
-        """OPEN GAP, and older than this change. official-docs turns every
-        signal off, so score == tier base and EVERY base tier-2 domain passes
-        it: mit.edu, owasp.org and mayoclinic.org all scored 74 SUPPORT there
-        before the news round too. The base-table expansion widened the set by
-        six (iapp, turing, fpf, ada lovelace, ai now, cloud security alliance)
-        rather than creating the behaviour. The real fix is a ceiling in
-        official-docs for domains it has not re-filed as documentation, which
-        is a change to that mode and out of scope here."""
+        """PARTIALLY CLOSED GAP, decorator dropped. official-docs turns every
+        signal off, so score == tier base and EVERY base tier-2 domain used to
+        pass it: mit.edu, owasp.org and mayoclinic.org all scored 74 SUPPORT
+        there, and the base-table expansion widened the set by six (iapp,
+        turing, fpf, ada lovelace, ai now, cloud security alliance) rather than
+        creating the behaviour.
+
+        What closed it for these two URLs is the commentary path read that mode
+        now carries (penalties.seo_path re-pointed at /news/, /blog/ and the
+        rest at -28): a trade body's news item is no longer read as reference.
+        Per this suite's own convention a passing expectedFailure has its
+        decorator dropped, so it is now an ordinary regression guard.
+
+        The residual is real and still unfixed: the close is a path read, not a
+        ceiling, so a tier-2 domain whose URL carries no commentary segment
+        (iapp.org/resources/article/..., mit.edu/..., owasp.org/Top10/) still
+        scores 74 SUPPORT in a documentation search. That is pinned by
+        test_a_tier_two_domain_with_no_commentary_segment_is_still_support
+        below, and the real fix remains a ceiling in official-docs for domains
+        it has not re-filed as documentation."""
         od = merged("official-docs", self.base)
         for url in ("https://iapp.org/news/a/some-privacy-story",
                     "https://www.turing.ac.uk/blog/x"):
+            with self.subTest(url=url):
+                self.assertNotIn(score(od, url, "cs")["verdict"],
+                                 ("SUPPORT", "PRIMARY"))
+
+    @unittest.expectedFailure
+    def test_a_tier_two_domain_with_no_commentary_segment_is_still_support(self):
+        """OPEN GAP, the residual of the one above. official-docs re-files the
+        hosts it considers documentation and reads commentary segments out of
+        the citable band, but it sets no ceiling for a base tier-2 domain it
+        never re-filed: a university, a standards-adjacent association or a
+        hospital still scores 74 SUPPORT in a documentation search as long as
+        the URL carries no /news/ or /blog/ segment. Still a change to that
+        mode rather than to the news ladder."""
+        od = merged("official-docs", self.base)
+        for url in ("https://iapp.org/resources/article/some-guidance/",
+                    "https://www.mit.edu/some/page",
+                    "https://owasp.org/Top10/",
+                    "https://www.mayoclinic.org/diseases-conditions/x"):
             with self.subTest(url=url):
                 self.assertNotIn(score(od, url, "cs")["verdict"],
                                  ("SUPPORT", "PRIMARY"))

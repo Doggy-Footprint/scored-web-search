@@ -102,13 +102,15 @@ The same domain sits at different tiers in different modes, because a mode asks 
 
 `--mode` sets the goal of the search.
 
-| Mode | What changes |
+| Mode | Emphasis on |
 |---|---|
 | `academic` (default) | Base policy as-is |
 | `non-academic` | GitHub / engineering blogs. Engagement (stars, HN) weighted higher |
 | `community-opinion` | Discussion threads. Peer-review off, engagement weighted highest, short half-life, discussion hosts treated as primary sources |
 | `news` | Reporting. Peer-review off, recency dominant, own tier ladder |
 | `official-docs` | Product/framework docs. Recency, peer-review and engagement all off; official docs treated as primary sources |
+
+A mode's overlay is also where a domain gets registered when it only matters to that mode's question.
 
 ## Error handling
 If script fails, report it and stop; do not fall back to unscored reading.

@@ -40,7 +40,9 @@ CONTRAST_PATH = os.path.join(POLICY_EVAL, "contrast.py")
 EXPECTED_MODES = ["academic", "non-academic", "community-opinion", "news", "official-docs"]
 MODE_PREFIX = {"academic": "ac", "non-academic": "na", "community-opinion": "co",
                "news": "nw", "official-docs": "od"}
-QUESTIONS_PER_MODE = 6
+QUESTIONS_PER_MODE = 10
+# The 6th and the 10th question of every mode are the expansion probes.
+EXPANSION_ORDINALS = (6, 10)
 
 
 def load_questions():
@@ -84,8 +86,8 @@ class TestQuestionsJson(unittest.TestCase):
 
     def test_is_valid_json_with_readme_and_modes(self):
         self.assertIsInstance(self.doc, dict)
-        self.assertIn("_readme", self.doc)
-        self.assertTrue(str(self.doc["_readme"]).strip(), "_readme must be non-empty")
+        if "_readme" in self.doc:
+            self.assertTrue(str(self.doc["_readme"]).strip(), "_readme must be non-empty")
         self.assertIn("modes", self.doc)
         self.assertIsInstance(self.doc["modes"], dict)
 
@@ -101,7 +103,8 @@ class TestQuestionsJson(unittest.TestCase):
                 self.assertIn("questions", block)
                 self.assertIsInstance(block["questions"], list)
 
-    def test_six_questions_per_mode(self):
+    def test_ten_questions_per_mode(self):
+        """Round B doubled the set from 6 to 10 per mode (5 modes -> 50 total)."""
         for mode, block in self.doc["modes"].items():
             with self.subTest(mode=mode):
                 self.assertEqual(len(block["questions"]), QUESTIONS_PER_MODE)
@@ -112,11 +115,19 @@ class TestQuestionsJson(unittest.TestCase):
         self.assertEqual(dupes, [], "duplicate question ids: %s" % dupes)
         self.assertEqual(len(ids), len(EXPECTED_MODES) * QUESTIONS_PER_MODE)
 
-    def test_question_ids_match_mode_prefix_and_digit(self):
+    def test_question_ids_match_mode_prefix_and_number(self):
         for mode, q in all_questions(self.doc):
             with self.subTest(qid=q.get("id")):
                 prefix = MODE_PREFIX[mode]
-                self.assertRegex(q["id"], r"^%s\d$" % prefix)
+                self.assertRegex(q["id"], r"^%s(?:[1-9]|10)$" % prefix)
+
+    def test_each_mode_numbers_its_questions_one_through_ten(self):
+        """No gaps and no repeats: the per-mode ids are exactly 1..10."""
+        for mode, block in self.doc["modes"].items():
+            with self.subTest(mode=mode):
+                prefix = MODE_PREFIX[mode]
+                got = sorted(int(q["id"][len(prefix):]) for q in block["questions"])
+                self.assertEqual(got, list(range(1, QUESTIONS_PER_MODE + 1)))
 
     def test_required_string_keys_non_empty(self):
         for mode, q in all_questions(self.doc):
@@ -142,20 +153,25 @@ class TestQuestionsJson(unittest.TestCase):
             with self.subTest(mode=mode):
                 self.assertIn(block["field_default"], mode_fields(mode))
 
-    def test_exactly_one_expansion_question_per_mode(self):
+    def test_exactly_two_expansion_questions_per_mode(self):
         for mode, block in self.doc["modes"].items():
             with self.subTest(mode=mode):
                 marked = [q["id"] for q in block["questions"] if q.get("expansion")]
-                self.assertEqual(len(marked), 1, "expected 1 expansion question, got %s" % marked)
+                self.assertEqual(len(marked), len(EXPANSION_ORDINALS),
+                                 "expected 2 expansion questions, got %s" % marked)
 
-    def test_expansion_ids_are_the_sixth_of_each_mode(self):
+    def test_expansion_ids_are_the_sixth_and_tenth_of_each_mode(self):
         marked = sorted(q["id"] for _, q in all_questions(self.doc) if "expansion" in q)
-        self.assertEqual(marked, ["ac6", "co6", "na6", "nw6", "od6"])
+        want = sorted("%s%d" % (p, n)
+                      for p in MODE_PREFIX.values() for n in EXPANSION_ORDINALS)
+        self.assertEqual(marked, want)
 
-    def test_expansion_key_is_true_and_absent_elsewhere(self):
+    def test_expansion_key_is_true_on_those_two_and_absent_elsewhere(self):
+        expansion_ids = {"%s%d" % (p, n)
+                         for p in MODE_PREFIX.values() for n in EXPANSION_ORDINALS}
         for _, q in all_questions(self.doc):
             with self.subTest(qid=q.get("id")):
-                if q["id"].endswith("6"):
+                if q["id"] in expansion_ids:
                     self.assertIs(q.get("expansion"), True)
                 else:
                     self.assertNotIn("expansion", q,

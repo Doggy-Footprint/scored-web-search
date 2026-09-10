@@ -1,5 +1,4 @@
 {
-  "_readme": "For discussion threads (Reddit/forum/X/HN), where a thread IS the primary source. Peer-review off, engagement weighted highest, short 'opinion' half-life. domain_overrides re-files discussion hosts as tier 1; engagement_floor drops a thread nobody read back below the pass mark.",
   "signals": {
     "peer_review": false
   },
@@ -22,7 +21,6 @@
     }
   },
   "trusted_people": {
-    "_readme": "Flat bonus (added on top of tier + engagement) when the URL is a profile or post by a well-known domain expert with a track record of reliable public commentary. Matching is URL-pattern-only (see identifiers.extract_person_handle): x.com/twitter.com profile and status links, and reddit.com/u/<name> profile links - a reddit discussion-thread URL never carries the author's name in its path, so reddit is left empty rather than guessed. Handles are public figures' own accounts, not affiliation endorsements; re-verify periodically since handles can change hands or go inactive.",
     "bonus": 12.0,
     "hosts": {
       "x.com": [
@@ -91,7 +89,32 @@
     "lesswrong.com": "2",
     "clien.net": "2",
     "okky.kr": "2",
-    "quora.com": "4"
+    "quora.com": "4",
+    "community.openai.com": "1",
+    "discuss.elastic.co": "1",
+    "community.cloudflare.com": "1",
+    "forums.swift.org": "1",
+    "discourse.nixos.org": "1",
+    "forum.obsidian.md": "1",
+    "community.home-assistant.io": "1",
+    "discuss.streamlit.io": "1",
+    "discourse.llvm.org": "1",
+    "lore.kernel.org": "1",
+    "sourceware.org": "1",
+    "bsky.app": "1",
+    "mastodon.social": "1",
+    "fosstodon.org": "1",
+    "hachyderm.io": "1",
+    "github.com": "1",
+    "v2ex.com": "2",
+    "segmentfault.com": "2",
+    "habr.com": "2",
+    "news.hada.io": "2",
+    "qiita.com": "4",
+    "zenn.dev": "4",
+    "juejin.cn": "4",
+    "threads.net": "1",
+    "ppomppu.co.kr": "6"
   },
   "engagement_floor": {
     "_readme": "A tier-1 discussion host with no measurable engagement is a venue, not evidence. `min_points` is read against HN points or GitHub stars, whichever is higher, and the penalty is set so that nothing below the floor can reach SUPPORT even with the engagement bonus it does earn (at 9 points: 88 + 6.0 - 36 = 58, SKIM). The step at `min_points` is deliberate: the claim is categorical - below the floor the thread is not evidence, above it the venue tier stands - so a ramp would blur the line the mode draws. The known cost of the step is that this mode has almost no SUPPORT band for threads: a thread is either below the floor (SKIM) or carries the full tier-1 base (PRIMARY). The floor does not fire when no lookup happened or the lookup failed - a rate limit is not evidence of silence.",

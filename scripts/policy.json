@@ -125,7 +125,10 @@
       "nvd.nist.gov", "cve.org", "cve.mitre.org", "cwe.mitre.org", "attack.mitre.org",
       "cisa.gov", "ncsc.gov.uk", "enisa.europa.eu", "first.org", "kisa.or.kr",
       "iec.ch", "itu.int", "ansi.org", "ecma-international.org", "unicode.org",
-      "khronos.org", "jedec.org", "3gpp.org", "tc39.es", "whatwg.org"
+      "khronos.org", "jedec.org", "3gpp.org", "tc39.es", "whatwg.org",
+      "journals.aps.org", "pubs.acs.org", "pubs.rsc.org", "iopscience.iop.org", "ams.org",
+      "epubs.siam.org", "pubs.aip.org", "opg.optica.org", "nsf.gov", "destatis.de",
+      "ons.gov.uk", "insee.fr", "stat.go.jp", "statcan.gc.ca", "abs.gov.au"
     ],
     "2": [
       "springer.com", "link.springer.com", "sciencedirect.com", "wiley.com",
@@ -149,7 +152,13 @@
       "massgeneral.org", "stanfordhealthcare.org", "cancer.gov", "cancer.org",
       "heart.org", "diabetes.org", "psychiatry.org", "aap.org",
       "fpf.org", "adalovelaceinstitute.org", "ainowinstitute.org", "turing.ac.uk",
-      "iapp.org", "cloudsecurityalliance.org"
+      "iapp.org", "cloudsecurityalliance.org",
+      "asmedigitalcollection.asme.org", "arc.aiaa.org", "ascelibrary.org",
+      "spiedigitallibrary.org", "pubs.geoscienceworld.org", "psycnet.apa.org",
+      "degruyter.com", "karger.com", "cambridge.org", "journals.uchicago.edu",
+      "erc.europa.eu", "dfg.de", "jst.go.jp", "jstage.jst.go.jp", "nationalacademies.org",
+      "openalex.org", "doaj.org", "inspirehep.net", "ui.adsabs.harvard.edu", "zbmath.org",
+      "mathscinet.ams.org", "kci.go.kr", "cnki.net"
     ],
     "3": [
       "arxiv.org", "biorxiv.org", "medrxiv.org", "ssrn.com", "osf.io",
@@ -188,7 +197,7 @@
       "refactoring.com", "shopify.engineering",
 
       "supabase.com", "encore.dev", "milvus.io", "weaviate.io", "qdrant.tech",
-      "pinecone.io", "chromadb.com", "docs.trychroma.com",
+      "pinecone.io", "docs.trychroma.com",
       "docs.djangoproject.com", "flask.palletsprojects.com", "fastapi.tiangolo.com",
       "docs.rubyonrails.org", "laravel.com", "symfony.com", "expressjs.com",
       "nestjs.com", "remix.run", "astro.build", "nuxt.com", "solidjs.com",
@@ -225,7 +234,8 @@
       "developer.chrome.com", "electronjs.org", "tauri.app", "shopify.dev",
       "eff.org", "cdt.org", "epic.org", "accessnow.org", "edri.org", "noyb.eu",
       "privacyinternational.org", "algorithmwatch.org", "futureoflife.org",
-      "artificialintelligenceact.eu", "dig.watch"
+      "artificialintelligenceact.eu", "dig.watch",
+      "trychroma.com"
     ],
     "4": [
       "arstechnica.com", "theverge.com", "wired.com", "technologyreview.com",
@@ -299,7 +309,8 @@
       "alliedmarketresearch.com", "mordorintelligence.com",
       "precedenceresearch.com", "fortunebusinessinsights.com",
       "expertbeacon.com", "byjus.com", "unstop.com", "naukri.com",
-      "linkedin.com/pulse", "quora.com/profile"
+      "linkedin.com/pulse", "quora.com/profile",
+      "hindawi.com", "omicsonline.org", "scirp.org", "waset.org"
     ],
     "block": [
       "sci-hub.se", "libgen.is", "researchgate.net/publication/preview",
@@ -308,19 +319,5 @@
       "coursehero.com", "scribd.com", "studocu.com", "slideshare.net",
       "issuu.com"
     ]
-  },
-
-  "notes": [
-    "mdpi / frontiers vary a lot per journal: kept at tier 2 but leaning heavily on citation adjustment.",
-    "github.com sits at tier 4 and is moved mostly by actual star count.",
-    "wikipedia is tier 5; SKILL.md instructs using it only to walk footnotes back to primary sources.",
-    "consulting/market decks (mckinsey, bcg, bain, deloitte, pwc) moved to tier 4 and statista to tier 4: they are marketing-facing secondary aggregation, not primary research. gartner/forrester/idc kept one notch higher at tier 3 because they are the cited source of record in enterprise IT.",
-    "mdpi moved to tier 3: per-journal quality varies too much to sit alongside springer/wiley.",
-    "news.ycombinator.com and lesswrong moved to tier 5 (aggregator/community); actual signal comes from the hackernews engagement term, which community_opinion mode weights heavily.",
-    "academia.edu unblocked to tier 5: it is author self-archiving, not a scraper mirror.",
-    "vendor/language/framework documentation sits at tier 3 (primary but self-interested); standards bodies and CVE/vulnerability registries at tier 1.",
-    "round A: the tier table here is the ACADEMIC reading of the web. A mode that asks a different question re-files specific domains via its own `domain_overrides` (see modes/community_opinion.json, modes/official_docs.json) rather than being given a bonus on top of this one. reddit is a tier-5 aggregator for a scholarly question and a tier-1 primary source for 'what did practitioners actually hit' - both are true, because they are different questions.",
-    "round A: unregistered domains stay at tier 5 / 32 on purpose. The project's premise is that a trustworthy source leaves a trace somewhere, and in this policy the trace is registration - so the answer to a coverage gap is to register the domain, not to give unknown domains a way to earn a passing score. The domain list is meant to grow.",
-    "round A: version_path is the docs counterpart to seo_path - a deterministic path read, no fetch. -28 drops an archived doc two bands, out of the citable range entirely (88 -> 60 / SKIM in official-docs). -14 (one band, still SUPPORT) was tried first and the pilot re-run rejected it: the judge labelled the archived nextjs.org/docs/13/ page junk because following superseded instructions is actively misleading, not merely non-canonical. Known limits: it only fires on a version segment directly under /docs|/reference|/guide (so nextjs.org/docs/13/ is caught, docs.djangoproject.com/en/4.2/ is not), and it only reads a bare major version (/docs/13/, /docs/v2/), never a precise release (/doc/2.1/, /docs/1.7.0/). Two deliberate exclusions, both found by re-measuring against real URLs: /api/vN/ is normally the current API, and a project that publishes its current release under a precise version (numpy.org/doc/2.1/) would otherwise be penalised for saying which release you are reading. The cost is that a genuinely superseded /docs/1.2.3/ goes unflagged; a bare major line kept alongside a newer one is the shape that actually signals 'old'."
-  ]
+  }
 }

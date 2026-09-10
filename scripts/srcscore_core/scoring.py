@@ -237,8 +237,8 @@ def score_one(item: dict, policy: dict, cache, field: str,
     """Score a single URL.
 
     `injected` lets a caller supply {"scholar": {...}, "github": {...},
-    "hn": {...}} instead of hitting the network. The golden regression suite
-    uses it to test the citation math deterministically and offline.
+    "hn": {...}} instead of hitting the network. Unit tests use it to test
+    the citation math deterministically and offline.
     """
     url = item["url"]
     tier, pat = match_tier(url, policy)
@@ -306,8 +306,8 @@ def score_one(item: dict, policy: dict, cache, field: str,
             return _result(item, 0.0, blocked_name(policy), tier, pat, ["RETRACTED"], meta)
 
         yr = sch.get("year")
-        # `age_years` is only ever set by an injected record (golden tests), so
-        # fixtures stay stable as the calendar moves.
+        # `age_years` is only ever set by an injected record (unit tests), so
+        # test fixtures stay stable as the calendar moves.
         age = (float(sch["age_years"]) if sch.get("age_years") is not None
                else age_years(sch.get("date"), yr))
         c = int(sch.get("citations") or 0)
@@ -346,7 +346,7 @@ def score_one(item: dict, policy: dict, cache, field: str,
         arxiv_id = ids.get("arxiv")
         arxiv_age = None
         if arxiv_id:
-            # override lets golden/unit tests pin a deterministic age, same
+            # override lets unit tests pin a deterministic age, same
             # convention as sch["age_years"] above.
             arxiv_age = injected.get("arxiv_age_years")
             if arxiv_age is None:

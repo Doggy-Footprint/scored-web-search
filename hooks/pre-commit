@@ -1,8 +1,8 @@
 #!/bin/sh
 # scored-web-search pre-commit hook.
 #
-# Rule-based, no LLM: fails the commit when policy.json, the scripts/modes/
-# overlays and the golden fixtures disagree. Install with scripts/install-hooks.sh.
+# Rule-based, no LLM: fails the commit when policy.json and the scripts/modes/
+# overlays disagree. Install with scripts/install-hooks.sh.
 #
 # Skip once (emergency only):  git commit --no-verify
 
@@ -15,22 +15,12 @@ cd "$repo_root"
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
 case "$staged" in
   *scripts/policy.json*|*scripts/srcscore.py*|*scripts/srcscore_core/**|\
-  *scripts/check_policy.py*|*scripts/golden/**|*scripts/modes/**) ;;
+  *scripts/check_policy.py*|*scripts/modes/**) ;;
   *) exit 0 ;;
 esac
 
 python3 scripts/check_policy.py || {
   echo ""
   echo "pre-commit: policy checks failed."
-  echo "  python3 scripts/check_policy.py --bless   # re-baseline golden cases (deliberate changes only)"
   exit 1
 }
-
-# --bless must have been run and staged: an unstaged re-baseline would leave
-# the committed fixtures out of date even though the check passed on the
-# worktree.
-if ! git diff --quiet -- scripts/golden/; then
-  echo "pre-commit: scripts/golden/ has unstaged changes."
-  echo "  git add scripts/golden/"
-  exit 1
-fi

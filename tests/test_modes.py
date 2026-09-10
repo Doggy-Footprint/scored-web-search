@@ -184,9 +184,8 @@ class CheckModesBrokenOverlayTests(unittest.TestCase):
 
 # ----------------------------------------------------------------------------
 # Round A: a mode owns its own tier reading (domain_overrides), and the two
-# ceilings the n=5 pilot found are gone. These assert reachability, which is
-# the thing the golden files cannot state: a golden case records what the
-# scorer produces, while these say what the mode must be *able* to produce.
+# ceilings the n=5 pilot found are gone. These assert reachability: what the
+# mode must be *able* to produce.
 # ----------------------------------------------------------------------------
 
 def _score(policy, url, field, inject=None):

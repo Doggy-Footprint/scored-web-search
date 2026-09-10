@@ -61,7 +61,7 @@ class Cache:
 
 
 class NullCache(Cache):
-    def __init__(self):  # noqa: D107 - used by golden tests
+    def __init__(self):  # noqa: D107 - used by tests
         self.data, self.dirty, self.ttl, self.path = {}, False, 0, ""
 
     def get(self, key):

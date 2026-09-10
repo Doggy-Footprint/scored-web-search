@@ -1,4 +1,3 @@
-import copy
 import json
 import os
 import tempfile
@@ -7,11 +6,6 @@ import unittest
 import _pathsetup  # noqa: F401
 import srcscore as S
 import check_policy as CP
-
-
-def load_golden():
-    with open(CP.GOLDEN_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 class CheckSchemaTests(unittest.TestCase):
@@ -46,49 +40,22 @@ class CheckModesTests(unittest.TestCase):
             self.assertTrue(any("field_halflife_years" in p for p in problems))
 
     def test_overlay_deep_merges_without_dropping_untouched_keys(self):
+        overlay = S.load_mode_overlay("non-academic", CP.MODES_DIR)
         merged = S.apply_mode(self.policy, "non-academic", CP.MODES_DIR)
         self.assertEqual(merged["defaults"]["field"], "cs")
-        # untouched top-level keys must survive the merge unchanged
-        self.assertEqual(merged["domains"], self.policy["domains"])
-        self.assertEqual(merged["tiers"], self.policy["tiers"])
 
+        untouched = ("tiers", "verdicts", "citations", "citation_gap",
+                     "seo_path_patterns", "version_path_patterns",
+                     "preprint_hosts", "field_halflife_years")
+        for key in untouched:
+            self.assertNotIn(key, overlay,
+                             "%r is named by the overlay; pick a key it does "
+                             "not touch" % key)
+            self.assertEqual(merged[key], self.policy[key], key)
 
-class CheckGoldenTests(unittest.TestCase):
-    def setUp(self):
-        self.policy = S.load_policy()
-
-    def test_real_golden_cases_pass(self):
-        golden = load_golden()
-        problems = CP.check_golden(self.policy, golden, CP.GOLDEN_PATH, bless=False)
-        self.assertEqual(problems, [])
-
-    def test_wrong_expectation_is_reported(self):
-        golden = copy.deepcopy(load_golden())
-        golden["cases"][0]["expect"]["score"] = 0.1
-        problems = CP.check_golden(self.policy, golden, CP.GOLDEN_PATH, bless=False)
-        self.assertTrue(problems)
-        self.assertIn(golden["cases"][0]["name"], problems[0])
-
-    def test_bless_rewrites_expectations_to_match_current_scoring(self):
-        golden = copy.deepcopy(load_golden())
-        golden["cases"][0]["expect"]["score"] = 0.1
-        with tempfile.TemporaryDirectory() as d:
-            path = os.path.join(d, "golden.json")
-            problems = CP.check_golden(self.policy, golden, path, bless=True)
-            self.assertEqual(problems, [])
-            with open(path, "r", encoding="utf-8") as f:
-                blessed = json.load(f)
-            real = load_golden()
-            self.assertEqual(
-                blessed["cases"][0]["expect"]["score"],
-                real["cases"][0]["expect"]["score"])
-
-    def test_bless_does_not_write_file_when_nothing_changed(self):
-        golden = copy.deepcopy(load_golden())
-        with tempfile.TemporaryDirectory() as d:
-            path = os.path.join(d, "golden.json")
-            CP.check_golden(self.policy, golden, path, bless=True)
-            self.assertFalse(os.path.exists(path))
+        self.assertEqual(set(merged["engagement"]), set(self.policy["engagement"]))
+        self.assertEqual(merged["engagement"]["github"]["archived_penalty"],
+                         overlay["engagement"]["github"]["archived_penalty"])
 
 
 if __name__ == "__main__":

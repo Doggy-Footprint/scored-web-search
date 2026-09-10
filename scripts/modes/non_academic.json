@@ -1,10 +1,67 @@
 {
-  "_readme": "For GitHub repos and engineering blogs. Citations/peer-review stay on; engagement weighted higher and the HN lookup is no longer restricted to tier <=3. Default field: cs.",
-
-  "defaults": { "field": "cs" },
-
+  "defaults": {
+    "field": "cs"
+  },
   "engagement": {
-    "github": { "coefficient": 5.4, "cap": 24.0, "archived_penalty": -4.0 },
-    "hackernews": { "coefficient": 4.5, "cap": 14.0, "min_tier": 1 }
+    "github": {
+      "coefficient": 5.4,
+      "cap": 24.0,
+      "archived_penalty": -20.0
+    },
+    "hackernews": {
+      "coefficient": 4.5,
+      "cap": 14.0,
+      "min_tier": 1
+    }
+  },
+  "domain_overrides": {
+    "github.com": "3",
+    "gitlab.com": "3",
+    "stackoverflow.com": "3",
+    "stackexchange.com": "3",
+    "codeberg.org": "3",
+    "git.sr.ht": "3",
+    "bitbucket.org": "3",
+    "dropbox.tech": "4",
+    "airbnb.tech": "4",
+    "engineering.atspotify.com": "4",
+    "engineering.linkedin.com": "4",
+    "canva.dev": "4",
+    "datadoghq.com": "4",
+    "honeycomb.io": "4",
+    "fly.io": "4",
+    "tailscale.com": "4",
+    "sentry.engineering": "4",
+    "planetscale.com": "4",
+    "etsy.com/codeascraft": "4",
+    "engineering.zalando.com": "4",
+    "blog.booking.com": "4",
+    "engineering.grab.com": "4",
+    "engineering.linecorp.com": "4",
+    "tech.kakao.com": "4",
+    "d2.naver.com": "4",
+    "toss.tech": "4",
+    "techblog.woowahan.com": "4",
+    "eng.lyft.com": "4",
+    "discord.com/blog": "4",
+    "figma.com/blog": "4",
+    "medium.com/pinterest-engineering": "4",
+    "hillelwayne.com": "4",
+    "ferd.ca": "4",
+    "matklad.github.io": "4",
+    "fasterthanli.me": "4",
+    "blog.regehr.org": "4",
+    "lemire.me": "4",
+    "aphyr.com": "4",
+    "mrale.ph": "4",
+    "nullprogram.com": "4",
+    "evanmiller.org": "4",
+    "kalzumeus.com": "4",
+    "apenwarr.ca": "4",
+    "drmaciver.com": "4",
+    "sourceforge.net": "5",
+    "hackernoon.com": "6",
+    "c-sharpcorner.com": "6",
+    "codeproject.com": "6"
   }
 }

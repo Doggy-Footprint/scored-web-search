@@ -1,33 +1,47 @@
 {
-  "_readme": "For news coverage. Peer-review off, recency dominant (fast 'news' half-life, tight fresh windows), engagement on. Own tier ladder: 1 = the instrument itself (gazette/court/regulator, already in the base table), 2 = original reporting (wires, papers of record), 3 = re-report and analysis (base raised 60->66 so it lands in SUPPORT), 4 = general and trade media. Primary-vs-re-report is expressed only as this tier convention. An outlet's every host must be listed, or the same story scores differently by host.",
-
-  "signals": { "peer_review": false },
-
-  "defaults": { "field": "news" },
-
-  "field_halflife_years": { "news": 0.2 },
-
+  "signals": {
+    "peer_review": false
+  },
+  "defaults": {
+    "field": "news"
+  },
+  "field_halflife_years": {
+    "news": 0.2
+  },
   "tiers": {
     "3": {
       "base": 66,
       "label": "Re-report and analysis: law-firm client alerts, policy think tanks, professional associations, trackers"
     }
   },
-
   "recency": {
     "fresh_bonuses": [
-      { "max_age_years": 0.02, "points": 4.0 },
-      { "max_age_years": 0.14, "points": 2.0 }
+      {
+        "max_age_years": 0.02,
+        "points": 4.0
+      },
+      {
+        "max_age_years": 0.14,
+        "points": 2.0
+      }
     ],
-    "decay": { "grace_years": 0.01, "max_penalty": -12.0 },
+    "decay": {
+      "grace_years": 0.01,
+      "max_penalty": -12.0
+    },
     "classic_exemption_citations": 1000,
-    "classic_softening": { "citations": 300, "factor": 0.4 }
+    "classic_softening": {
+      "citations": 300,
+      "factor": 0.4
+    }
   },
-
   "engagement": {
-    "hackernews": { "coefficient": 4.5, "cap": 14.0, "min_tier": 1 }
+    "hackernews": {
+      "coefficient": 4.5,
+      "cap": 14.0,
+      "min_tier": 1
+    }
   },
-
   "domain_overrides": {
     "reuters.com": "2",
     "apnews.com": "2",
@@ -59,7 +73,6 @@
     "straitstimes.com": "2",
     "france24.com": "2",
     "dw.com": "2",
-
     "brookings.edu": "3",
     "rand.org": "3",
     "carnegieendowment.org": "3",
@@ -77,19 +90,16 @@
     "turing.ac.uk": "3",
     "cloudsecurityalliance.org": "3",
     "iapp.org": "3",
-
     "lawfaremedia.org": "3",
     "scotusblog.com": "3",
     "law360.com": "3",
     "mlex.com": "3",
     "globalcompetitionreview.com": "3",
     "courthousenews.com": "3",
-
     "gartner.com": "4",
     "forrester.com": "4",
     "idc.com": "4",
     "mdpi.com": "4",
-
     "gibsondunn.com": "3",
     "whitecase.com": "3",
     "morganlewis.com": "3",
@@ -129,6 +139,116 @@
     "fieldfisher.com": "3",
     "taylorwessing.com": "3",
     "osborneclarke.com": "3",
-    "twobirds.com": "3"
+    "twobirds.com": "3",
+    "kyodonews.jp": "2",
+    "pa.media": "2",
+    "yna.co.kr": "2",
+    "efe.com": "2",
+    "ansa.it": "2",
+    "abcnews.go.com": "2",
+    "cbsnews.com": "2",
+    "nbcnews.com": "2",
+    "pbs.org": "2",
+    "propublica.org": "2",
+    "themarkup.org": "2",
+    "chosun.com": "2",
+    "joongang.co.kr": "2",
+    "donga.com": "2",
+    "hani.co.kr": "2",
+    "khan.co.kr": "2",
+    "hankookilbo.com": "2",
+    "kbs.co.kr": "2",
+    "telegraph.co.uk": "2",
+    "independent.co.uk": "2",
+    "irishtimes.com": "2",
+    "corriere.it": "2",
+    "welt.de": "2",
+    "faz.net": "2",
+    "zeit.de": "2",
+    "nrc.nl": "2",
+    "dn.se": "2",
+    "thehindu.com": "2",
+    "indianexpress.com": "2",
+    "theglobeandmail.com": "2",
+    "cbc.ca": "2",
+    "abc.net.au": "2",
+    "smh.com.au": "2",
+    "theage.com.au": "2",
+    "meduza.io": "2",
+    "themoscowtimes.com": "2",
+    "punchbowl.news": "3",
+    "puck.news": "3",
+    "platformer.news": "3",
+    "techpolicy.press": "3",
+    "eenews.net": "3",
+    "bloomberglaw.com": "3",
+    "law.com": "3",
+    "pitchbook.com": "3",
+    "ballotpedia.org": "3",
+    "opensecrets.org": "3",
+    "govtrack.us": "3",
+    "cnn.com": "4",
+    "foxnews.com": "4",
+    "msnbc.com": "4",
+    "theatlantic.com": "4",
+    "newyorker.com": "4",
+    "usatoday.com": "4",
+    "time.com": "4",
+    "newsweek.com": "4",
+    "fortune.com": "4",
+    "marketwatch.com": "4",
+    "barrons.com": "4",
+    "forbes.com": "4",
+    "businessinsider.com": "4",
+    "techcrunch.com": "4",
+    "venturebeat.com": "4",
+    "zdnet.com": "4",
+    "cnet.com": "4",
+    "engadget.com": "4",
+    "mashable.com": "4",
+    "thehackernews.com": "4",
+    "xinhuanet.com": "4",
+    "news.cn": "4",
+    "cgtn.com": "4",
+    "globaltimes.cn": "4",
+    "tass.com": "4",
+    "interfax.com": "4",
+    "hankyung.com": "4",
+    "mk.co.kr": "4",
+    "etnews.com": "4",
+    "zdnet.co.kr": "4",
+    "bloter.net": "4",
+    "news1.kr": "4",
+    "mt.co.kr": "4",
+    "sedaily.com": "4",
+    "imbc.com": "4",
+    "news.sbs.co.kr": "4",
+    "koreatimes.co.kr": "4",
+    "koreaherald.com": "4",
+    "taipeitimes.com": "4",
+    "channelnewsasia.com": "4",
+    "news.com.au": "4",
+    "hindustantimes.com": "4",
+    "timesofindia.indiatimes.com": "4",
+    "dailymail.co.uk": "5",
+    "thesun.co.uk": "5",
+    "nypost.com": "5",
+    "mirror.co.uk": "5",
+    "prnewswire.com": "6",
+    "businesswire.com": "6",
+    "globenewswire.com": "6",
+    "accesswire.com": "6",
+    "einpresswire.com": "6",
+    "openpr.com": "6",
+    "prlog.org": "6",
+    "newswire.com": "6",
+    "benzinga.com": "6",
+    "newsbreak.com": "6",
+    "rt.com": "6",
+    "sputnikglobe.com": "6",
+    "msn.com": "block",
+    "flipboard.com": "block",
+    "news.google.com": "block",
+    "english.kyodonews.net": "4"
   }
 }

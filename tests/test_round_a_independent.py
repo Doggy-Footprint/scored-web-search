@@ -328,11 +328,16 @@ class VersionPathTests(unittest.TestCase):
         self.assertEqual(float(cfg["points"]), -28.0)
 
     def test_path_penalty_helper_shared_with_seo(self):
-        pts, flag = SC.path_penalty("https://example.com/best-python-frameworks",
-                                    self.pol["seo_path_patterns"],
-                                    self.pol["penalties"]["seo_path"])
-        self.assertEqual(flag, "seo-path")
-        self.assertLess(pts, 0)
+        for pol in (self.pol, P.load_policy()):
+            cfg = pol["penalties"]["seo_path"]
+            pattern = str(pol["seo_path_patterns"][0]).strip("/")
+            pts, flag = SC.path_penalty("https://example.com/%s/page" % pattern,
+                                        pol["seo_path_patterns"], cfg)
+            with self.subTest(flag=cfg.get("flag")):
+                self.assertEqual(flag, cfg["flag"])
+                self.assertEqual(pts, float(cfg["points"]))
+                self.assertLess(pts, 0)
+        self.assertEqual(P.load_policy()["penalties"]["seo_path"]["flag"], "seo-path")
 
     def test_no_false_positives_on_current_docs(self):
         """Asserted through `version_penalty`, not the raw regex: after the

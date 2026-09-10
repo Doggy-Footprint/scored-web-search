@@ -1,94 +1,339 @@
 {
-  "_readme": "Policy validation question set. These are NOT golden cases — there is no expected output. Each question is a live web search whose result set is used to measure how scripts/policy.json + scripts/modes/*.json behave on real URLs. 'stress' says what the question is meant to expose. 'field' is passed to srcscore.py --field. 'expansion': true marks a question where reading a round-1 source is expected to name a better search term; those are judged in two rounds (METHODOLOGY.md), everything else in one.",
+  "_readme": "Policy validation question set. There is no expected output. Each question is a live web search whose result set is used to measure how scripts/policy.json + scripts/modes/*.json behave on real URLs. 'stress' says what the question is meant to expose. 'field' is passed to srcscore.py --field. 'expansion': true marks a question where reading a round-1 source is expected to name a better search term; those are judged in two rounds (METHODOLOGY.md), everything else in one.",
   "modes": {
     "academic": {
       "field_default": "ai",
       "questions": [
-        { "id": "ac1", "field": "ai", "q": "Do chain-of-thought traces faithfully reflect the model's actual reasoning process?",
-          "stress": "arXiv preprints dominate. Tests whether preprint tier 3 + citation boost lands them correctly, and whether recent (uncited) but important work gets dropped." },
-        { "id": "ac2", "field": "med", "q": "What is the measured efficacy of GLP-1 receptor agonists for weight maintenance after discontinuation?",
-          "stress": "Vendor interest is heavy (pharma). Journals vs. pharma-funded sites vs. health content farms. 6y half-life." },
-        { "id": "ac3", "field": "bio", "q": "How reproducible are organoid models of human brain development?",
-          "stress": "Reproducibility-critique literature often lives in commentary/letters, not high-tier research articles. Recall risk." },
-        { "id": "ac4", "field": "policy", "q": "What does the evidence say about the labor market effects of minimum wage increases?",
-          "stress": "Contested field with think tanks on both sides. Tests whether tier assignment encodes a political lean." },
-        { "id": "ac5", "field": "cs", "q": "What are the known limitations of differential privacy in production deployments?",
-          "stress": "Best sources split between papers and vendor engineering blogs. Tests the academic/industry boundary." },
-        { "id": "ac6", "field": "ai", "q": "Why does fine-tuning a model on a new task make it worse at tasks it already handled?",
+        {
+          "id": "ac1",
+          "field": "ai",
+          "q": "Do chain-of-thought traces faithfully reflect the model's actual reasoning process?",
+          "stress": "arXiv preprints dominate. Tests whether preprint tier 3 + citation boost lands them correctly, and whether recent (uncited) but important work gets dropped."
+        },
+        {
+          "id": "ac2",
+          "field": "med",
+          "q": "What is the measured efficacy of GLP-1 receptor agonists for weight maintenance after discontinuation?",
+          "stress": "Vendor interest is heavy (pharma). Journals vs. pharma-funded sites vs. health content farms. 6y half-life."
+        },
+        {
+          "id": "ac3",
+          "field": "bio",
+          "q": "How reproducible are organoid models of human brain development?",
+          "stress": "Reproducibility-critique literature often lives in commentary/letters, not high-tier research articles. Recall risk."
+        },
+        {
+          "id": "ac4",
+          "field": "policy",
+          "q": "What does the evidence say about the labor market effects of minimum wage increases?",
+          "stress": "Contested field with think tanks on both sides. Tests whether tier assignment encodes a political lean."
+        },
+        {
+          "id": "ac5",
+          "field": "cs",
+          "q": "What are the known limitations of differential privacy in production deployments?",
+          "stress": "Best sources split between papers and vendor engineering blogs. Tests the academic/industry boundary."
+        },
+        {
+          "id": "ac6",
+          "field": "ai",
+          "q": "Why does fine-tuning a model on a new task make it worse at tasks it already handled?",
           "expansion": true,
-          "stress": "KEYWORD EXPANSION. Asked in plain words; the literature is indexed under established terms (catastrophic forgetting, alignment tax) that any round-1 paper names in its own text. Round 2 should reach the survey and benchmark papers round 1 misses." }
+          "stress": "KEYWORD EXPANSION. Asked in plain words; the literature is indexed under established terms (catastrophic forgetting, alignment tax) that any round-1 paper names in its own text. Round 2 should reach the survey and benchmark papers round 1 misses."
+        },
+        {
+          "id": "ac7",
+          "field": "general",
+          "q": "What is the current experimental status of room-temperature superconductivity claims?",
+          "stress": "Society-publisher journals (APS/ACS/IOP) carry the replication attempts while the hype lives in preprints and press releases. Tests whether the physics/chemistry publishers are registered at all, and whether a retracted or unreplicated preprint is held below the citable band."
+        },
+        {
+          "id": "ac8",
+          "field": "med",
+          "q": "Does the evidence support app-delivered cognitive behavioral therapy for depression?",
+          "stress": "Systematic-review sources (Cochrane, trial registries) compete with wellness content farms and the vendors' own outcome studies. Tests the tier-1 evidence-synthesis hosts against commercially motivated health content."
+        },
+        {
+          "id": "ac9",
+          "field": "policy",
+          "q": "What does the Korean domestic evidence say about the employment effects of the 52-hour workweek cap?",
+          "stress": "NON-ENGLISH COVERAGE. The primary evidence sits with Korean statistical and research institutes (kostat/KDI/KLI/KCI) while Korean general media re-reports it. Tests whether non-English institutional sources are registered or silently fall to the unregistered tier 5."
+        },
+        {
+          "id": "ac10",
+          "field": "bio",
+          "q": "Why do two labs running the same genomics analysis on the same data report different results?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The literature indexes this under established terms (batch effect, reference bias, computational reproducibility, pipeline versioning) that any round-1 paper names in its methods. Round 2 should reach the benchmarking and reproducibility-study literature the plain phrasing misses."
+        }
       ]
     },
     "non-academic": {
       "field_default": "cs",
       "questions": [
-        { "id": "na1", "field": "cs", "q": "How do teams handle database migrations with zero downtime in production?",
-          "stress": "Best material is individual engineering blogs (tier 4) and GitHub. Direct test of whether engagement weighting rescues tier 4." },
-        { "id": "na2", "field": "cs", "q": "Which vector database should be used for a mid-scale RAG system?",
-          "stress": "VENDOR TRAP. Every vendor publishes a benchmark showing itself winning. Replicates the harness-tool finding." },
-        { "id": "na3", "field": "cs", "q": "What are the practical failure modes of Kubernetes autoscaling?",
-          "stress": "Postmortems and incident writeups, often on personal blogs or company blogs of non-famous companies." },
-        { "id": "na4", "field": "cs", "q": "How is Rust async runtime performance compared across tokio, async-std, and smol?",
-          "stress": "GitHub-heavy. Tests star-count engagement vs. archived/stale repos." },
-        { "id": "na5", "field": "ai", "q": "What techniques reduce LLM inference cost in production serving?",
-          "stress": "Research-lab blogs (tier 3) vs. startup marketing. Tests the tier 3 band's internal spread." },
-        { "id": "na6", "field": "cs", "q": "How do teams keep one slow downstream service from taking down the rest of the system?",
+        {
+          "id": "na1",
+          "field": "cs",
+          "q": "How do teams handle database migrations with zero downtime in production?",
+          "stress": "Best material is individual engineering blogs (tier 4) and GitHub. Direct test of whether engagement weighting rescues tier 4."
+        },
+        {
+          "id": "na2",
+          "field": "cs",
+          "q": "Which vector database should be used for a mid-scale RAG system?",
+          "stress": "VENDOR TRAP. Every vendor publishes a benchmark showing itself winning. Replicates the harness-tool finding."
+        },
+        {
+          "id": "na3",
+          "field": "cs",
+          "q": "What are the practical failure modes of Kubernetes autoscaling?",
+          "stress": "Postmortems and incident writeups, often on personal blogs or company blogs of non-famous companies."
+        },
+        {
+          "id": "na4",
+          "field": "cs",
+          "q": "How is Rust async runtime performance compared across tokio, async-std, and smol?",
+          "stress": "GitHub-heavy. Tests star-count engagement vs. archived/stale repos."
+        },
+        {
+          "id": "na5",
+          "field": "ai",
+          "q": "What techniques reduce LLM inference cost in production serving?",
+          "stress": "Research-lab blogs (tier 3) vs. startup marketing. Tests the tier 3 band's internal spread."
+        },
+        {
+          "id": "na6",
+          "field": "cs",
+          "q": "How do teams keep one slow downstream service from taking down the rest of the system?",
           "expansion": true,
-          "stress": "KEYWORD EXPANSION. The operational patterns have standard names (circuit breaker, bulkhead, backpressure, load shedding) that a round-1 postmortem states while describing the fix. Tests whether expansion pulls in engineering blogs and GitHub the plain query never reaches." }
+          "stress": "KEYWORD EXPANSION. The operational patterns have standard names (circuit breaker, bulkhead, backpressure, load shedding) that a round-1 postmortem states while describing the fix. Tests whether expansion pulls in engineering blogs and GitHub the plain query never reaches."
+        },
+        {
+          "id": "na7",
+          "field": "cs",
+          "q": "How do teams find and fix memory leaks in long-running JVM and Node.js services?",
+          "stress": "The real material is individual practitioner blogs and Q&A answers, and the query is exactly the shape SEO tutorial farms target. Direct test of the tier-6 floor against the tier-4 practitioner band."
+        },
+        {
+          "id": "na8",
+          "field": "ai",
+          "q": "How do teams evaluate and monitor LLM agents once they are running in production?",
+          "stress": "Young topic with almost no independent write-ups, so nearly every result is a vendor selling an eval product. Tests whether the mode has any non-vendor floor when the honest answer is that the evidence base is thin."
+        },
+        {
+          "id": "na9",
+          "field": "cs",
+          "q": "How well does server-side WebAssembly hold up for teams that actually shipped it?",
+          "stress": "GitHub-heavy with a fast-moving ecosystem: dead and archived repos outnumber live ones. Tests the archived penalty and whether star count alone promotes an abandoned project."
+        },
+        {
+          "id": "na10",
+          "field": "cs",
+          "q": "Why does our service get slow under load when CPU and memory both look fine?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. Practitioners diagnose this under named concepts (tail latency, head-of-line blocking, queueing delay, coordinated omission, USE/RED method) that a round-1 postmortem states while explaining the diagnosis. Tests whether expansion reaches performance-engineering blogs the plain symptom query never surfaces."
+        }
       ]
     },
     "community-opinion": {
       "field_default": "opinion",
       "questions": [
-        { "id": "co1", "field": "opinion", "q": "What do practitioners say about whether AI coding assistants actually improve their productivity?",
-          "stress": "HN/Reddit core case. Tests engagement weighting and the 0.75y half-life." },
-        { "id": "co2", "field": "opinion", "q": "How do developers feel about the shift from REST to GraphQL after several years in production?",
-          "stress": "Retrospective opinion — the best takes are often OLD. Directly antagonizes the short half-life." },
-        { "id": "co3", "field": "opinion", "q": "What is the community reaction to recent open-weight model licensing changes?",
-          "stress": "Fresh, X/Twitter-heavy. Tests the trusted_people +12 bonus and whether it distorts." },
-        { "id": "co4", "field": "opinion", "q": "Do developers find monorepos worth the tooling cost at mid-size companies?",
-          "stress": "Low-engagement but high-quality comments vs. high-engagement hot takes. Engagement/quality divergence." },
-        { "id": "co5", "field": "opinion", "q": "What are practitioners' complaints about the current state of MLOps tooling?",
-          "stress": "Vendor-adjacent astroturf risk in community channels." },
-        { "id": "co6", "field": "opinion", "q": "What do practitioners say about junior developers becoming dependent on AI coding assistants?",
+        {
+          "id": "co1",
+          "field": "opinion",
+          "q": "What do practitioners say about whether AI coding assistants actually improve their productivity?",
+          "stress": "HN/Reddit core case. Tests engagement weighting and the 0.75y half-life."
+        },
+        {
+          "id": "co2",
+          "field": "opinion",
+          "q": "How do developers feel about the shift from REST to GraphQL after several years in production?",
+          "stress": "Retrospective opinion — the best takes are often OLD. Directly antagonizes the short half-life."
+        },
+        {
+          "id": "co3",
+          "field": "opinion",
+          "q": "What is the community reaction to recent open-weight model licensing changes?",
+          "stress": "Fresh, X/Twitter-heavy. Tests the trusted_people +12 bonus and whether it distorts."
+        },
+        {
+          "id": "co4",
+          "field": "opinion",
+          "q": "Do developers find monorepos worth the tooling cost at mid-size companies?",
+          "stress": "Low-engagement but high-quality comments vs. high-engagement hot takes. Engagement/quality divergence."
+        },
+        {
+          "id": "co5",
+          "field": "opinion",
+          "q": "What are practitioners' complaints about the current state of MLOps tooling?",
+          "stress": "Vendor-adjacent astroturf risk in community channels."
+        },
+        {
+          "id": "co6",
+          "field": "opinion",
+          "q": "What do practitioners say about junior developers becoming dependent on AI coding assistants?",
           "expansion": true,
-          "stress": "KEYWORD EXPANSION. The community argues this under its own slang (vibe coding, skill atrophy), which shows up inside the threads rather than in the plain phrasing. Tests whether expansion is what reaches the threads the mode exists to find." }
+          "stress": "KEYWORD EXPANSION. The community argues this under its own slang (vibe coding, skill atrophy), which shows up inside the threads rather than in the plain phrasing. Tests whether expansion is what reaches the threads the mode exists to find."
+        },
+        {
+          "id": "co7",
+          "field": "opinion",
+          "q": "What do practitioners say about return-to-office mandates at tech companies?",
+          "stress": "Maximum engagement, minimum expertise: the loudest threads are the least informative, and anonymous workplace apps dominate. Tests whether engagement weighting alone can carry a mode when engagement and quality point in opposite directions."
+        },
+        {
+          "id": "co8",
+          "field": "opinion",
+          "q": "How do Korean and Japanese developer communities assess adopting AI pair programming at work?",
+          "stress": "NON-ENGLISH COVERAGE. The discussion lives on domestic community hosts (okky, clien, hada, qiita, zenn, teratail). Tests whether non-English discussion venues are re-filed as primary like their English counterparts, or are left at the unregistered default."
+        },
+        {
+          "id": "co9",
+          "field": "opinion",
+          "q": "What is the practitioner verdict on Rust in Linux kernel development?",
+          "stress": "The authoritative discussion is a mailing-list archive, not a forum thread. Tests whether list archives are registered as discussion hosts and how the engagement floor behaves on a venue that has no points or stars to read."
+        },
+        {
+          "id": "co10",
+          "field": "opinion",
+          "q": "What do practitioners say about teams that went back on splitting their system into services?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The argument is conducted under its own vocabulary (distributed monolith, modular monolith, service mesh tax) that appears inside the threads rather than in the plain phrasing. Tests expansion as the route from generic threads to the specific retrospectives."
+        }
       ]
     },
     "news": {
       "field_default": "news",
       "questions": [
-        { "id": "nw1", "field": "news", "q": "What is the current status of the EU AI Act implementation timeline?",
-          "stress": "Primary source (official EU) vs. secondary reporting. Tests tier 1 dominance and the re-report problem." },
-        { "id": "nw2", "field": "news", "q": "What happened in the most recent major cloud provider outage and what was the root cause?",
-          "stress": "Breaking news. Official postmortem vs. fast aggregators. Tests the 0.2y half-life and fresh-article windows." },
-        { "id": "nw3", "field": "news", "q": "How have semiconductor export restrictions changed in the past year?",
-          "stress": "Geopolitics — outlet lean matters. Tests whether tier encodes a national/political bias." },
-        { "id": "nw4", "field": "news", "q": "What are the reported terms of recent large AI infrastructure investments?",
-          "stress": "Financial reporting where the only source is often a single paywalled outlet or a press release." },
-        { "id": "nw5", "field": "news", "q": "What is the current regulatory stance on AI use in hiring decisions?",
-          "stress": "Regulatory news mixed with law-firm marketing content (tier ambiguous, commercially motivated)." },
-        { "id": "nw6", "field": "news", "q": "What is the status of the EU proposal to require messaging services to scan private messages?",
+        {
+          "id": "nw1",
+          "field": "news",
+          "q": "What is the current status of the EU AI Act implementation timeline?",
+          "stress": "Primary source (official EU) vs. secondary reporting. Tests tier 1 dominance and the re-report problem."
+        },
+        {
+          "id": "nw2",
+          "field": "news",
+          "q": "What happened in the most recent major cloud provider outage and what was the root cause?",
+          "stress": "Breaking news. Official postmortem vs. fast aggregators. Tests the 0.2y half-life and fresh-article windows."
+        },
+        {
+          "id": "nw3",
+          "field": "news",
+          "q": "How have semiconductor export restrictions changed in the past year?",
+          "stress": "Geopolitics — outlet lean matters. Tests whether tier encodes a national/political bias."
+        },
+        {
+          "id": "nw4",
+          "field": "news",
+          "q": "What are the reported terms of recent large AI infrastructure investments?",
+          "stress": "Financial reporting where the only source is often a single paywalled outlet or a press release."
+        },
+        {
+          "id": "nw5",
+          "field": "news",
+          "q": "What is the current regulatory stance on AI use in hiring decisions?",
+          "stress": "Regulatory news mixed with law-firm marketing content (tier ambiguous, commercially motivated)."
+        },
+        {
+          "id": "nw6",
+          "field": "news",
+          "q": "What is the status of the EU proposal to require messaging services to scan private messages?",
           "expansion": true,
-          "stress": "KEYWORD EXPANSION. Reported under a nickname (Chat Control); the primary sources are filed under the official designation (CSA Regulation, 2022/0155(COD)), which the re-reports cite in their own body text. Directly pairs with nw1: expansion is the route from re-reports to the primary text." }
+          "stress": "KEYWORD EXPANSION. Reported under a nickname (Chat Control); the primary sources are filed under the official designation (CSA Regulation, 2022/0155(COD)), which the re-reports cite in their own body text. Directly pairs with nw1: expansion is the route from re-reports to the primary text."
+        },
+        {
+          "id": "nw7",
+          "field": "news",
+          "q": "What is the current status of Korea's AI Framework Act and its enforcement decree?",
+          "stress": "NON-ENGLISH PRIMARY SOURCE. The instrument itself is on Korean government hosts, the analysis is in law-firm client alerts, and Korean general media sits between them. Tests whether the news ladder's tier 1 reaches beyond EU/US instruments."
+        },
+        {
+          "id": "nw8",
+          "field": "news",
+          "q": "What have competition regulators recently decided in semiconductor and AI-related merger reviews?",
+          "stress": "Regulator decisions are tier 1 but the reporting that finds them is specialist and paywalled (MLex, Law360). Tests whether the ladder can be satisfied at all when the primary text is public but the reporting is not."
+        },
+        {
+          "id": "nw9",
+          "field": "news",
+          "q": "How is AI data-center buildout affecting local electricity prices and grid planning?",
+          "stress": "Press-release wires and paid market-research reports flood this query. Direct test of the tier-6 floor for PR distribution and market-research spam, which the ladder currently barely names."
+        },
+        {
+          "id": "nw10",
+          "field": "news",
+          "q": "What are the rules requiring large platforms to open their messaging to competitors?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. Re-reports describe it in plain words while citing the official designation (DMA Article 7, gatekeeper, interoperability obligation) that indexes the primary text. Pairs with nw6 as a second measurement of the re-report-to-primary route."
+        }
       ]
     },
     "official-docs": {
       "field_default": "ai",
       "questions": [
-        { "id": "od1", "field": "cs", "q": "How does Python's asyncio handle task cancellation and cleanup?",
-          "stress": "Clean case. docs.python.org should dominate. Baseline sanity check." },
-        { "id": "od2", "field": "ai", "q": "What are the rate limits and retry semantics of the Anthropic Messages API?",
-          "stress": "Official docs vs. third-party tutorials restating them. Tests re-report detection." },
-        { "id": "od3", "field": "cs", "q": "How is authentication configured in the current version of Next.js App Router?",
-          "stress": "VERSION ROT. Official docs are evergreen-by-assumption, but framework docs are not. Recency-off is a real risk here." },
-        { "id": "od4", "field": "cs", "q": "What does the PostgreSQL documentation specify about transaction isolation levels?",
-          "stress": "Spec-quality docs. Tests whether tier alone suffices when engagement/recency are all off." },
-        { "id": "od5", "field": "cs", "q": "How do you configure retries and timeouts in the AWS SDK for Python?",
-          "stress": "Vendor docs are simultaneously authoritative AND marketing. Tests the tier-1-by-default assumption for vendor docs." },
-        { "id": "od6", "field": "cs", "q": "How do you make Kubernetes wait until a container can actually serve traffic before sending it any?",
+        {
+          "id": "od1",
+          "field": "cs",
+          "q": "How does Python's asyncio handle task cancellation and cleanup?",
+          "stress": "Clean case. docs.python.org should dominate. Baseline sanity check."
+        },
+        {
+          "id": "od2",
+          "field": "ai",
+          "q": "What are the rate limits and retry semantics of the Anthropic Messages API?",
+          "stress": "Official docs vs. third-party tutorials restating them. Tests re-report detection."
+        },
+        {
+          "id": "od3",
+          "field": "cs",
+          "q": "How is authentication configured in the current version of Next.js App Router?",
+          "stress": "VERSION ROT. Official docs are evergreen-by-assumption, but framework docs are not. Recency-off is a real risk here."
+        },
+        {
+          "id": "od4",
+          "field": "cs",
+          "q": "What does the PostgreSQL documentation specify about transaction isolation levels?",
+          "stress": "Spec-quality docs. Tests whether tier alone suffices when engagement/recency are all off."
+        },
+        {
+          "id": "od5",
+          "field": "cs",
+          "q": "How do you configure retries and timeouts in the AWS SDK for Python?",
+          "stress": "Vendor docs are simultaneously authoritative AND marketing. Tests the tier-1-by-default assumption for vendor docs."
+        },
+        {
+          "id": "od6",
+          "field": "cs",
+          "q": "How do you make Kubernetes wait until a container can actually serve traffic before sending it any?",
           "expansion": true,
-          "stress": "KEYWORD EXPANSION. The feature has exact config names (readinessProbe, startupProbe, minReadySeconds) that a round-1 tutorial spells out in its examples. Tests whether expansion moves the pool from tutorials to kubernetes.io reference pages." }
+          "stress": "KEYWORD EXPANSION. The feature has exact config names (readinessProbe, startupProbe, minReadySeconds) that a round-1 tutorial spells out in its examples. Tests whether expansion moves the pool from tutorials to kubernetes.io reference pages."
+        },
+        {
+          "id": "od7",
+          "field": "cs",
+          "q": "How is remote state locking configured in Terraform?",
+          "stress": "HOST MIGRATION. The canonical docs moved off the product domain (terraform.io) to the vendor's developer host; both are registered now, so what is measured is whether the live reference and the superseded pages on the old host are separable at all - version_path is the only downward signal this mode has left."
+        },
+        {
+          "id": "od8",
+          "field": "ai",
+          "q": "What does the Gemini API documentation specify about context caching and token counting?",
+          "stress": "VENDOR PARITY. A mode that registers one vendor's API docs and not a comparable vendor's acquires a vendor bias for free. ai.google.dev was registered this round, so the measurement is now whether the third-party tutorials restating the same limits stay below the docs they restate."
+        },
+        {
+          "id": "od9",
+          "field": "cs",
+          "q": "What does Biome's own documentation say about how its formatter differs from Prettier?",
+          "stress": "UNREGISTERED OFFICIAL DOCS. Biome's doc host postdates the policy while the tool it is compared against is registered at tier 1, so the same class of source scores two ways in one result set. Tests the unregistered-tier-5 premise in the one mode where tier is the only signal left, and whether the gap is visible as a coverage problem rather than as a quality judgment."
+        },
+        {
+          "id": "od10",
+          "field": "cs",
+          "q": "How do you keep a schema change from blocking every other write on a PostgreSQL table?",
+          "expansion": true,
+          "stress": "KEYWORD EXPANSION. The manual documents this under exact identifiers (ACCESS EXCLUSIVE, lock_timeout, CREATE INDEX CONCURRENTLY) that a round-1 blog post spells out in its examples. Tests whether expansion moves the pool from blog posts to the reference manual."
+        }
       ]
     }
   }
