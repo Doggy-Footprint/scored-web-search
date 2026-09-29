@@ -21,7 +21,7 @@ Check `scripts/policy.json` and `scripts/modes/` to edit this skill permanently.
 
 AI chat, 특히 클로드에서 web search할 때, 결과물을 heuristic filter로 걸러내어 신뢰도가 낮은 정보를 차단하는 skill입니다.
 달성 목표는 **Precision over Recall**, 모든 유용한 정보를 가져오지 못하더라도 오염된 정보를 걸러내는데 집중하는 스킬입니다.
-[posting](https://harsh-wavelength-48b.notion.site/Better-web-search-3c72e74ce621801aaec5df9464488aec?source=copy_link)
+[posting](https://blog-steel-ten-13.vercel.app/posts/scored-web-search)
 
 ## 왜 만들었나?
 
