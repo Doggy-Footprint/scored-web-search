@@ -22,7 +22,8 @@ def parse_input(text: str) -> list:
                 if isinstance(e, str):
                     out.append({"url": e, "title": ""})
                 elif isinstance(e, dict) and e.get("url"):
-                    out.append({"url": e["url"], "title": e.get("title", "")})
+                    out.append({"url": e["url"], "title": e.get("title", ""),
+                                **({"date": e["date"]} if "date" in e else {})})
             if out:
                 return out
         except ValueError:

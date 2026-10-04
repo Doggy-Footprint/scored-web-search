@@ -427,7 +427,7 @@ class HnItemFetchTests(unittest.TestCase):
                           {"points": 412, "children": [{}, {}, {}]}})
         F.http_json = stub
         out = F.hn_item("999", NullCache(), 5)
-        self.assertEqual(out, {"points": 412, "comments": 3})
+        self.assertEqual(out, {"points": 412, "comments": 3, "created_at": None})
         self.assertEqual(stub.calls, ["https://hn.algolia.com/api/v1/items/999"])
 
     def test_hn_item_zero_points_is_none(self):
@@ -453,7 +453,7 @@ class HnItemFetchTests(unittest.TestCase):
             "https://hn.algolia.com/api/v1/items/7": {"points": 5, "children": []}})
         c = C()
         F.hn_item("7", c, 5)
-        self.assertIn("hnitem:7", seen)
+        self.assertIn("hnitem:v2:7", seen)
         self.assertNotIn("hn:7", seen)
 
     def test_score_one_routes_permalink_through_hn_item(self):

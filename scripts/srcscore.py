@@ -8,7 +8,8 @@ signals fetched from free APIs. Emits 0-100 scores and a verdict
 (PRIMARY / SUPPORT / SKIM / WEAK / DROP / BLOCKED).
 
 Input: one URL per line. `URL | title` is accepted. A JSON array
-([{"url": ..., "title": ...}] or ["https://..."]) is auto-detected.
+([{"url": ..., "title": ..., "date": "YYYY-MM-DD"}] or ["https://..."])
+is auto-detected. The optional date also accepts ISO timestamps.
 """
 
 from __future__ import annotations

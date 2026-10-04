@@ -10,6 +10,8 @@ import urllib.parse
 import urllib.request
 from threading import Lock
 
+from .util import date_age_years
+
 VERSION = "2.0.0"
 UA = "srcscore/%s (research triage)" % VERSION
 MAILTO = os.environ.get("SRCSCORE_MAILTO", "").strip()
@@ -211,7 +213,7 @@ def arxiv_lookup(arxiv_id: str, cache: Cache, timeout: float):
 
 
 def github_repo(owner: str, repo: str, cache: Cache, timeout: float):
-    key = "gh:%s/%s" % (owner.lower(), repo.lower())
+    key = "gh:v2:%s/%s" % (owner.lower(), repo.lower())
     hit = cache.get(key)
     if hit is not None:
         return hit or None
@@ -225,6 +227,7 @@ def github_repo(owner: str, repo: str, cache: Cache, timeout: float):
             "stars": j.get("stargazers_count") or 0,
             "forks": j.get("forks_count") or 0,
             "archived": bool(j.get("archived")),
+            "pushed_at": j.get("pushed_at"),
         }
     cache.put(key, out or {})
     return out
@@ -232,7 +235,7 @@ def github_repo(owner: str, repo: str, cache: Cache, timeout: float):
 
 def hn_item(item_id: str, cache: Cache, timeout: float):
     """Points/comments for an HN thread addressed by its own id."""
-    key = "hnitem:" + str(item_id)
+    key = "hnitem:v2:" + str(item_id)
     hit = cache.get(key)
     if hit is not None:
         return hit or None
@@ -240,9 +243,10 @@ def hn_item(item_id: str, cache: Cache, timeout: float):
     if j is FETCH_FAILED:
         return FETCH_FAILED
     out = None
-    if isinstance(j, dict) and (j.get("points") or 0) > 0:
+    if isinstance(j, dict) and ((j.get("points") or 0) > 0 or date_age_years(j.get("created_at")) is not None):
         out = {"points": j.get("points") or 0,
-               "comments": len(j.get("children") or [])}
+               "comments": len(j.get("children") or []),
+               "created_at": j.get("created_at")}
     cache.put(key, out or {})
     return out
 

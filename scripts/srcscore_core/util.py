@@ -5,7 +5,7 @@ from __future__ import annotations
 import urllib.parse
 from datetime import datetime, timezone
 
-__all__ = ["now_year_frac", "age_years", "norm_host", "host_path", "host_matches", "human"]
+__all__ = ["now_year_frac", "age_years", "date_age_years", "norm_host", "host_path", "host_matches", "human"]
 
 
 def now_year_frac() -> float:
@@ -27,6 +27,19 @@ def age_years(date_str, year) -> float:
         except (TypeError, ValueError):
             pass
     return 3.0
+
+
+def date_age_years(date_str):
+    """Known ISO date age in UTC; invalid and future dates are not evidence."""
+    if not isinstance(date_str, str) or not date_str.strip():
+        return None
+    try:
+        d = datetime.fromisoformat(date_str.strip().replace("Z", "+00:00"))
+        d = d.replace(tzinfo=timezone.utc) if d.tzinfo is None else d.astimezone(timezone.utc)
+        seconds = (datetime.now(timezone.utc) - d).total_seconds()
+        return seconds / (365.25 * 86400) if seconds >= 0 else None
+    except (ValueError, OverflowError):
+        return None
 
 
 def norm_host(url: str) -> str:

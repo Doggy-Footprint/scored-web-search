@@ -30,7 +30,7 @@ def main(argv=None):
     ap.add_argument("--field", default=None,
                     help="research field, sets the citation half-life (see policy.json)")
     ap.add_argument("--no-net", action="store_true",
-                    help="domain tier only, no external lookups")
+                    help="no external lookups; URL signals and supplied dates still apply")
     ap.add_argument("--workers", type=int, default=None)
     ap.add_argument("--policy", default=None, help="path to policy.json")
     ap.add_argument("--mode", choices=MODES, default="academic",
@@ -102,7 +102,7 @@ def main(argv=None):
         if STATS["failed"] * 2 >= STATS["lookups"]:
             print("%s.\nScores would be domain-tier only and misleading. Check network "
                   "access to api.openalex.org / api.semanticscholar.org, or re-run with "
-                  "--no-net to accept domain-only scoring deliberately." % msg, file=sys.stderr)
+                  "--no-net to score with URL signals and supplied dates only." % msg, file=sys.stderr)
             return 4
         print("%s; those rows are flagged `lookup-failed`." % msg, file=sys.stderr)
 

@@ -10,7 +10,7 @@ This skill filters sub-standard sources before the main agent reads them when hi
 ## Pipeline
 
 ```
-1. Search   (lightweight subagent) → URL list only, no summaries
+1. Search   (lightweight subagent) → URL/title/date only, no summaries
 2. Score    (srcscore.py)          → 0-100 + verdict
 3. Read     (main agent)           → top n PRIMARY/SUPPORT only
 4. Re-search (loop back to 1 if sources are thin)
@@ -22,15 +22,15 @@ When sub-agents are not available, the main agent does Steps 1 and 5 as fallback
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** (do NOT use `fork` / make subagent to call web-search tools at a single turn. / use luna, haiku, or the lightest model of the same generation) and accept only a `URL | title` list in return. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** (do NOT use `fork` / make subagent to call web-search tools at a single turn. / use luna, haiku, or the lightest model of the same generation) and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
-No sub agent fallback: main agent calls the web-search tool itself. Extract only the URLs from the results and write them straight to `urls.txt`. The caution for sub agents works same for main agent too.
+No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json`. The caution for sub agents works same for main agent too.
 
 ### Step 2 — Score: hand it to the script
 
-Write all subagent returns to `urls.txt`(one URL per line) in temporal directory and run `scripts/srcscore.py`. You can check arguments with `--help`.
+Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py`. You can check arguments with `--help`.
 
 Output is a compact table, roughly 15 tokens per line:
 
@@ -84,7 +84,7 @@ Close the report with one line: `n sources collected → m passed → l read`.
 
 ## Scoring Policy
 
-The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it.
+The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it. Recency applies once to every source with a known date: academic API publication date/year, repository `pushed_at` or direct HN thread creation date, then supplied publication date. Invalid or future dates fall through to the next candidate. Unknown dates receive no recency adjustment and carry `date-unknown`; `official-docs` disables recency. URL lists and `URL | title` remain supported, but JSON is needed to supply dates.
 
 | Tier | Base | Trust level |
 |---|---|---|

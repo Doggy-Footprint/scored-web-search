@@ -12,7 +12,7 @@ from .fetchers import FETCH_FAILED, arxiv_lookup, github_repo, hn_item, hn_point
 from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, \
     extract_person_handle
 from .policy import blocked_name, signal_enabled, tier_base, verdict_for
-from .util import age_years, host_matches, host_path, human, norm_host
+from .util import age_years, date_age_years, now_year_frac, host_matches, host_path, human, norm_host
 
 __all__ = [
     "match_tier", "citation_points", "recency_points", "engagement_points",
@@ -232,6 +232,36 @@ def _result(item, score, verdict, tier, pat, flags, meta, notes=None):
     }
 
 
+def _recency_date(item, sch, gh, hn, repo_url, hn_url):
+    if sch:
+        fixture = sch.get("age_years")
+        if fixture is not None:
+            try:
+                age = float(fixture)
+                if math.isfinite(age) and age >= 0:
+                    return None, "scholar-age", age
+            except (TypeError, ValueError):
+                pass
+        age = date_age_years(sch.get("date"))
+        if age is not None:
+            return sch["date"], "scholar", age
+        try:
+            year = int(sch.get("year"))
+            age = now_year_frac() - year
+            if year > 0 and age >= 0:
+                return str(year), "scholar", age
+        except (TypeError, ValueError, OverflowError):
+            pass
+    for date, source in (
+            ((gh or {}).get("pushed_at") if repo_url else None, "github"),
+            ((hn or {}).get("created_at") if hn_url else None, "hn"),
+            (item.get("date"), "input")):
+        age = date_age_years(date)
+        if age is not None:
+            return date, source, age
+    return None, None, None
+
+
 def score_one(item: dict, policy: dict, cache, field: str,
               use_net: bool, injected: dict = None) -> dict:
     """Score a single URL.
@@ -253,6 +283,7 @@ def score_one(item: dict, policy: dict, cache, field: str,
     is_preprint_host = any(host_matches(host, p) for p in policy["preprint_hosts"])
     peer_review_on = signal_enabled(policy, "peer_review")
     engagement_on = signal_enabled(policy, "engagement")
+    recency_on = signal_enabled(policy, "recency_decay")
 
     # URL-path signals: SEO slug, and documentation that is not the current
     # (or the requested) version.
@@ -267,12 +298,20 @@ def score_one(item: dict, policy: dict, cache, field: str,
             flags.append(flag)
 
     ids = extract_ids(url)
+    try:
+        path = urllib.parse.urlsplit(url if "//" in url else "https://" + url).path
+    except ValueError:
+        path = ""
+    repo_url = (host == "github.com" and "github" in ids
+                and len(path.strip("/").split("/")) == 2)
+    hn_id = extract_hn_item_id(url) if host == "news.ycombinator.com" and path == "/item" else None
     injected = injected or {}
     sch = injected.get("scholar")
     gh = injected.get("github")
     hn = injected.get("hn")
     timeout = float(policy["defaults"].get("http_timeout_seconds", 12))
 
+    hn_looked_up = False
     if use_net:
         if sch is None:
             if "arxiv" in ids:
@@ -281,10 +320,13 @@ def score_one(item: dict, policy: dict, cache, field: str,
                 sch = openalex_by_doi(ids["doi"], cache, timeout)
             elif "pmid" in ids:
                 sch = openalex_by_pmid(ids["pmid"], cache, timeout)
-        if engagement_on and gh is None and "github" in ids:
+        if (engagement_on or (recency_on and repo_url)) and gh is None and "github" in ids:
             gh = github_repo(ids["github"][0], ids["github"][1], cache, timeout)
+        if recency_on and hn_id and hn is None:
+            hn_looked_up = True
+            hn = hn_item(hn_id, cache, timeout)
         min_tier = int(policy["engagement"]["hackernews"]["min_tier"])
-        if (engagement_on and hn is None and sch is None and gh is None
+        if (engagement_on and not hn_looked_up and hn is None and sch is None and gh is None
                 and tier.isdigit() and int(tier) >= min_tier):
             item_id = extract_hn_item_id(url)
             hn = (hn_item(item_id, cache, timeout) if item_id
@@ -296,9 +338,6 @@ def score_one(item: dict, policy: dict, cache, field: str,
         hn = None if hn is FETCH_FAILED else hn
     elif not injected:
         flags.append("net:off")
-
-    if not engagement_on:
-        gh, hn = None, None
 
     if sch:
         meta["title"] = sch.get("title")
@@ -312,7 +351,7 @@ def score_one(item: dict, policy: dict, cache, field: str,
                else age_years(sch.get("date"), yr))
         c = int(sch.get("citations") or 0)
         cum_pts, vel_pts = citation_points(policy, c, age)
-        adj += cum_pts + vel_pts + recency_points(policy, age, field, c)
+        adj += cum_pts + vel_pts
         notes.append("cit=%s" % human(c))
         if yr:
             notes.append("y%s" % yr)
@@ -357,6 +396,19 @@ def score_one(item: dict, policy: dict, cache, field: str,
         else:
             adj += float(ni["points"])
             flags.append(ni["flag"])  # an academic ID in no academic database is suspicious
+
+    if recency_on:
+        date, source, recency_age = _recency_date(item, sch, gh, hn, repo_url, hn_id)
+        if recency_age is None:
+            flags.append("date-unknown")
+            meta.update({"date": None, "date_source": None,
+                         "age_years": None, "recency_points": 0.0})
+        else:
+            rp = recency_points(policy, recency_age, field,
+                                int((sch or {}).get("citations") or 0))
+            adj += rp
+            meta.update({"date": date, "date_source": source,
+                         "age_years": recency_age, "recency_points": rp})
 
     if engagement_on:
         ep, enotes = engagement_points(policy, gh, hn)
