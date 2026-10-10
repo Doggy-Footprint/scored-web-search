@@ -1,0 +1,33 @@
+name: skill-zip
+
+on:
+  push:
+    branches: [master]
+    paths: ['skills/scored-web-search/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python3 -m unittest discover tests
+      - run: python3 scripts/check_policy.py
+      - run: scripts/build_skill_zip.sh dist/scored-web-search.zip
+      - name: Publish latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes="Built from ${GITHUB_SHA}"
+          if gh release view latest >/dev/null 2>&1; then
+            gh release upload latest dist/scored-web-search.zip --clobber
+            gh release edit latest --notes "$notes"
+          else
+            gh release create latest dist/scored-web-search.zip --title "latest" --notes "$notes" --target "${GITHUB_SHA}"
+          fi

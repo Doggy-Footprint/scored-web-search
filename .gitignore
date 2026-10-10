@@ -4,3 +4,4 @@
 **/__pycache__/
 myTODO.md
 .tmp/
+dist/

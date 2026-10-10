@@ -24,6 +24,8 @@ mkdir -p ~/.codex/skills
 ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.codex/skills/scored-web-search
 ```
 
+Mobile / claude.ai (skill only, no mod): download [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip) and upload it in claude.ai Settings > Customize > Skills. It is rebuilt on every change under `skills/scored-web-search/`, and claude.ai has no auto-sync, so re-upload to update. The scorer queries `api.openalex.org`, `api.semanticscholar.org`, `doi.org` and `hn.algolia.com`; set the cloud environment network to Custom (add these domains) or Full.
+
 The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. Skill only runs the same pipeline with general subagents and `scripts/srcscore.py`; the mod adds the side view (`/search-view`).
 
 # Customization (policy)

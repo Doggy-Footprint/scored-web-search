@@ -128,7 +128,6 @@ A mode's overlay is also where a domain gets registered when it only matters to 
 ## Error handling
 If script fails, report it and stop; do not fall back to unscored reading.
 
-
 ## Don't Do This
 
 - Don't cite WEAK/DROP material "for reference anyway."
