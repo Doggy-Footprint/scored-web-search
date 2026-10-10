@@ -2,6 +2,14 @@
 # Install
 
 ```bash
+# Claude Code (mod + skill, v2.1.290+): install from the marketplace
+claude plugin marketplace add Doggy-Footprint/claude-plugins
+claude plugin install scored-web-search@doggy-footprint
+```
+
+Or from a clone:
+
+```bash
 git clone https://github.com/Doggy-Footprint/scored-web-search
 
 # Claude Code (mod + skill, v2.1.290+): load as a plugin
