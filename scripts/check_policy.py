@@ -4,10 +4,10 @@ check_policy - keep policy.json, the mode overlays and the scorer in agreement.
 
 Two rule-based checks, no LLM involved:
 
-  1. schema     policy.json (and every scripts/modes/*.json overlay merged
+  1. schema     policy.json (and every skills/scored-web-search/scripts/modes/*.json overlay merged
                 onto it) loads, is structurally valid, has no duplicate
                 domains and has properly ordered verdict bands.
-  2. modes      Every scripts/modes/*.json overlay merges onto the base
+  2. modes      Every skills/scored-web-search/scripts/modes/*.json overlay merges onto the base
                 policy and still validates.
 
 USAGE
@@ -27,11 +27,12 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-sys.path.insert(0, HERE)
+SCORER = os.path.join(ROOT, "skills", "scored-web-search", "scripts")
+sys.path.insert(0, SCORER)
 
 import srcscore as S  # noqa: E402
 
-MODES_DIR = os.path.join(HERE, "modes")
+MODES_DIR = os.path.join(SCORER, "modes")
 
 
 # ----------------------------------------------------------------------------

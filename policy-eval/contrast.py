@@ -16,7 +16,7 @@ NEG_VERDICTS = {"WEAK", "DROP", "BLOCKED"}
 def score(urls_file: Path, mode: str, field: str) -> dict:
     """Run the real scorer. Its output is the thing under test, so shell out rather than import."""
     out = subprocess.run(
-        [sys.executable, str(ROOT.parent / "scripts" / "srcscore.py"),
+        [sys.executable, str(ROOT.parent / "skills" / "scored-web-search" / "scripts" / "srcscore.py"),
          "--in", str(urls_file), "--mode", mode, "--field", field, "--format", "json"],
         capture_output=True, text=True, check=True).stdout
     rows = json.loads(out)

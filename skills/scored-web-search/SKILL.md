@@ -10,19 +10,20 @@ This skill filters sub-standard sources before the main agent reads them when hi
 ## Pipeline
 
 ```
-1. Search   (lightweight subagent) → URL/title/date only, no summaries
-2. Score    (srcscore.py)          → 0-100 + verdict
-3. Read     (main agent)           → top n PRIMARY/SUPPORT only
-4. Re-search (loop back to 1 if sources are thin)
-5. Verify   (optional)             → claims vs. evidence
-6. Write    → every claim tagged with source + score
+1.   Search   (lightweight subagent)        → URL/title/date only, no summaries
+2.   Score    (`scripts/srcscore.py`)        → 0-100 + verdict
+2.5. Judge    (lightweight subagent)        → SUPPORT only: USE / SKIP / UNJUDGED
+3.   Read     (main agent)                        → PRIMARY + USE-judged SUPPORT only
+4.   Re-search (loop back to 1 if sources are thin)
+5.   Verify / follow-up (optional)                → claims vs. evidence
+6.   Write    → every claim tagged with source + score
 ```
 
-When sub-agents are not available, the main agent does Steps 1 and 5 as fallback.
+Paths below are relative to this skill's folder. **If the `score_sources` tool is available, read `references/mod.md` first** — the plugin's mod replaces Steps 1, 2 and 2.5 with its own agent and tools. When sub-agents are not available, the main agent does Steps 1 and 5 as fallback and skips Step 2.5.
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** (do NOT use `fork` / make subagent to call web-search tools at a single turn. / use luna, haiku, or the lightest model of the same generation) and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
@@ -30,7 +31,7 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 
 ### Step 2 — Score: hand it to the script
 
-Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py`. You can check arguments with `--help`.
+Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
 
 Output is a compact table, roughly 15 tokens per line:
 
@@ -52,12 +53,22 @@ SCORE VERDICT T  SIGNALS                     URL
 | DROP | <30 | Do not open |
 | BLOCKED | 0 | Retracted paper / scraper. Never use |
 
+### Step 2.5 — Judge: vet SUPPORT sources
+
+Hand every SUPPORT source (with the research question) to a **lightweight subagent** (same model rule as Step 1, no `fork`). Give it `references/judge-rubric.md` verbatim and have it do **this and nothing else**:
+
+> For each URL: `WebFetch` the page and apply the rubric to it. If the page cannot be fetched, is empty, or is a PDF, answer UNJUDGED with the reason. Return only one line per URL, in input order: `url | USE/SKIP/UNJUDGED | reason`. No page text, quotes, or summaries.
+
+Page text never reaches you. No sub agent fallback: skip this step and read SUPPORT sources as before.
+
+- Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
+- SKIP and UNJUDGED are final for this run: exclude the source from Step 3 and do not open it to second-guess the judge.
+- If the judge itself fails, read SUPPORT sources as before and say the judge step was unavailable.
+
 ### Step 3 — Read: open only what passed
-`WebFetch` only the URLs this returns. **Do not open WEAK/DROP.** The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
+`WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.** The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
 
 Default cap: 8-12 sources. Up to 20 if the user asks for depth.
-
-If pages you read names keywords to search, do not run the search yourself. Hand it to a new subagent like Step 1.
 
 Two re-search rounds max. Beyond that, **ask the user explicitly** before searching again, and if they decline, state plainly in the answer that the evidence base is thin.
 
@@ -66,13 +77,15 @@ Two re-search rounds max. Beyond that, **ask the user explicitly** before search
 
 Do not promote sub-WEAK sources becase of low credible sources. Change the keywords and re-run from step 1.
 
-### Step 5 — Verify (optional): claims vs. evidence
+### Step 5 — Verify / follow-up (optional): claims vs. evidence
 
-Only when the user has stressed accuracy, or the report carries a lot of figures. Give the sources url that passed scoring filter to a **lightweight subagent** and have it do **this and nothing else**:
+Follow-up: as with any web search, terms found in sources you read may be searched. Never run that search yourself; send it through Step 1 and Steps 2-2.5. It counts toward the two re-search rounds.
+
+Verify: only when the user has stressed accuracy, or the report carries a lot of figures. Give the sources url that passed scoring filter to a **lightweight subagent** and have it do **this and nothing else**:
 
 > For each figure or claim: (a) does this document actually state that figure, (b) is this document the original source of the figure or is it citing someone else, (c) are sample size, time period, and measurement method stated. Answer only in the format `claim | supported/secondary/contradicted | location of evidence`.
 
-When a figure turns out to be secondary, the document you read is not its source. Take the URL of the original it cites — a new source, not yet scored — and run that through step 2; if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source.
+When a figure turns out to be secondary, the document you read is not its source. Take the URL of the original it cites — a new source, not yet scored — and run that through steps 2-2.5; if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source.
 
 No sub agent fallback: run the same claim-vs-evidence check yourself instead of delegating it. This step doesn't reintroduce the context-pollution problem Step 1 guards against — the sources are already open and being read — so there's no quality loss from doing it inline.
 
@@ -80,7 +93,7 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
 
-Close the report with one line: `n sources collected → m passed → l read`.
+Close the report with one line: `n sources collected → m passed → j judged-out → l read`.
 
 ## Scoring Policy
 

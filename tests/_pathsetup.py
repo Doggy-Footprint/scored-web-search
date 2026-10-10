@@ -5,6 +5,7 @@ import os
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SCRIPTS = os.path.join(ROOT, "scripts")
-if SCRIPTS not in sys.path:
-    sys.path.insert(0, SCRIPTS)
+SCRIPTS = os.path.join(ROOT, "skills", "scored-web-search", "scripts")
+for d in (os.path.join(ROOT, "scripts"), SCRIPTS):
+    if d not in sys.path:
+        sys.path.insert(0, d)
