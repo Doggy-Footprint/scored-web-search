@@ -27,7 +27,12 @@ master push 시 GitHub Action이 `skills/scored-web-search/`를 zip으로 만들
 - Remote Control 상시 대기 모드(`claude remote-control`) 동작.
 - 모바일에서 사이드 뷰 렌더링.
 
-## 결정 필요 (CI/CD)
+## 진행 (2026-10-11)
+- CI/CD 완료: `.github/workflows/skill-zip.yml` + `scripts/build_skill_zip.sh`. skill 폴더 변경 시 테스트·check_policy 통과 후 `latest` Release에 zip 갱신.
+- 모바일 앱 업로드 완료, `scored-web-search` skill 동작 확인. mod 도구(`judge_support`, `scored-web-search:searcher`)는 모바일에서 불가 (mod 전용, 예상된 동작).
+- 이슈 등록: 업데이트 자동 반영 여부 확인 필요.
+
+## 결정 필요 (CI/CD) — 해결됨: latest Release / skill 폴더 변경 트리거 / 테스트+check_policy 게이트 / README 안내
 1. 배포 형태: GitHub Release asset / Actions artifact / 고정 URL(예: `latest` release).
 2. 트리거: master push 전부 vs `skills/scored-web-search/**` 변경 시만. 버전/태그 규칙.
 3. zip 내용: 폴더 그대로? `__pycache__` 등 제외 규칙. zip 최상위가 폴더여야 하는지(claude.ai 업로드 형식 확인 필요).

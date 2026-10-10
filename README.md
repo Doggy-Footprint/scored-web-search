@@ -24,7 +24,13 @@ mkdir -p ~/.codex/skills
 ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.codex/skills/scored-web-search
 ```
 
-Mobile / claude.ai (skill only, no mod): download [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip) and upload it in claude.ai Settings > Customize > Skills. It is rebuilt on every change under `skills/scored-web-search/`, and claude.ai has no auto-sync, so re-upload to update. The scorer queries `api.openalex.org`, `api.semanticscholar.org`, `doi.org` and `hn.algolia.com`; set the cloud environment network to Custom (add these domains) or Full.
+Mobile / claude.ai (skill only, no mod):
+
+1. Download [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip). It is rebuilt on every change under `skills/scored-web-search/`.
+2. In claude.ai, open Settings > Customize > Skills and upload the zip. The skill is account-wide, so the mobile app gets it too.
+3. To update, download the zip again and re-upload. Auto-sync to the mobile app is not verified.
+
+The mod tools (`judge_support`, `scored-web-search:searcher`) are not available on mobile; the skill falls back to general subagents. The scorer queries `api.openalex.org`, `api.semanticscholar.org`, `doi.org` and `hn.algolia.com`; in a cloud environment set the network to Custom (add these domains) or Full.
 
 The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. Skill only runs the same pipeline with general subagents and `scripts/srcscore.py`; the mod adds the side view (`/search-view`).
 
