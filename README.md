@@ -2,15 +2,17 @@
 # Install
 
 ```bash
-clone https://github.com/Doggy-Footprint/scored-web-search
+git clone https://github.com/Doggy-Footprint/scored-web-search
 
-mkdir -p ~/.claude/skills
+# Claude Code (mod + skill, v2.1.290+): load as a plugin
+claude --plugin-dir "$(realpath scored-web-search)"
+
+# Codex (skill only, no mod tools): symlink the skill
 mkdir -p ~/.codex/skills
-
-# symlink로 연결
-ln -s "$(realpath scored-web-search)" ~/.claude/skills/scored-web-search
-ln -s "$(realpath scored-web-search)" ~/.codex/skills/scored-web-search
+ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.codex/skills/scored-web-search
 ```
+
+The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. 
 
 # Customization (policy)
 

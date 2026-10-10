@@ -1,0 +1,4 @@
+{
+  "description": "scored-web-search tools: score_sources, judge_support, searcher agent",
+  "modules": ["./register.js"]
+}
