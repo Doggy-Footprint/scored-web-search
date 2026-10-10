@@ -68,14 +68,14 @@ test('side view tracks score, judge, and read', async ($, on) => {
 
   await $.tool.call({ tool: 'mcp__scored-web-search__score_sources', records: [] })
   await $.tool.call({ tool: 'mcp__scored-web-search__score_sources', records: [] })
-  expect(opened).toEqual(['search-view'])
+  expect(opened).toEqual([])
   await $.tool.call({ tool: 'mcp__scored-web-search__judge_support', question: 'q', sources: [{ url: 'https://s.org/use' }, { url: 'https://s.org/skip' }] })
   await $.tool.call({ tool: 'WebFetch', url: 'https://p.org/a/', prompt: 'x' })
 
   const ui = await $.ui.mount(PANE)
   expect(await ui.find({ type: 'Text', text: '4 collected → 3 passed → 1 judged-out → 1 read' })).toBeDefined()
   expect(await ui.find({ type: 'Text', text: /SKIP: seo filler/ })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /^READ/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /^✓ READ/ })).toBeDefined()
   expect(await ui.find({ type: 'Text', text: /^OUT/ })).toBeDefined()
 })
 

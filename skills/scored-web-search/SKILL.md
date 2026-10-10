@@ -31,7 +31,7 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 
 ### Step 2 — Score: hand it to the script
 
-Pass all subagent returns as `records` to the `score_sources` tool, with `mode` (and `field` when relevant). Without the mod: write them as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
+Pass all subagent returns as `records` to the `score_sources` tool, with `mode` (and `field` when relevant), a short `round` label, and — for a Step 4 re-search or Step 5 follow-up — `parentRound` set to the label of the round it came from, so the side view nests it. Without the mod: write them as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
 
 Output is a compact table, roughly 15 tokens per line:
 

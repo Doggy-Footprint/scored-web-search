@@ -19,8 +19,10 @@ const T1 = [
   ' 14.0 DROP     6  https://d.org/x',
 ].join('\n')
 
-function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDeny?: boolean } = {}) {
+function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDeny?: boolean, unplaced?: boolean, keepClosed?: boolean, panes?: any[] } = {}) {
   const opened: string[] = []
+  const openArgs: any[] = [], toasts: string[] = [], closed: string[] = []
+  const panes: any[] = [...(opts.panes ?? [])]
   let i = 0
   on('fs.write', () => ({ value: undefined }))
   on('process.run', () => {
@@ -28,7 +30,10 @@ function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDe
     const s = outs[Math.min(i++, outs.length - 1)]
     return { value: { exitCode: opts.exit ?? 0, stdout: s, stderr: '' } }
   })
-  on('ui.open', ($: any, e: any) => { opened.push(e.id); return opts.openDeny ? { deny: 'no' } : { value: { isPlaced: true } } })
+  on('ui.open', ($: any, e: any) => { opened.push(e.id); openArgs.push(e); if (!opts.keepClosed) panes.push({ id: e.id, title: e.title, isPlaced: !opts.unplaced }); return opts.openDeny ? { deny: 'no' } : { value: { isPlaced: !opts.unplaced } } })
+  on('ui.panes', () => ({ value: [...panes] }))
+  on('ui.toast', ($: any, e: any) => { toasts.push(e.text); return { value: undefined } })
+  on('ui.close', ($: any, e: any) => { closed.push(e.id); return { value: undefined } })
   on('http.fetch', () => ({ value: { ok: true, status: 200, headers: {}, text: '<p>body</p>' } }))
   on('model.complete', ($: any, e: any) => {
     const p = JSON.stringify(e.prompt) + JSON.stringify(e.promptBlocks ?? '')
@@ -42,49 +47,163 @@ function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDe
   on('classic.SessionStart', () => ({}))
   on('agent.spawn', ($: any, e: any) => ({ model: 'haiku', agentId: 'ag-' + (e.description ?? 'p') }))
   on('turn.complete', () => ({ text: '' }))
-  return opened
+  return Object.assign(opened, { openArgs, toasts, closed })
 }
 
-test('opens once on first successful score run', async ($, on) => {
-  const opened = base(on)
-  await $.tool.call({ tool: SS, records: [] })
-  await $.tool.call({ tool: SS, records: [] })
-  expect(opened).toEqual(['search-view'])
+
+const SEARCHER = 'scored-web-search:searcher'
+const spawn = ($: any, description: string, subagentType = SEARCHER) => $.agent.spawn({ subagentType, description, prompt: 'x' })
+const done = ($: any, agentId: string) => $.turn.complete({ turnId: 't-' + agentId, agentId, answer: '[]', durationMs: 1, isAborted: false, usage: null } as any)
+const recs = (n: number) => Array.from({ length: n }, (_, i) => ({ url: 'https://r.org/' + i }))
+const txt = async (ui: any, text: string | RegExp) => ui.find({ type: 'Text', text })
+
+// 1. auto-open
+test('searcher spawn opens pane with closeOnEscape', async ($, on) => {
+  const o = base(on)
+  await spawn($, 'alpha')
+  expect(o).toEqual(['search-view'])
+  expect(o.openArgs[0].closeOnEscape).toBe(true)
 })
 
-test('failed score run does not open', async ($, on) => {
-  const opened = base(on, { exit: 1 })
-  await $.tool.call({ tool: SS, records: [] })
-  expect(opened).toEqual([])
+test('searcher spawn does not reopen when panes() lists it', async ($, on) => {
+  const o = base(on)
+  await spawn($, 'a'); await spawn($, 'b')
+  expect(o).toEqual(['search-view'])
 })
 
-test('ui.open failure still returns stdout', async ($, on) => {
+test('searcher spawn reopens when pane was closed (not in panes())', async ($, on) => {
+  const o = base(on, { keepClosed: true })
+  await spawn($, 'a'); await spawn($, 'b')
+  expect(o).toEqual(['search-view', 'search-view'])
+})
+
+test('already-open pane from before: no open', async ($, on) => {
+  const o = base(on, { panes: [{ id: 'search-view', title: 'Scored search', isPlaced: true }] })
+  await spawn($, 'a')
+  expect(o).toEqual([])
+})
+
+test('isPlaced false shows toast mentioning /search-view', async ($, on) => {
+  const o = base(on, { unplaced: true })
+  await spawn($, 'a')
+  expect(o.toasts.length).toBe(1)
+  expect(o.toasts[0]).toContain('/search-view')
+})
+
+test('isPlaced true shows no toast', async ($, on) => {
+  const o = base(on)
+  await spawn($, 'a')
+  expect(o.toasts).toEqual([])
+})
+
+test('other agent types do not open', async ($, on) => {
+  const o = base(on)
+  await spawn($, 'other', 'general-purpose')
+  expect(o).toEqual([])
+})
+
+test('score_sources does not open pane', async ($, on) => {
+  const o = base(on)
+  await $.tool.call({ tool: SS, records: [] })
+  expect(o).toEqual([])
+})
+
+test('ui.open failure on spawn still spawns', async ($, on) => {
   base(on, { openDeny: true })
-  const out = await $.tool.call({ tool: SS, records: [] })
-  expect(out.result).toBe(T1)
+  const r = await spawn($, 'a')
+  expect((r as any).agentId).toBe('ag-a')
 })
 
-test('/search-view command opens pane and returns {}', async ($, on) => {
-  const opened = base(on)
+// 2. command
+test('/search-view command opens with closeOnEscape and returns {}', async ($, on) => {
+  const o = base(on)
   await $.session.start({ surface: 'terminal', isInteractive: true, cwd: '/tmp/x' })
   const r = await $.command.run({ command: 'search-view', args: '' })
   expect(r).toEqual({})
-  expect(opened).toEqual(['search-view'])
+  expect(o).toEqual(['search-view'])
+  expect(o.openArgs[0].closeOnEscape).toBe(true)
 })
 
-test('summary, statuses, judged-out lines', async ($, on) => {
+// 3. close button
+test('Close button (role dismiss) closes the pane', async ($, on) => {
+  const o = base(on)
+  const ui = await $.ui.mount(PANE)
+  const b = await ui.find({ type: 'Button' })
+  expect(b).toBeDefined()
+  expect((b as any).text).toBe('Close')
+  expect((b as any).props.role).toBe('dismiss')
+  await ui.press({ key: (b as any).key })
+  expect(o.closed).toEqual(['search-view'])
+})
+
+// 4. tree
+test('root round header with label and record count; sources indented under it', async ($, on) => {
+  base(on)
+  await $.tool.call({ tool: SS, records: recs(4), round: 'llm eval' })
+  const ui = await $.ui.mount(PANE)
+  expect(await txt(ui, '▾ Search: llm eval  4 URLs')).toBeDefined()
+  expect(await txt(ui, '   ')).toBeDefined()
+  expect(await txt(ui, 'Sources')).toBeUndefined()
+  expect(await txt(ui, /Searches \(/)).toBeUndefined()
+})
+
+test('missing label defaults to Search <k>', async ($, on) => {
+  base(on)
+  await $.tool.call({ tool: SS, records: recs(1) })
+  await $.tool.call({ tool: SS, records: recs(2) })
+  const ui = await $.ui.mount(PANE)
+  expect(await txt(ui, '▾ Search: Search 1  1 URLs')).toBeDefined()
+  expect(await txt(ui, '▾ Search: Search 2  2 URLs')).toBeDefined()
+})
+
+test('follow-up nested with 3-space indent per depth; unknown parent is root', async ($, on) => {
+  base(on, { stdout: 'H' })
+  await $.tool.call({ tool: SS, records: recs(3), round: 'A' })
+  await $.tool.call({ tool: SS, records: recs(2), round: 'B', parentRound: 'A' })
+  await $.tool.call({ tool: SS, records: recs(1), round: 'C', parentRound: 'B' })
+  await $.tool.call({ tool: SS, records: recs(5), round: 'D', parentRound: 'nope' })
+  const ui = await $.ui.mount(PANE)
+  expect(await txt(ui, '▾ Search: A  3 URLs')).toBeDefined()
+  expect(await txt(ui, '   ▾ Follow-up: B  2 URLs')).toBeDefined()
+  expect(await txt(ui, '      ▾ Follow-up: C  1 URLs')).toBeDefined()
+  expect(await txt(ui, '▾ Search: D  5 URLs')).toBeDefined()
+})
+
+test('source stays in first round; re-score updates score/verdict', async ($, on) => {
+  base(on, { stdout: ['H\n 50.0 SUPPORT  3  https://x.org/a', 'H\n 95.0 PRIMARY  1  https://x.org/a/\n 40.0 SUPPORT  3  https://y.org/b'] })
+  await $.tool.call({ tool: SS, records: recs(1), round: 'A' })
+  await $.tool.call({ tool: SS, records: recs(2), round: 'B', parentRound: 'A' })
+  const ui = await $.ui.mount(PANE)
+  // round A sources indent 3, round B (depth 1) sources indent 6
+  const a = await txt(ui, /x\.org\/a/)
+  expect(a).toBeDefined()
+  expect(await txt(ui, ' 95 PRIMARY')).toBeDefined()
+  expect(await txt(ui, ' 50 SUPPORT')).toBeUndefined()
+  expect(await txt(ui, '      ')).toBeDefined() // y.org under follow-up
+  expect(await txt(ui, '2 collected → 2 passed → 0 judged-out → 0 read')).toBeDefined()
+  const tree = JSON.stringify((ui as any).tree ?? (ui as any).root ?? '')
+  if (tree.length > 2) {
+    expect(tree.indexOf('x.org/a')).toBeLessThan(tree.indexOf('Follow-up: B'))
+    expect(tree.indexOf('Follow-up: B')).toBeLessThan(tree.indexOf('y.org/b'))
+  }
+})
+
+// 5,6. statuses
+test('summary, statuses, judged-out lines, ✓ READ', async ($, on) => {
   base(on)
   await $.tool.call({ tool: SS, records: [] })
   await $.tool.call({ tool: JS, question: 'q', sources: [{ url: 'https://s.org/use' }, { url: 'https://s.org/skip' }, { url: 'https://s.org/unj' }] })
   await $.tool.call({ tool: 'WebFetch', url: 'https://p.org/a/#frag', prompt: 'x' })
   await $.tool.call({ tool: 'WebFetch', url: 'https://unscored.org/', prompt: 'x' })
   const ui = await $.ui.mount(PANE)
-  expect(await ui.find({ type: 'Text', text: 'Sources' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: '6 collected → 5 passed → 2 judged-out → 1 read' })).toBeDefined()
-  for (const s of ['READ   ', 'USE    ', 'SKIP   ', 'PENDING', 'OUT    ']) expect(await ui.find({ type: 'Text', text: s })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: 'PASS   ' })).toBeUndefined()
-  expect(await ui.find({ type: 'Text', text: '        ↳ SKIP: seo filler' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /^ {8}↳ UNJUDGED: / })).toBeDefined()
+  expect(await txt(ui, '6 collected → 5 passed → 2 judged-out → 1 read')).toBeDefined()
+  expect(await txt(ui, /✓ READ/)).toBeDefined()
+  expect(await txt(ui, /^READ/)).toBeUndefined()
+  for (const s of ['USE    ', 'SKIP   ', 'PENDING', 'OUT    ']) expect(await txt(ui, s)).toBeDefined()
+  expect(await txt(ui, 'PASS   ')).toBeUndefined()
+  expect(await txt(ui, /↳ SKIP: seo filler$/)).toBeDefined()
+  expect(await txt(ui, /↳ UNJUDGED: /)).toBeDefined()
+  expect(await txt(ui, /unscored/)).toBeUndefined()
 })
 
 test('WebFetch passes through', async ($, on) => {
@@ -92,53 +211,52 @@ test('WebFetch passes through', async ($, on) => {
   await $.tool.call({ tool: SS, records: [] })
   const r = await $.tool.call({ tool: 'WebFetch', url: 'https://p.org/a', prompt: 'x' })
   expect(r.result).toBe('fetched')
+  const r2 = await $.tool.call({ tool: 'WebFetch', url: 'https://unscored.org', prompt: 'x' })
+  expect(r2.result).toBe('fetched')
 })
 
-test('PASS for unread PRIMARY; merge by URL, later wins', async ($, on) => {
+test('PASS for unread PRIMARY; merge by URL', async ($, on) => {
   base(on, { stdout: [T1, 'SCORE VERDICT T  SIGNALS URL\n 99.0 DROP     6  https://s.org/pend/#x\n 50.0 PRIMARY  1  https://n.org/'] })
   await $.tool.call({ tool: SS, records: [] })
   await $.tool.call({ tool: SS, records: [] })
   const ui = await $.ui.mount(PANE)
-  expect(await ui.find({ type: 'Text', text: 'PASS   ' })).toBeDefined()
-  // 7 unique, passed: p.org/a, use, skip, unj, n.org = 5 ; none judged
-  expect(await ui.find({ type: 'Text', text: '7 collected → 5 passed → 0 judged-out → 0 read' })).toBeDefined()
+  expect(await txt(ui, 'PASS   ')).toBeDefined()
+  expect(await txt(ui, '7 collected → 5 passed → 0 judged-out → 0 read')).toBeDefined()
 })
 
-test('searches section: pending, done with JSON and text URL counts, other agents ignored', async ($, on) => {
+// 7. pending searches
+test('pending searcher shown until its turn.complete; others ignored', async ($, on) => {
   base(on)
-  await $.agent.spawn({ subagentType: 'scored-web-search:searcher', description: 'alpha', prompt: 'x' })
-  await $.agent.spawn({ subagentType: 'scored-web-search:searcher', prompt: 'beta line\nmore' })
-  await $.agent.spawn({ subagentType: 'scored-web-search:searcher', description: 'gamma', prompt: 'x' })
-  await $.agent.spawn({ subagentType: 'general-purpose', description: 'other', prompt: 'x' })
-  await $.turn.complete({ turnId: 't1', agentId: 'ag-alpha', answer: JSON.stringify([{ url: 'https://a' }, { url: 'https://b' }, { title: 'no' }]), durationMs: 1, isAborted: false, usage: null } as any)
-  await $.turn.complete({ turnId: 't2', agentId: 'ag-p', answer: 'see https://x.org and http://y.org, not ftp://z', durationMs: 1, isAborted: false, usage: null } as any)
-  const ui = await $.ui.mount(PANE)
-  expect(await ui.find({ type: 'Text', text: 'Searches (3)' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: '  ✓ alpha — 2 URLs' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: '  ✓ beta line — 2 URLs' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: '  … gamma' })).toBeDefined()
-  expect(await ui.find({ type: 'Text', text: /other/ })).toBeUndefined()
+  await spawn($, 'alpha'); await spawn($, 'gamma'); await spawn($, 'other', 'general-purpose')
+  let ui = await $.ui.mount(PANE)
+  expect(await txt(ui, '… searching: alpha')).toBeDefined()
+  expect(await txt(ui, '… searching: gamma')).toBeDefined()
+  expect(await txt(ui, /other/)).toBeUndefined()
+  await ui.unmount()
+  await done($, 'ag-alpha')
+  ui = await $.ui.mount(PANE)
+  expect(await txt(ui, /searching: alpha/)).toBeUndefined()
+  expect(await txt(ui, '… searching: gamma')).toBeDefined()
 })
 
-test('sorted by score descending', async ($, on) => {
-  base(on, { stdout: 'H\n 10.0 PRIMARY  1  https://low.org\n 90.0 PRIMARY  1  https://high.org' })
-  await $.tool.call({ tool: SS, records: [] })
-  const ui = await $.ui.mount(PANE)
-  const hi = await ui.find({ type: 'Text', text: /high\.org/ })
-  const lo = await ui.find({ type: 'Text', text: /low\.org/ })
-  expect(hi).toBeDefined(); expect(lo).toBeDefined()
-  const tree = JSON.stringify((ui as any).tree ?? (ui as any).root ?? await (ui as any).toJSON?.() ?? '')
-  if (tree.length > 2) expect(tree.indexOf('high.org')).toBeLessThan(tree.indexOf('low.org'))
-})
-
+// 8. reset
 for (const source of ['clear', 'resume', 'fork']) {
-  test(`SessionStart ${source} resets and reopens`, async ($, on) => {
-    const opened = base(on)
-    await $.tool.call({ tool: SS, records: [] })
+  test(`SessionStart ${source} resets state`, async ($, on) => {
+    base(on)
+    await spawn($, 'alpha')
+    await $.tool.call({ tool: SS, records: recs(2), round: 'R' })
     await $.classic.SessionStart({ source } as any)
-    let ui = await $.ui.mount(PANE)
-    expect(await ui.find({ type: 'Text', text: '0 collected → 0 passed → 0 judged-out → 0 read' })).toBeDefined()
-    await $.tool.call({ tool: SS, records: [] })
-    expect(opened).toEqual(['search-view', 'search-view'])
+    const ui = await $.ui.mount(PANE)
+    expect(await txt(ui, '0 collected → 0 passed → 0 judged-out → 0 read')).toBeDefined()
+    expect(await txt(ui, /▾/)).toBeUndefined()
+    expect(await txt(ui, /searching/)).toBeUndefined()
   })
 }
+
+test('SessionStart startup does not reset', async ($, on) => {
+  base(on)
+  await $.tool.call({ tool: SS, records: recs(2), round: 'R' })
+  await $.classic.SessionStart({ source: 'startup' } as any)
+  const ui = await $.ui.mount(PANE)
+  expect(await txt(ui, '▾ Search: R  2 URLs')).toBeDefined()
+})

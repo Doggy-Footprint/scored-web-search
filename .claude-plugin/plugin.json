@@ -2,7 +2,9 @@
   "name": "scored-web-search",
   "version": "0.2.0",
   "description": "Filter and rank web sources with a heuristic score, then let a cheap judge vet SUPPORT sources before the main agent reads them",
-  "author": { "name": "Doggy-Footprint" },
+  "author": {
+    "name": "Doggy-Footprint"
+  },
   "userConfig": {
     "judgeModel": {
       "type": "string",
@@ -10,5 +12,6 @@
       "description": "Model that judges SUPPORT sources (e.g. haiku, luna)",
       "default": "haiku"
     }
-  }
+  },
+  "types": "./types/index.d.ts"
 }

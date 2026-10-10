@@ -1,4 +1,5 @@
-import { buildPane, countUrls, emptyRun, mergeSources, normUrl, parseJudgeLines, parseScoreTable } from './view.js'
+import { atom, read, update } from 'claude-code'
+import { addRound, buildPane, countUrls, emptyRun, mergeSources, normUrl, parseJudgeLines, parseScoreTable } from './view.js'
 
 const PANE = 'search-view'
 const SEARCHER = 'scored-web-search:searcher'
@@ -23,9 +24,9 @@ Otherwise answer SKIP.
 
 Reply with exactly one line: USE|<reason up to 15 words> or SKIP|<reason up to 15 words>`
 
-// Session-only history; reset on /clear, /resume, /branch.
-let run = emptyRun()
-let paneOpened = false
+// Session-only history in host state, so a write redraws the pane and a mod reload keeps it; reset on /clear, /resume, /branch.
+const RUN = atom({ plugin: 'scored-web-search', key: 'run' }, emptyRun())
+const edit = ($, fn) => update($, RUN, (r) => { const n = JSON.parse(JSON.stringify(r)); fn(n); return n })
 
 export function register(on, options) {
   on('session.start', async ($, e, next) => {
@@ -45,6 +46,8 @@ export function register(on, options) {
           },
           mode: { type: 'string', enum: MODES },
           field: { type: 'string' },
+          round: { type: 'string', description: 'Short label for this search round, shown in the side view' },
+          parentRound: { type: 'string', description: 'For a re-search or follow-up: the round label it came from' },
         },
         required: ['records'],
       },
@@ -86,8 +89,8 @@ export function register(on, options) {
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }
-      mergeSources(run, parseScoreTable(r.stdout))
-      try { await showPane($) } catch (err) {}
+      const rows = parseScoreTable(r.stdout)
+      await edit($, (run) => mergeSources(run, rows, addRound(run, { label: e.round, parent: e.parentRound, count: (e.records || []).length })))
       return { result: r.stdout }
     } catch (err) {
       return { result: 'srcscore.py could not run: ' + String(err && err.message || err) + '\nStop: do not fall back to unscored reading.' }
@@ -108,8 +111,8 @@ export function register(on, options) {
     for (let k = 0; k < Math.min(JUDGE_CONCURRENCY, sources.length); k++) workers.push(worker())
     await Promise.all(workers)
     const result = lines.filter(Boolean).join('\n')
-    Object.assign(run.judged, parseJudgeLines(result))
-    $.ui.invalidate('ui.render')
+    const judged = parseJudgeLines(result)
+    await edit($, (run) => Object.assign(run.judged, judged))
     return { result }
   }).catch(($, e, next) => ({ result: 'judge_support failed: ' + next.error.message + '\nJudge unavailable: read SUPPORT sources as before and note it.' }))
 
@@ -117,18 +120,17 @@ export function register(on, options) {
     const r = await next(e)
     try {
       if (r.agentId) {
-        run.queries.push({ agentId: r.agentId, label: e.description || String(e.prompt).split('\n')[0].slice(0, 80), urls: null })
-        $.ui.invalidate('ui.render')
+        await edit($, (run) => run.queries.push({ agentId: r.agentId, label: e.description || String(e.prompt).split('\n')[0].slice(0, 80), urls: null }))
       }
+      await showPane($)
     } catch (err) {}
     return r
   })
 
   on('turn.complete', async ($, e, next) => {
-    const q = e.agentId && run.queries.find((x) => x.agentId === e.agentId)
-    if (q) {
-      q.urls = countUrls(e.answer)
-      $.ui.invalidate('ui.render')
+    if (e.agentId && (await read($, RUN)).queries.some((x) => x.agentId === e.agentId)) {
+      const urls = countUrls(e.answer)
+      await edit($, (run) => { run.queries.find((x) => x.agentId === e.agentId).urls = urls })
     }
     return next(e)
   })
@@ -136,36 +138,32 @@ export function register(on, options) {
   on('tool.call', { tool: 'WebFetch' }, async ($, e, next) => {
     try {
       const key = normUrl(e.url)
-      if (run.sources.some((s) => normUrl(s.url) === key)) {
-        run.read[key] = true
-        $.ui.invalidate('ui.render')
-      }
+      if ((await read($, RUN)).sources.some((s) => normUrl(s.url) === key)) await edit($, (run) => { run.read[key] = true })
     } catch (err) {}
     return next(e)
   })
 
   on('command.run', { command: 'search-view' }, async ($) => {
-    await $.ui.open({ id: PANE, title: 'Scored search' })
+    await $.ui.open({ id: PANE, title: 'Scored search', closeOnEscape: true })
     return {}
   })
 
   on('ui.render', { component: 'Pane' }, async ($, e, next) => {
     if (e.requestId !== PANE) return next(e)
-    return buildPane($.ui.resolve(e), run)
+    return buildPane($.ui.resolve(e), await read($, RUN), () => { void $.ui.close({ id: PANE }) })
   })
 
   on('classic.SessionStart', { source: ['clear', 'resume', 'fork'] }, async ($, e, next) => {
-    run = emptyRun()
-    paneOpened = false
+    await update($, RUN, () => emptyRun())
     return next(e)
   })
 }
 
-// Opens once per session on the first score; after the user closes it, /search-view reopens it.
+// Opens on each searcher spawn while closed. An unasked open is drawn only on wide terminals, so say how to see it otherwise.
 async function showPane($) {
-  if (paneOpened) return $.ui.invalidate('ui.render')
-  paneOpened = true
-  await $.ui.open({ id: PANE, title: 'Scored search' })
+  if ((await $.ui.panes()).some((p) => p.id === PANE)) return
+  const r = await $.ui.open({ id: PANE, title: 'Scored search', closeOnEscape: true })
+  if (r && r.isPlaced === false) $.ui.toast('Scored search: run /search-view to open the side view')
 }
 
 export async function judgeOne($, source, question, model) {
