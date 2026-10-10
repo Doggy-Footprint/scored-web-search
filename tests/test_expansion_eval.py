@@ -232,7 +232,8 @@ class ContrastHarness(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.mkdtemp(prefix="contrast-eval-")
-        os.symlink(SCRIPTS, os.path.join(cls.tmp, "scripts"))
+        os.makedirs(os.path.join(cls.tmp, "skills", "scored-web-search"))
+        os.symlink(SCRIPTS, os.path.join(cls.tmp, "skills", "scored-web-search", "scripts"))
         cls.pe = os.path.join(cls.tmp, "policy-eval")
         cls.runs = os.path.join(cls.pe, "runs")
         os.makedirs(cls.runs)

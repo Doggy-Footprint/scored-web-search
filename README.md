@@ -7,16 +7,20 @@ git clone https://github.com/Doggy-Footprint/scored-web-search
 # Claude Code (mod + skill, v2.1.290+): load as a plugin
 claude --plugin-dir "$(realpath scored-web-search)"
 
+# Claude Code (skill only): symlink the skill folder; it carries its own scorer
+mkdir -p ~/.claude/skills
+ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/scored-web-search
+
 # Codex (skill only, no mod tools): symlink the skill
 mkdir -p ~/.codex/skills
 ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.codex/skills/scored-web-search
 ```
 
-The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. 
+The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. Skill only runs the same pipeline with general subagents and `scripts/srcscore.py`; the mod adds the side view (`/search-view`).
 
 # Customization (policy)
 
-Check `scripts/policy.json` and `scripts/modes/` to edit this skill permanently.
+Check `skills/scored-web-search/scripts/policy.json` and `skills/scored-web-search/scripts/modes/` to edit this skill permanently.
 
 ---
 
@@ -50,4 +54,4 @@ AI chat, 특히 클로드에서 web search할 때, 결과물을 heuristic filter
 
 1. 재검색 - 검색 중 알게 된 용어가 원 질문의 미해결 부분을 조사하는 데 필요할 때 검색을 확장합니다. 자료가 적다는 것은 확장 사유가 아니며, 조건을 만족하는 새 키워드가 없으면 멈춥니다. 확장은 main agent가 읽은 본문에서 발견해 새 sub agent(KV cache 재활용)에 넘기는 경로로 일어납니다.
 2. 토큰 소모 감소 - 11%🔻, 메인 에이전트가 읽는 소스가 줄어들고, sub agent의 토큰 소모도 많지 않아서 더 드라마틱 감소를 기대했는데, sub agent cold-start 비용이 30k이라 감소폭이 적었다.
-3. `scripts/policy.json`에 단일 의존하는 점수 게산 - 개발이 쉬워진만큼 이 도구를 쓰는 사람이 AI의 도움을 받아 직접 수정하길 기대했다.
+3. `skills/scored-web-search/scripts/policy.json`에 단일 의존하는 점수 게산 - 개발이 쉬워진만큼 이 도구를 쓰는 사람이 AI의 도움을 받아 직접 수정하길 기대했다.

@@ -4,9 +4,11 @@ import { htmlToText, parseVerdict } from '../hooks/register.js'
 const USAGE = { input_tokens: 1, output_tokens: 1, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 }
 const SS = 'mcp__scored-web-search__score_sources'
 const JS = 'mcp__scored-web-search__judge_support'
+const FSREAD = (on: any) => on('fs.read', ($: any, e: any) => ({ value: 'stub:' + e.path }))
 const html = (text: string, ct = 'text/html') => ({ value: { ok: true, status: 200, headers: { 'content-type': ct }, text } })
 
 test('session.start registers tools and searcher agent', async ($, on) => {
+  FSREAD(on)
   const tools: any[] = []
   const agents: any[] = []
   on('session.start', () => ({ cwd: '/tmp/x' }))
@@ -23,6 +25,7 @@ test('session.start registers tools and searcher agent', async ($, on) => {
 })
 
 test('score_sources writes JSON and runs script with mode and field', async ($, on) => {
+  FSREAD(on)
   const writes: any[] = []
   const argvs: string[][] = []
   on('fs.write', ($, e) => { writes.push(e); return { value: undefined } })
@@ -41,6 +44,7 @@ test('score_sources writes JSON and runs script with mode and field', async ($, 
 })
 
 test('score_sources defaults missing/invalid mode to academic, no field', async ($, on) => {
+  FSREAD(on)
   const argvs: string[][] = []
   on('fs.write', () => ({ value: undefined }))
   on('process.run', ($, e) => { argvs.push(e.argv); return { value: { exitCode: 0, stdout: 'x', stderr: '' } } })
@@ -53,6 +57,7 @@ test('score_sources defaults missing/invalid mode to academic, no field', async 
 })
 
 test('score_sources nonzero exit', async ($, on) => {
+  FSREAD(on)
   on('fs.write', () => ({ value: undefined }))
   on('process.run', () => ({ value: { exitCode: 1, stdout: '', stderr: 'err' } }))
   const out = await $.tool.call({ tool: SS, records: [] })
@@ -61,6 +66,7 @@ test('score_sources nonzero exit', async ($, on) => {
 })
 
 test('score_sources process.run rejects', async ($, on) => {
+  FSREAD(on)
   on('fs.write', () => ({ value: undefined }))
   on('process.run', () => ({ deny: 'nope' }))
   const out = await $.tool.call({ tool: SS, records: [] })
@@ -69,6 +75,7 @@ test('score_sources process.run rejects', async ($, on) => {
 })
 
 test('judge_support UNJUDGED cases and ordering', async ($, on) => {
+  FSREAD(on)
   on('http.fetch', ($, e) => {
     if (e.url.includes('404')) return { value: { ok: false, status: 503, headers: {}, text: '' } }
     if (e.url.includes('pdfct')) return html('stuff', 'application/pdf')
@@ -91,6 +98,7 @@ test('judge_support UNJUDGED cases and ordering', async ($, on) => {
 })
 
 test('judge_support model call shape, truncation, no page text leak', async ($, on) => {
+  FSREAD(on)
   const calls: any[] = []
   const body = 'Z'.repeat(30000)
   on('http.fetch', () => html(`<p>${body}</p>`))
@@ -108,6 +116,7 @@ test('judge_support model call shape, truncation, no page text leak', async ($, 
 })
 
 test('judge_support unparseable and unavailable', async ($, on) => {
+  FSREAD(on)
   on('http.fetch', () => html('<p>hi</p>'))
   on('model.complete', ($, e) => (JSON.stringify(e.prompt).includes('unavail')
     ? { value: { isAnswered: false, text: '', usage: USAGE } }

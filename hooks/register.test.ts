@@ -2,6 +2,8 @@ import { expect, test } from 'claude-code/testing'
 import { htmlToText, parseVerdict } from './register.js'
 import { emptyRun, mergeSources } from './view.js'
 
+const RUBRIC_STUB = ($: any, e: any) => ({ value: e.path.endsWith('/skills/scored-web-search/references/judge-rubric.md') ? 'RUBRIC' : '' })
+
 const USAGE = { input_tokens: 1, output_tokens: 1, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 }
 
 test('score_sources returns the script table', async ($, on) => {
@@ -14,6 +16,16 @@ test('score_sources returns the script table', async ($, on) => {
   const out = await $.tool.call({ tool: 'mcp__scored-web-search__score_sources', records: [{ url: 'https://a.org' }], mode: 'news' })
   expect(out.result).toBe('TABLE')
   expect(argvs[0]).toContain('news')
+  expect(argvs[0][1]).toMatch(/\/skills\/scored-web-search\/scripts\/srcscore\.py$/)
+})
+
+test('judge prompt starts with the rubric read from the skill folder', async ($, on) => {
+  const prompts: any[] = []
+  on('fs.read', RUBRIC_STUB)
+  on('http.fetch', () => ({ value: { ok: true, status: 200, headers: {}, text: '<p>body</p>' } }))
+  on('model.complete', ($, e) => { prompts.push(e.prompt); return { value: { isAnswered: true, text: 'USE|ok', usage: USAGE } } })
+  await $.tool.call({ tool: 'mcp__scored-web-search__judge_support', question: 'q', sources: [{ url: 'https://a.org' }] })
+  expect(String(prompts[0]).startsWith('RUBRIC')).toBe(true)
 })
 
 test('score_sources reports script failure', async ($, on) => {
@@ -24,6 +36,7 @@ test('score_sources reports script failure', async ($, on) => {
 })
 
 test('judge_support returns verdict lines only', async ($, on) => {
+  on('fs.read', RUBRIC_STUB)
   on('http.fetch', ($, e) => (e.url.includes('dead')
     ? { value: { ok: false, status: 404, headers: {}, text: '' } }
     : { value: { ok: true, status: 200, headers: { 'content-type': 'text/html' }, text: '<p>SECRET PAGE BODY</p>' } }))
@@ -59,6 +72,7 @@ const TABLE = [
 
 test('side view tracks score, judge, and read', async ($, on) => {
   const opened: string[] = []
+  on('fs.read', RUBRIC_STUB)
   on('fs.write', () => ({ value: undefined }))
   on('process.run', () => ({ value: { exitCode: 0, stdout: TABLE, stderr: '' } }))
   on('ui.open', ($, e) => { opened.push(e.id); return { value: { isPlaced: true } } })

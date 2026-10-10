@@ -10,20 +10,20 @@ This skill filters sub-standard sources before the main agent reads them when hi
 ## Pipeline
 
 ```
-1.   Search   (`scored-web-search:searcher` agent) → URL/title/date only, no summaries
-2.   Score    (`score_sources` tool)              → 0-100 + verdict
-2.5. Judge    (`judge_support` tool)              → SUPPORT only: USE / SKIP
+1.   Search   (lightweight subagent)        → URL/title/date only, no summaries
+2.   Score    (`scripts/srcscore.py`)        → 0-100 + verdict
+2.5. Judge    (lightweight subagent)        → SUPPORT only: USE / SKIP / UNJUDGED
 3.   Read     (main agent)                        → PRIMARY + USE-judged SUPPORT only
 4.   Re-search (loop back to 1 if sources are thin)
 5.   Verify / follow-up (optional)                → claims vs. evidence
 6.   Write    → every claim tagged with source + score
 ```
 
-The tools and the agent come from this plugin's mod. When sub-agents are not available, the main agent does Steps 1 and 5 as fallback. When the mod is not loaded, run `scripts/srcscore.py` (in the plugin root) directly for Step 2 and skip Step 2.5.
+Paths below are relative to this skill's folder. **If the `score_sources` tool is available, read `references/mod.md` first** — the plugin's mod replaces Steps 1, 2 and 2.5 with its own agent and tools. When sub-agents are not available, the main agent does Steps 1 and 5 as fallback and skips Step 2.5.
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to the `scored-web-search:searcher` agent (if absent: a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation) and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
@@ -31,7 +31,7 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 
 ### Step 2 — Score: hand it to the script
 
-Pass all subagent returns as `records` to the `score_sources` tool, with `mode` (and `field` when relevant), a short `round` label, and — for a Step 4 re-search or Step 5 follow-up — `parentRound` set to the label of the round it came from, so the side view nests it. Without the mod: write them as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
+Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
 
 Output is a compact table, roughly 15 tokens per line:
 
@@ -55,11 +55,15 @@ SCORE VERDICT T  SIGNALS                     URL
 
 ### Step 2.5 — Judge: vet SUPPORT sources
 
-Pass every SUPPORT source (with the research question) to `judge_support`. A cheap model reads each page and returns `url | USE/SKIP/UNJUDGED | reason`; page text never reaches you.
+Hand every SUPPORT source (with the research question) to a **lightweight subagent** (same model rule as Step 1, no `fork`). Give it `references/judge-rubric.md` verbatim and have it do **this and nothing else**:
+
+> For each URL: `WebFetch` the page and apply the rubric to it. If the page cannot be fetched, is empty, or is a PDF, answer UNJUDGED with the reason. Return only one line per URL, in input order: `url | USE/SKIP/UNJUDGED | reason`. No page text, quotes, or summaries.
+
+Page text never reaches you. No sub agent fallback: skip this step and read SUPPORT sources as before.
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
 - SKIP and UNJUDGED are final for this run: exclude the source from Step 3 and do not open it to second-guess the judge.
-- If the tool itself fails, read SUPPORT sources as before and say the judge step was unavailable.
+- If the judge itself fails, read SUPPORT sources as before and say the judge step was unavailable.
 
 ### Step 3 — Read: open only what passed
 `WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.** The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.

@@ -24,6 +24,7 @@ function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDe
   const openArgs: any[] = [], toasts: string[] = [], closed: string[] = []
   const panes: any[] = [...(opts.panes ?? [])]
   let i = 0
+  on('fs.read', ($: any, e: any) => ({ value: 'stub:' + e.path }))
   on('fs.write', () => ({ value: undefined }))
   on('process.run', () => {
     const outs = Array.isArray(opts.stdout) ? opts.stdout : [opts.stdout ?? T1]

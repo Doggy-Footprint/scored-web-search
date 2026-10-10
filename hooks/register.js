@@ -7,22 +7,10 @@ const PAGE_CHARS = 20000
 const JUDGE_CONCURRENCY = 4
 const MODES = ['academic', 'non-academic', 'community-opinion', 'news', 'official-docs']
 
-const SEARCHER_PROMPT = `You collect search results. Run the WebSearch tool for the queries you are given and return ONLY a JSON array of {"url", "title", "date"?} records.
-- "date" is an ISO date, included only when the search result itself supplies the publication date. Never guess.
-- No summaries, no snippets, no commentary. Never open pages.
-- Return 20-30 records per sub-topic, deduplicated by URL.`
-
-// Kept byte-identical across calls so it forms the cached prefix.
-const RUBRIC = `You are a strict source judge for a research pipeline. A heuristic scorer rated the page below as SUPPORT: credible but not primary. Decide whether the main researcher should read it for the question.
-
-Answer USE only when all hold:
-1. The page substantively addresses the question (not a passing mention, index page, or paywall/login stub).
-2. It carries its own evidence, data, or first-hand detail, or clearly attributes claims to named sources.
-3. It is not marketing, SEO filler, or a thin rewrite of another article.
-
-Otherwise answer SKIP.
-
-Reply with exactly one line: USE|<reason up to 15 words> or SKIP|<reason up to 15 words>`
+// The skill folder is the single origin of the scorer and the prompts; the skill-only path reads the same files.
+const SKILL_DIR = '/skills/scored-web-search'
+// Read whole and unchanged, so the rubric stays byte-identical across calls and forms the cached prefix.
+const ref = ($, name) => $.fs.read($.plugin.root + SKILL_DIR + '/references/' + name)
 
 // Session-only history in host state, so a write redraws the pane and a mod reload keeps it; reset on /clear, /resume, /branch.
 const RUN = atom({ plugin: 'scored-web-search', key: 'run' }, emptyRun())
@@ -70,7 +58,7 @@ export function register(on, options) {
     await $.agent.register({
       name: 'searcher',
       description: 'Scored web search step 1: runs web searches and returns URL/title/date JSON only.',
-      prompt: SEARCHER_PROMPT,
+      prompt: await ref($, 'searcher-prompt.md'),
       tools: ['WebSearch'],
       model: 'haiku',
       omitClaudeMd: true,
@@ -84,7 +72,7 @@ export function register(on, options) {
     const dir = $.plugin.root + '/.tmp'
     const infile = dir + '/urls-' + Date.now() + '.json'
     await $.fs.write(infile, JSON.stringify(e.records || []))
-    const argv = ['python3', $.plugin.root + '/scripts/srcscore.py', '--in', infile, '--mode', mode]
+    const argv = ['python3', $.plugin.root + SKILL_DIR + '/scripts/srcscore.py', '--in', infile, '--mode', mode]
     if (e.field) argv.push('--field', e.field)
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
@@ -181,7 +169,7 @@ export async function judgeOne($, source, question, model) {
   const r = await $.model.complete({
     model,
     prompt: [
-      { text: RUBRIC, cache: true },
+      { text: await ref($, 'judge-rubric.md'), cache: true },
       { text: 'Question: ' + question + '\nTitle: ' + (source.title || '') + '\nURL: ' + source.url + '\n\n<page>\n' + page + '\n</page>' },
     ],
     maxTokens: 100,
