@@ -93,7 +93,7 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
 
-Close the report with one line: `n sources collected → m passed → j judged-out → l read`.
+Close the report with one line: `n sources collected → m passed → j judged-out → l read`, followed by the keywords given to Step 1, in round order including re-search and follow-up rounds: `Keywords: <round>: q1, q2 / <round>: q3`.
 
 ## Scoring Policy
 

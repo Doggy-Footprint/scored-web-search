@@ -35,6 +35,7 @@ export function register(on, options) {
           mode: { type: 'string', enum: MODES },
           field: { type: 'string' },
           round: { type: 'string', description: 'Short label for this search round, shown in the side view' },
+          queries: { type: 'array', items: { type: 'string' }, description: 'Search keywords given to Step 1 for this round, shown in the side view' },
           parentRound: { type: 'string', description: 'For a re-search or follow-up: the round label it came from' },
         },
         required: ['records'],
@@ -78,7 +79,7 @@ export function register(on, options) {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }
       const rows = parseScoreTable(r.stdout)
-      await edit($, (run) => mergeSources(run, rows, addRound(run, { label: e.round, parent: e.parentRound, count: (e.records || []).length })))
+      await edit($, (run) => mergeSources(run, rows, addRound(run, { label: e.round, parent: e.parentRound, queries: e.queries, count: (e.records || []).length })))
       return { result: r.stdout }
     } catch (err) {
       return { result: 'srcscore.py could not run: ' + String(err && err.message || err) + '\nStop: do not fall back to unscored reading.' }

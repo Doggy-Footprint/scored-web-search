@@ -8,10 +8,10 @@ export function emptyRun() {
 }
 
 // A round is one score_sources call. `parent` names an earlier round's label; an unknown or missing one makes it a root.
-export function addRound(run, { label, parent, count }) {
+export function addRound(run, { label, parent, queries, count }) {
   const id = run.rounds.length + 1
   const up = parent ? [...run.rounds].reverse().find((r) => r.label === parent) : undefined
-  run.rounds.push({ id, label: label || 'Search ' + id, parent: up ? up.id : null, count })
+  run.rounds.push({ id, label: label || 'Search ' + id, parent: up ? up.id : null, queries: Array.isArray(queries) ? queries.filter((q) => typeof q === 'string' && q.trim()) : [], count })
   return id
 }
 
@@ -106,6 +106,7 @@ function roundRows(el, run, round, depth) {
   const { Text } = el
   const indent = '   '.repeat(depth)
   const rows = [Text({ bold: true, wrap: 'truncate-end', children: [indent + '▾ ' + (depth ? 'Follow-up: ' : 'Search: ') + round.label + '  ' + round.count + ' URLs'] })]
+  if (round.queries && round.queries.length) rows.push(Text({ dimColor: true, wrap: 'truncate-end', children: [indent + '   🔍 ' + round.queries.join(' · ')] }))
   for (const s of run.sources.filter((x) => x.round === round.id)) rows.push(...sourceRows(el, run, s, indent + '   '))
   for (const child of run.rounds.filter((r) => r.parent === round.id)) rows.push(...roundRows(el, run, child, depth + 1))
   return rows
