@@ -1,4 +1,4 @@
-[posting](https://blog-steel-ten-13.vercel.app/posts/scored-web-search)
+Related blog [posting](https://blog-steel-ten-13.vercel.app/posts/scored-web-search)
 # Install
 
 ```bash
