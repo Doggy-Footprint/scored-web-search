@@ -1,0 +1,6 @@
+{"id":"d10","kind":"official docs","caller":"opus",
+ "verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},
+ "worst":"A (minor, not counted): must-revalidate 504 Gateway Timeout behaviour and max-age omitted","worst_summary_quote":"If the response becomes stale, it must be validated with the origin server before reuse.","worst_page_quote":"genera una respuesta 504 (Gateway Timeout)","worst_page_url":"https://developer.mozilla.org/es-ES/docs/Web/HTTP/Headers/Cache-Control",
+ "quote_verified":true,"reader_gets_wrong":"Nothing material; reader would not know a cache must return 504 when revalidation is impossible, and max-age is not covered.","verbatim_source":"transcript",
+ "pages_compared":4,"pages_reused":4,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"na","notes":"Same 9 links as Haiku round. Opus summary candidly says no English MDN page was returned and points to en-US page. Scrapbox page unusable (57 chars). max-age not in QUERY."}

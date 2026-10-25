@@ -1,0 +1,40 @@
+{
+ "id": "r04",
+ "kind": "research",
+ "websearch": {
+  "verdict": "material loss",
+  "counts": {
+   "A": 1,
+   "B": 1,
+   "C": 1,
+   "D": 0
+  },
+  "worst": "B: Summary presents DRIFT as a separate larger trial registered to fill the gap, though the DRIFT protocol (same 3-day 80% restriction, ~34% deficit design as the Annals trial) appears to be the protocol of that very trial",
+  "worst_summary_quote": "a larger 52-week trial (DRIFT) was registered to address that gap",
+  "worst_page_quote": "This 80% energy restriction on three fast days per week translates to a targeted weekly energy deficit of ~34%.",
+  "worst_page_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9421629/",
+  "quote_verified": true,
+  "reader_gets_wrong": "A reader would think the 12-month Annals result is one trial and that a separate, larger, still-pending trial will settle the question, when the Annals trial likely is the DRIFT trial.",
+  "verbatim_source": "transcript",
+  "pages_compared": 3,
+  "notes": "Annals paper not in links; PMC protocol and Medical Dialogues compared; HealthDay/Newsweek/Scimex/ClinicalTrials gave no usable text. Omitted: 58% vs 47% reaching 5% loss, cardiometabolic secondary results, 300 min/week exercise and behavioral support in both arms. Newsweek ease-of-maintenance claim: maybe from an unfetched page. Identity of Annals trial with DRIFT inferred from matching design, not from an explicit statement in fetched text."
+ },
+ "webfetch": {
+  "verdict": "minor loss",
+  "counts": {
+   "A": 1,
+   "B": 0,
+   "C": 0,
+   "D": 0
+  },
+  "url": "https://www.researchsquare.com/article/rs-1663131/v1.html",
+  "fetch_prompt": "Does this article report randomized trials comparing intermittent fasting with daily calorie restriction for weight loss? If so, summarize the main weight-loss result for intermittent fasting versus daily calorie restriction, including effect sizes, confidence intervals or p-values where given, and whether the difference was statistically significant. Note the number of trials, participants, and follow-up duration if stated.",
+  "worst": "A: Omits the page's stated limitations of the three 52-week trials (high attrition, minimal behavioral support), so the 'no significant difference' findings look more conclusive than the protocol says",
+  "worst_summary_quote": "none found a significant weight-loss difference between the two",
+  "worst_page_quote": "the overall rate of attrition was high (60% in DCR, 49% in 5:2 IMF, and 58% in week-on-week-off)",
+  "quote_verified": true,
+  "reader_gets_wrong": "A reader may take the three trials as solid evidence of no difference, not knowing the protocol says each has limitations that prevent generalizable conclusions.",
+  "verbatim_source": "transcript",
+  "notes": "redone after redirect failure. PMC final URL (pmc.ncbi.nlm.nih.gov/articles/PMC9421629/) was fetched by H2 but WebFetch returned only a reCAPTCHA verification page, so no summary to compare; switched to the Research Square preprint of the same DRIFT protocol (no redirect, 92k chars raw). Numbers (-5.3 vs -6.0%, -6.6/-5.0/-5.1 kg, -5.0 vs -6.8 kg, n=100/332/137, 150 participants, 90% power for 3 kg) all match the page. Summary calls the 8-week pilot correctly non-52-week. Also omitted: attrition rates and ADF dropout 38% vs 29%."
+ }
+}

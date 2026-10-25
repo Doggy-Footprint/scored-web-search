@@ -1,0 +1,6 @@
+{"id":"r16","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":1,"D":1},
+ "worst":"A: summary says lines of code showed no effect, omitting the published log-transformed result favoring treatment (P=0.0103)","worst_summary_quote":"Lines of code written by engineers also showed no effect.","worst_page_quote":"When using log 2 (1 + code lines) the difference has a P value of 0.0103, with treatment having the higher average values.","worst_page_url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC11208135/",
+ "quote_verified":true,"reader_gets_wrong":"A reader may think the trial's code-output data were uniformly null, when one transformation showed a significant positive treatment difference.","verbatim_source":"transcript",
+ "pages_compared":4,"pages_reused":4,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes","notes":"Usable pages: PMC11208135, breeze.pm, nber w30292, IGL. Summary's 35% attrition reduction (working-paper version) is in no usable page (C, maybe from unfetched PDF); the page says one-third. Call-centre 'raised output' attributed to Stanford-linked study is not in usable pages (D/attribution, minor; breeze says gains and losses depending on selection). Manager -2.6%/+1.0%, 395 managers, 1,612 employees, 30%/20% IT figure are supported."}

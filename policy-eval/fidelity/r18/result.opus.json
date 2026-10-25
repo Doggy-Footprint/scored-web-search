@@ -1,0 +1,12 @@
+{"id":"r18","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":0,"C":2,"D":1},
+ "worst":"A: omits Dube-Zipperer split (broad-group median OWE 0.02, null vs teenagers -0.17); reports only pooled -0.13 as 'modest'",
+ "worst_summary_quote":"The median OWE of all published studies is -0.13.",
+ "worst_page_quote":"The median OWE for the 21 published studies examining broad groups is 0.02, suggesting a null effect on employment",
+ "worst_page_url":"https://arxiv.org/html/2509.20465",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader would think the typical effect is uniformly mildly negative, missing that broad-group studies find about zero and teen studies are larger.",
+ "verbatim_source":"transcript",
+ "pages_compared":2,"pages_reused":2,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes",
+ "notes":"Usable: arxiv html (search listed PDF) and Upjohn book page. Summary omits Belman-Wolfson (200+ publications meta-analysis, Upjohn, a listed link). Doucouliagos-Stanley '-0.01' and 'US teen' not in fetched pages (page: 'statistically indistinguishable from zero'), UK, Boockmann 55 studies, hiring/separations unverifiable: C, maybe from unfetched page. D: drops 'statistically indistinguishable' hedge. IZA page was cookie boilerplate; Emerald/Hendrix/encyclopedia/econpapers not fetched. Summary does flag the Doucouliagos figure as secondary-sourced. 72-study count verified."}

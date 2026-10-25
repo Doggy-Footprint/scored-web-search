@@ -1,0 +1,12 @@
+{"id":"r02","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":0,"C":2,"D":1},
+ "worst":"A: Meta-analysis's substantial heterogeneity (I2 74-98%) and 4 RCT + 11 observational design omitted; only a generic 'treat pooled numbers cautiously' remains",
+ "worst_summary_quote":"they noted that the comparative effectiveness of these two approaches remains uncertain, so treat the pooled numbers cautiously.",
+ "worst_page_quote":"Although substantial heterogeneity was present, BS was associated with greater and sustained reductions in weight",
+ "worst_page_url":"https://cedclinic.com/glp-1-bariatric-surgery-meta-analysis/",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader would take the 19.8 kg long-term advantage as a reasonably firm estimate without knowing it rests on highly heterogeneous, mostly observational data with unstated follow-up length.",
+ "verbatim_source":"transcript",
+ "pages_compared":3,"pages_reused":3,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"no",
+ "notes":"Same 9 links as Haiku round. Opus no longer calls the meta-analysis 'most rigorous' and adds a caution, but still omits heterogeneity. Cleveland Clinic figures (21.6% vs 6.8%, 3,932, 32%/35%) and ASMBS 2024 figures (25% at 10y, 50% regain) not in usable pages: maybe from an unfetched page; 'once either of these treatments were stopped' is a garbled scope (D) and sits under a 'GLP-1 durability' heading though 25% is a surgery figure. Pages reused: cedclinic, NBC Washington, ReachMD (NBC Boston not reused here; other links under 2000 chars or unfetched)."}

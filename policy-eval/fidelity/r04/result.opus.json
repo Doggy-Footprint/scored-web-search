@@ -1,0 +1,12 @@
+{"id":"r04","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":1,"C":1,"D":0},
+ "worst":"B: Summary calls DRIFT a 'related 52-week trial' separate from the Annals trial, though matching 34% deficit design suggests they are the same trial",
+ "worst_summary_quote":"A related 52-week trial (DRIFT, NCT03411356) was designed to address those gaps with objective adherence measures.",
+ "worst_page_quote":"This 80% energy restriction on three fast days per week translates to a targeted weekly energy deficit of ~34%.",
+ "worst_page_url":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9421629/",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader would think the 12-month Annals result and DRIFT are two different trials, so the evidence base looks larger than one trial.",
+ "verbatim_source":"transcript",
+ "pages_compared":3,"pages_reused":3,"links_total":9,"links_shared_with_haiku_round":4,
+ "haiku_worst_repeated":"yes",
+ "notes":"Annals paper not in links. Reused PMC9421629 protocol (also as researchsquare rs-1663131 preprint), Medical Dialogues; clinicaltrials/scimex/newsweek/healthday unusable. Core result (7.6% vs 5%, 165 randomized, 80% on 3 days, 34.3% deficit) matches. Not in compared pages: 2.89 kg, n=84/81, 125 (76%) completers, no binge-eating, adherence claim (C, maybe from unfetched page). Omitted 58% vs 47% reaching 5% loss and 300 min/week exercise plus behavioral support in both arms (A). Opus summary hedges that full paper was not retrieved and that Newsweek ease claim is interpretation. Less misleading than Haiku round: does not say DRIFT is pending."}

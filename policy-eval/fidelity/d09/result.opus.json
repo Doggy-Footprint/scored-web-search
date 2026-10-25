@@ -1,0 +1,6 @@
+{"id":"d09","kind":"official docs","caller":"opus",
+ "verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},
+ "worst":"none material; minor A: no mention that the option defaults to on under strict or of the resulting 'possibly undefined' errors","worst_summary_quote":"One guide says the option defaults to off","worst_page_quote":"The default setting is strictNullChecks=false .","worst_page_url":"https://dev.to/viridia/typescript-strictnullchecks-a-migration-guide-3glo",
+ "quote_verified":true,"reader_gets_wrong":"No material wrong belief; the summary is hedged ('One guide says') and points to the official TSConfig reference.","verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"na","notes":"Opus summary does not mention the strict-flag version (4.3 vs 4.4), so Haiku's worst finding is not touched. Migration-order claim (after noImplicitAny) matches the OneUptime flowchart. No official docs in Links; summary says so. Sling 'every file' and compilerOptions claims not individually confirmed; treated as minor."}

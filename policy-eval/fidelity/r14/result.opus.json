@@ -1,0 +1,6 @@
+{"id":"r14","kind":"research","caller":"opus",
+ "verdict":"material loss","counts":{"A":1,"B":0,"C":1,"D":0},
+ "worst":"A: omits Freedman/CCHP JWST result (H0=70.4, ~3%, overlaps Planck, tension possibly resolved); summary only conveys her methodological dissent and says cause still open","worst_summary_quote":"Dissent from Freedman's group. Wendy Freedman's team uses other stars.","worst_page_quote":"suggesting the tension may have been resolved after all","worst_page_url":"https://astronomynow.com/2025/06/09/is-the-hubble-tension-resolved/",
+ "quote_verified":true,"reader_gets_wrong":"A reader would think the JWST results leave the tension intact with Freedman only objecting on method, missing her JWST H0 of 70.4 (3%) that overlaps Planck.","verbatim_source":"transcript",
+ "pages_compared":7,"pages_reused":5,"links_total":10,"links_shared_with_haiku_round":7,
+ "haiku_worst_repeated":"yes","notes":"Opus summary is better than Haiku (no Universe Today misattribution, includes Freedman dissent) but still omits her numeric result. The 0.03 vs 0.18 mag claim is in no linked page (found only in arXiv 2307.15806 from the Haiku round), and 'large sampling differences' was not found in usable pages; baas page too short (825 chars)."}

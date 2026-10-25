@@ -1,2 +1,5 @@
 # Raw judge/score data is regenerated per run and is large; only reports are tracked.
 runs/
+# Page texts and verbatim tool results are raw data; only the per-topic result*.json and summary.json are tracked.
+fidelity/*/*.txt
+fidelity/*/*.tmp

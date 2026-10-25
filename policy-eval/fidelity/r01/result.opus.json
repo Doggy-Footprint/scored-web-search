@@ -1,0 +1,10 @@
+{"id":"r01","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":1,"D":0},
+ "worst":"A: omits the meta-analysis pooled results (RR 0.75 for CV death/HFH; CV death alone not reduced) that the page reports",
+ "worst_summary_quote":"I did not get its findings.",
+ "worst_page_quote":"SGLT2i were not superior to placebo for cardiovascular death or all-cause death in all RCTs, HF-RCTs, or CVOTs.",
+ "worst_page_url":"https://science.ulysseus.eu/records/j3b4d-9gk77",
+ "quote_verified":true,"reader_gets_wrong":"Reader is told the meta-analysis findings were not obtained, so they miss pooled benefit on CV death/HFH and the null on CV death alone, but is not led to a false belief.","verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":4,"links_total":10,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"no",
+ "notes":"Opus hedges honestly (did not get findings; check full papers) instead of Haiku's claim that the abstract had no pooled results. Pages: ulysseus, ajmc, pharmatimes, patientcare (reused), the-hospitalist (new). 'EF greater than 40%' for DELIVER and EMPEROR 'generally consistent' safety not in fetched pages; maybe from unfetched page. tctmd and cardiovascularbusiness unfetchable."}
