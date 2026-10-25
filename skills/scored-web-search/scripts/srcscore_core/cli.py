@@ -46,6 +46,11 @@ def main(argv=None):
                     help="the docs variant the question is about, e.g. nextjs.org=app "
                          "(repeatable; variants are listed in policy.json doc_variants). "
                          "Pages under another variant of that domain are penalised.")
+    ap.add_argument("--official-domain", action="append", default=[], metavar="DOMAIN",
+                    help="official-docs only: the product's own docs host, e.g. biomejs.dev "
+                         "(repeatable). An unregistered host (and its subdomains) is scored "
+                         "at the mode's official_domain tier and flagged; registered hosts "
+                         "keep their tier.")
     ap.add_argument("--modes-dir", default=None, help="override scripts/modes/ location")
     ap.add_argument("--version", action="version", version=VERSION)
     a = ap.parse_args(argv)
@@ -87,6 +92,22 @@ def main(argv=None):
         policy = dict(policy, doc_variant=doc_variant)
         try:
             validate_policy(policy, "merged policy + --doc-variant")
+        except PolicyError as e:
+            print("srcscore: %s" % e, file=sys.stderr)
+            return 3
+
+    official = [d.strip().lower() for d in a.official_domain]
+    if official:
+        if not all(official):
+            print("srcscore: --official-domain expects a domain", file=sys.stderr)
+            return 2
+        if not policy.get("official_domain"):
+            print("srcscore: --official-domain is not available in --mode %s" % a.mode,
+                  file=sys.stderr)
+            return 2
+        policy = dict(policy, official_domains=official)
+        try:
+            validate_policy(policy, "merged policy + --official-domain")
         except PolicyError as e:
             print("srcscore: %s" % e, file=sys.stderr)
             return 3

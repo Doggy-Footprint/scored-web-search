@@ -15,7 +15,7 @@ This skill filters sub-standard sources before the main agent reads them when hi
 2.5. Judge    (lightweight subagent)        → SUPPORT only: USE / SKIP / UNJUDGED
 3.   Read     (main agent)                        → PRIMARY + USE-judged SUPPORT only
 4.   Re-search (loop back to 1 if sources are thin)
-5.   Verify / follow-up (optional)                → claims vs. evidence
+5.   Verify / follow-up (optional; default in academic) → claims vs. evidence, trace to originals
 6.   Write    → every claim tagged with source + score
 ```
 
@@ -27,6 +27,8 @@ The main agent defines the search keywords. Delegate the actual web search to a 
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
+In `official-docs` mode, name the official docs host of the product the question is about (one or two, e.g. `docs.python.org`) and add `site:<host> <keywords>` queries next to the plain ones. Plain searches often miss the official page entirely.
+
 No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json`. The caution for sub agents works same for main agent too.
 
 ### Step 2 — Score: hand it to the script
@@ -34,6 +36,8 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
 
 When the question names a docs version or variant, pass it: `--doc-version nextjs.org=14`, `--doc-variant nextjs.org=app` (variants are listed under `doc_variants` in `scripts/policy.json`). Pages for another version or variant then score as `stale-version` / `wrong-variant`. Without them, only paths that read as superseded on their own are penalised.
+
+In `official-docs` mode, pass the hosts you used for `site:` queries: `--official-domain biomejs.dev`. A host the policy does not know is then scored SUPPORT with `official-claimed` instead of the unregistered default, so Step 2.5 still vets each page. A registered host keeps its tier.
 
 Output is a compact table, roughly 15 tokens per line:
 
@@ -79,15 +83,15 @@ Two re-search rounds max. Beyond that, **ask the user explicitly** before search
 
 Do not promote sub-WEAK sources becase of low credible sources. Change the keywords and re-run from step 1.
 
-### Step 5 — Verify / follow-up (optional): claims vs. evidence
+### Step 5 — Verify / follow-up: claims vs. evidence
 
 Follow-up: as with any web search, terms found in sources you read may be searched. Never run that search yourself; send it through Step 1 and Steps 2-2.5. It counts toward the two re-search rounds.
 
-Verify: only when the user has stressed accuracy, or the report carries a lot of figures. Give the sources url that passed scoring filter to a **lightweight subagent** and have it do **this and nothing else**:
+Verify: in `academic` mode, always. In other modes, only when the user has stressed accuracy, or the report carries a lot of figures. Give the sources url that passed scoring filter to a **lightweight subagent** and have it do **this and nothing else**:
 
 > For each figure or claim: (a) does this document actually state that figure, (b) is this document the original source of the figure or is it citing someone else, (c) are sample size, time period, and measurement method stated. Answer only in the format `claim | supported/secondary/contradicted | location of evidence`.
 
-When a figure turns out to be secondary, the document you read is not its source. Take the URL of the original it cites — a new source, not yet scored — and run that through steps 2-2.5; if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source.
+When a figure turns out to be secondary, the document you read is not its source. Take the URL of the original it cites — a new source, not yet scored — and run that through steps 2-2.5 (when it names the original without a URL, find it through Step 1); if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source. Tracing originals is one round of its own (`trace`); it does not count toward the two re-search rounds.
 
 No sub agent fallback: run the same claim-vs-evidence check yourself instead of delegating it. This step doesn't reintroduce the context-pollution problem Step 1 guards against — the sources are already open and being read — so there's no quality loss from doing it inline.
 
@@ -95,7 +99,7 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
 
-Close the report with one line: `n sources collected → m passed → j judged-out → l read`, followed by the keywords given to Step 1, in round order including re-search and follow-up rounds: `Keywords: <round>: q1, q2 / <round>: q3`.
+Close the report with one line: `n sources collected → m passed → j judged-out → l read`, followed by the keywords given to Step 1, in round order including re-search, follow-up and trace rounds: `Keywords: <round>: q1, q2 / <round>: q3`.
 
 ## Scoring Policy
 

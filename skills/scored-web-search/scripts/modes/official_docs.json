@@ -338,5 +338,10 @@
     "/what-is-",
     "/complete-guide-to",
     "/beginners-guide"
-  ]
+  ],
+  "official_domain": {
+    "_readme": "--official-domain names the docs host the agent believes is the product's own. It lifts only an unregistered host (policy default tier), and only to SUPPORT, so the Step 2.5 judge still reads every page: the claim is the agent's, not the policy's.",
+    "tier": "2",
+    "flag": "official-claimed"
+  }
 }

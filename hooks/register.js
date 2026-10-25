@@ -39,6 +39,7 @@ export function register(on, options) {
           parentRound: { type: 'string', description: 'For a re-search or follow-up: the round label it came from' },
           docVersions: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs version the question is about, per domain, e.g. {"nextjs.org": "14"}. Other versions of that domain are penalised' },
           docVariants: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs variant the question is about, per domain, e.g. {"nextjs.org": "app"}. Pages under another variant are penalised' },
+          officialDomains: { type: 'array', items: { type: 'string' }, description: 'official-docs mode only: the product\'s own docs hosts, e.g. ["biomejs.dev"]. An unregistered host is lifted to SUPPORT and flagged official-claimed; registered hosts keep their tier' },
         },
         required: ['records'],
       },
@@ -79,6 +80,7 @@ export function register(on, options) {
     if (e.field) argv.push('--field', e.field)
     for (const [dom, v] of Object.entries(e.docVersions || {})) argv.push('--doc-version', dom + '=' + v)
     for (const [dom, v] of Object.entries(e.docVariants || {})) argv.push('--doc-variant', dom + '=' + v)
+    for (const dom of e.officialDomains || []) argv.push('--official-domain', dom)
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }

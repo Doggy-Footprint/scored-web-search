@@ -18,7 +18,7 @@ __all__ = [
     "match_tier", "citation_points", "recency_points", "engagement_points",
     "engagement_floor_points", "path_penalty", "regex_path_penalty", "version_penalty",
     "variant_penalty",
-    "trusted_person_points", "score_one", "score_many",
+    "trusted_person_points", "official_claim", "score_one", "score_many",
 ]
 
 
@@ -45,6 +45,20 @@ def match_tier(url: str, policy: dict):
     if best is None:
         return str(policy["defaults"]["unregistered_tier"]), None
     return best[1], best[2]
+
+
+def official_claim(policy: dict, url: str, matched):
+    """(tier, flag) when the caller named this unregistered host as the product's
+    own docs with --official-domain; None otherwise. A registered host keeps the
+    tier the policy gave it, so the claim can only fill a gap, never overrule."""
+    cfg = policy.get("official_domain")
+    claimed = policy.get("official_domains")
+    if matched is not None or not cfg or not claimed:
+        return None
+    host = norm_host(url)
+    if any(host_matches(host, d.lower()) for d in claimed):
+        return str(cfg["tier"]), cfg["flag"]
+    return None
 
 
 def citation_points(policy: dict, citations: int, age: float):
@@ -326,6 +340,10 @@ def score_one(item: dict, policy: dict, cache, field: str,
     tier, pat = match_tier(url, policy)
     notes, flags, meta = [], [], {}
     adj = 0.0
+    claimed = official_claim(policy, url, pat)
+    if claimed:
+        tier = claimed[0]
+        flags.append(claimed[1])
 
     if tier == "block":
         return _result(item, 0.0, blocked_name(policy), tier, pat, ["blocklist"], meta)
