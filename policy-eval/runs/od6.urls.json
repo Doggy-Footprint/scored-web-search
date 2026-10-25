@@ -1,0 +1,242 @@
+[
+ {
+  "url": "https://www.fairwinds.com/blog/increase-kubernetes-reliability-a-best-practices-guide-for-readiness-probes",
+  "title": "increase kubernetes reliability a best practices guide for readiness probes"
+ },
+ {
+  "url": "https://zesty.co/?p=13367",
+  "title": "How Readiness Probes Work"
+ },
+ {
+  "url": "https://www.groundcover.com/blog/kubernetes-readiness-probe",
+  "title": "kubernetes readiness probe"
+ },
+ {
+  "url": "https://gitea.com/Cloud_GitDevSecOps/Kubernetes_K8S/src/branch/main/Kubernetes/Probes",
+  "title": "gitea.com"
+ },
+ {
+  "url": "https://github.com/algolia/kubernetes-hands-on/blob/3c5b855dc46fcb856670af213a67f885a3f28517/11-probes/README.md",
+  "title": "github.com"
+ },
+ {
+  "url": "https://komodor.com/learn/kubernetes-readiness-probes-a-practical-guide/",
+  "title": "Kubernetes Readiness Probe: Guide & Examples"
+ },
+ {
+  "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/",
+  "title": "Liveness, Readiness, and Startup Probes"
+ },
+ {
+  "url": "https://kodekloud.com/blog/kubernetes-readiness-probe/",
+  "title": "kubernetes readiness probe"
+ },
+ {
+  "url": "https://transip.eu/knowledgebase/configuring-readiness-liveness-and-startup-probes-in-kubernetes",
+  "title": "configuring readiness liveness and startup probes in kubernetes"
+ },
+ {
+  "url": "https://www.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/",
+  "title": "Configure Liveness, Readiness and Startup Probes"
+ },
+ {
+  "url": "https://v1-36.docs.kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/",
+  "title": "Configure Liveness, Readiness and Startup Probes"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-20-kubernetes-liveness-readiness-startup-probes/markdown",
+  "title": "How to Configure Kubernetes Liveness, Readiness, and Startup Probes"
+ },
+ {
+  "url": "https://startup-house.com/glossary/kubernetes-readiness-probe",
+  "title": "kubernetes readiness probe"
+ },
+ {
+  "url": "https://www.squadcast.com/blog/kubernetes-health-check-using-probes",
+  "title": "kubernetes health check using probes"
+ },
+ {
+  "url": "https://www.apptio.com/blog/kubernetes-readiness-probe/",
+  "title": "Kubernetes Readiness Probe: Tutorial & Examples"
+ },
+ {
+  "url": "https://www.gremlin.com/blog/managing-slow-container-starts-kubernetes-readiness-probes",
+  "title": "managing slow container starts kubernetes readiness probes"
+ },
+ {
+  "url": "https://juniper.net/documentation/en_US/day-one-books/topics/concept/readiness-probe.html",
+  "title": "Readiness Probe"
+ },
+ {
+  "url": "https://www.perfectscale.io/blog/kubernetes-health-check",
+  "title": "Kubernetes Health Checks: Ensure Performance & Availability"
+ },
+ {
+  "url": "https://itnext.io/kubernetes-readiness-probes-examples-common-pitfalls-136e3a9a058d",
+  "title": "Kubernetes Readiness Probes \u2014 Examples & Common Pitfalls"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-01-24-kubernetes-liveness-readiness-probes/view",
+  "title": "oneuptime.com"
+ },
+ {
+  "url": "https://spacelift.io/blog/kubernetes-readiness-probe",
+  "title": "Heading to KubeCon North America 2025?"
+ },
+ {
+  "url": "https://docs.okd.io/3.6/dev_guide/application_health.html",
+  "title": "application health"
+ },
+ {
+  "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition/",
+  "title": "Pod Conditions"
+ },
+ {
+  "url": "https://gurubase.io/g/kubernetes/purpose-of-readinessgates-in-kubernetes-pod-spec",
+  "title": "Purpose of 'readinessGates' in Kubernetes Pod spec"
+ },
+ {
+  "url": "https://itnext.io/a-less-known-feature-pod-readiness-gates-in-kubernetes-bbcdc6a8cadb",
+  "title": "A less known feature: Pod Readiness Gates in Kubernetes"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-08-07-kubernetes-running-not-ready-checklist/markdown",
+  "title": "Kubernetes Pod Running but Not Ready: A Diagnostic Checklist"
+ },
+ {
+  "url": "https://martinheinz.dev/blog/63",
+  "title": "Improving Application Availability with Pod Readiness Gates"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-pod-readiness-gates-custom-health/markdown",
+  "title": "How to Use Pod Readiness Gates for Custom Health Conditions"
+ },
+ {
+  "url": "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-setting-up-health-checks-with-readiness-and-liveness-probes",
+  "title": "Kubernetes best practices: Setting up health checks with readiness and liveness probes"
+ },
+ {
+  "url": "https://hackernoon.com/kubernetes-liveness-readiness-and-startup-probes-keys-to-container-health-and-resilience",
+  "title": "kubernetes liveness readiness and startup probes keys to container health and resilience"
+ },
+ {
+  "url": "https://urban.digit.org/v2.0/devops/probes",
+  "title": "Readiness & Liveness"
+ },
+ {
+  "url": "https://komodor.com/?p=3397",
+  "title": "Kubernetes Liveness Probes | Practical Guide and Best Practices"
+ },
+ {
+  "url": "https://learnkube.com/production-best-practices",
+  "title": "production best practices"
+ },
+ {
+  "url": "https://dev.to/nadimtuhin/setting-up-liveness-and-readiness-probes-in-a-kubernetes-deployment-48pp",
+  "title": "DEV Community"
+ },
+ {
+  "url": "https://www.computer.org/publications/tech-news/trends/improve-kubernetes-pod-availability-and-resilience",
+  "title": "IEEE.org"
+ },
+ {
+  "url": "https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/950-liveness-probe-holdoff/README.md",
+  "title": "KEP-950 README"
+ },
+ {
+  "url": "https://cloudoptimo.com/blog/liveness-readiness-startup-probes-kubernetes/",
+  "title": "Liveness vs Readiness vs Startup Probes in Kubernetes: What's the Difference?"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-startup-probes-slow-starting/markdown",
+  "title": "How to Use Startup Probes for Slow-Starting Applications on Kubernetes"
+ },
+ {
+  "url": "https://github.com/sidd-harth/kubernetes/blob/main/challenges/03%20-%20Startup%20Probe.md",
+  "title": "03 - Startup Probe"
+ },
+ {
+  "url": "https://decodeops.substack.com/p/kubernetes-probes-explained-practical",
+  "title": "Kubernetes probes explained \u2014 practical guide for DevOps"
+ },
+ {
+  "url": "https://www.kubernetes.dev/resources/keps/950/",
+  "title": "KEP-950: Add pod-startup liveness-probe holdoff for slow-starting pods"
+ },
+ {
+  "url": "https://docs.daocloud.io/en/kpanda/07UserGuide/Workloads/PodConfig/healthcheck",
+  "title": "container health check"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-probe-initialdelay-avoid-restarts/view",
+  "title": "oneuptime.com"
+ },
+ {
+  "url": "https://www.kubernetes.io/docs/concepts/services-networking/endpoint-slices/",
+  "title": "endpoint slices"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-20-kubernetes-endpoint-slices/view",
+  "title": "oneuptime.com"
+ },
+ {
+  "url": "https://kubernetes.io/docs/reference/kubernetes-api/discovery/endpoint-slice-v1/",
+  "title": "endpoint slice v1"
+ },
+ {
+  "url": "https://www.k8s.dev/resources/keps/1672/",
+  "title": "KEP-1672: Tracking Terminating Endpoints in EndpointSlice"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-readiness-gates-external-health/view",
+  "title": "oneuptime.com"
+ },
+ {
+  "url": "https://towardsdatascience.com/improving-application-availability-with-pod-readiness-gates-4ebebc3fb28a/",
+  "title": "improving application availability with pod readiness gates"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-custom-readiness-gates-external/markdown",
+  "title": "How to Use Custom Readiness Gates for External System Integration"
+ },
+ {
+  "url": "https://raindrop.io/ChrisShort/1-r-devopsish-15805349/sort=-sort&perpage=30&page=5",
+  "title": "raindrop bookmarks"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-08-01-native-vs-legacy-kubernetes-sidecars/markdown",
+  "title": "Native vs Legacy Kubernetes Sidecars: When to Use Native Sidecars"
+ },
+ {
+  "url": "https://kubernetes.io/blog/2025/06/03/start-sidecar-first/",
+  "title": "start sidecar first"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-08-01-kubernetes-sidecar-startup-order/markdown",
+  "title": "Kubernetes Native Sidecar, Init, and App Container Startup Order"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-09-05-gate-application-startup-istio-proxy/markdown",
+  "title": "Gate Application Startup on Istio Proxy Readiness"
+ },
+ {
+  "url": "https://www.gremlin.com/blog/safer-kubernetes-rollouts-with-minreadyseconds",
+  "title": "safer kubernetes rollouts with minreadyseconds"
+ },
+ {
+  "url": "https://jorijn.com/en/knowledge-base/kubernetes/deployments/kubernetes-rolling-updates-zero-downtime/",
+  "title": "Kubernetes rolling updates and zero-downtime deployments"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-02-09-min-ready-seconds-prevent-premature-rollout/markdown",
+  "title": "How to Use minReadySeconds to Prevent Premature Rollout Progression"
+ },
+ {
+  "url": "https://www.bluematador.com/blog/kubernetes-deployments-rolling-update-configuration",
+  "title": "kubernetes deployments rolling update configuration"
+ },
+ {
+  "url": "https://safe-wave-30402.onrender.com/Deployments/Blocking_Bad_Rollouts.html",
+  "title": "Blocking rollouts of bad versions"
+ }
+]

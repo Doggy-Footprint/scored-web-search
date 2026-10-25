@@ -1,0 +1,486 @@
+{
+ "id": "na3",
+ "judged_at": "2026-10-24",
+ "question": "What are the practical failure modes of Kubernetes autoscaling?",
+ "mode": "non-academic",
+ "field": "cs",
+ "judged": [
+  {
+   "url": "https://dzone.com/articles/kubernetes-autoscaling-what-breaks-under",
+   "title": "kubernetes autoscaling what breaks under",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "403 on fetch; snippet shows relevant failure list (dependency bottlenecks, lag, OOM) with unsourced figures"
+  },
+  {
+   "url": "https://yennj12.js.org/yennj12_blog_V4/posts/kubernetes-autoscaling-complete-guide-part7-troubleshooting-war-stories/",
+   "title": "Kubernetes Autoscaling Complete Guide (Part 7): Production Troubleshooting & War Stories",
+   "rank": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed causal failure chains (scaling lag, VPA OOM loop, spot cascade); stories admittedly illustrative composites"
+  },
+  {
+   "url": "https://par.nsf.gov/search/author:%22Kalbarczyk,%20Zbigniew%20T.%22",
+   "title": "skip to main content",
+   "rank": 3,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Author search listing page, no relevant content"
+  },
+  {
+   "url": "https://redsignals.beehiiv.com/p/why-kubernetes-cluster-autoscaler-fails-fixes-logs-yaml-inside",
+   "title": "Why Kubernetes Cluster Autoscaler Fails - Red Signals",
+   "rank": 4,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Checklist of ten CA blockers, shallow one-line fixes, unsupported claims"
+  },
+  {
+   "url": "https://par.nsf.gov/search/author:\"Kalbarczyk, Zbigniew T\"",
+   "title": "skip to main content",
+   "rank": 5,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate author search listing, no relevant content"
+  },
+  {
+   "url": "https://gurubase.io/g/kubernetes/kubernetes-auto-scaler-malfunction-fixes",
+   "title": "kubernetes auto scaler malfunction fixes",
+   "rank": 6,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "AI Q&A page now returns 410 Gone"
+  },
+  {
+   "url": "https://par.nsf.gov/search/author:%22Kalbarczyk,%20Zbigniew%22",
+   "title": "skip to main content",
+   "rank": 7,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Author search listing page, irrelevant"
+  },
+  {
+   "url": "https://www.site24x7.com/solutions/kubernetes-autoscaling.html",
+   "title": "Deciphering Kubernetes autoscaling issues before they escalate",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Covers four common issues generically, heavy monitoring-product pitch, unsourced stats"
+  },
+  {
+   "url": "https://dev.to/ismailkovvuru/kubernetes-autoscaling-fails-silently-heres-why-and-how-to-fix-it-34h8",
+   "title": "Kubernetes Autoscaling Fails Silently - DEV Community",
+   "rank": 9,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Preview-style post listing silent CA blockers; details behind external newsletter"
+  },
+  {
+   "url": "https://www.cloudbolt.io/blog/scale-jvm-kubernetes/",
+   "title": "scale jvm kubernetes",
+   "rank": 10,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Clear mechanism of JVM startup CPU burst causing HPA thrashing; vendor framing"
+  },
+  {
+   "url": "https://scaleops.com/blog/kubernetes-hpa/",
+   "title": "kubernetes hpa",
+   "rank": 11,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Substantive HPA pitfalls: lag, throttled pods, averages, memory signal; vendor pitch"
+  },
+  {
+   "url": "https://adhdecode.com/performance-engineering/capacity-planning-and-auto-scaling/horizontal-pod-autoscaler/",
+   "title": "Topic 307 of 405 in Performance Engineering",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Conceptual HPA pitfalls, templated feel, no configs or evidence"
+  },
+  {
+   "url": "https://www.plural.sh/blog/hpa-kubernetes-guide/amp/",
+   "title": "Kubernetes HPA: Your Guide to Autoscaling",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "AMP duplicate of Plural HPA guide"
+  },
+  {
+   "url": "https://www.learncursor.dev/tracks/software-engineer-infrastructure-interview/se-infra-aws-networking-kubernetes/se-infra-aws-networking-kubernetes--se-infra-aws-networking-kubernetes-s5--l5",
+   "title": "se infra aws networking kubernetes s5 l5",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short interview-prep lesson on thrash; conceptual only"
+  },
+  {
+   "url": "https://www.plural.sh/blog/hpa-kubernetes-guide/",
+   "title": "hpa kubernetes guide",
+   "rank": 15,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "General HPA guide with brief pitfalls, heavy vendor pitch"
+  },
+  {
+   "url": "https://scaleops.com/resources/videos/kubernetes-hpa-reactive-scaling-limitations/",
+   "title": "kubernetes hpa reactive scaling limitations",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Vendor video landing page; brief summary of HPA lag and HPA/VPA loop"
+  },
+  {
+   "url": "https://www.alibabacloud.com/en/developer/a/middleware/misunderstandings-of-kubernetes-hpa",
+   "title": "Three Misunderstandings of Kubernetes HPA and Guidelines for Avoiding Pits",
+   "rank": 17,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Concrete HPA mechanics: tolerance dead zone, request-based utilization, lag"
+  },
+  {
+   "url": "https://www.netdata.cloud/guides/haproxy/haproxy-server-flapping-up-down/",
+   "title": "HAProxy server flapping: rise, fall, and health checks oscillating UP and DOWN",
+   "rank": 18,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "About HAProxy health checks, not Kubernetes autoscaling"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-17-how-to-troubleshoot-gke-cluster-autoscaler-not-scaling-up-nodes/markdown",
+   "title": "How to Troubleshoot GKE Cluster Autoscaler Not Scaling Up Nodes",
+   "rank": 19,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concrete GKE CA scale-up failure causes with commands and events"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up",
+   "title": "GKE troubleshooting: cluster autoscaler scale-up",
+   "rank": 20,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Authoritative catalog of CA scale-up failures: quota, IP, predicates, backoff"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up?authuser=2",
+   "title": "GKE troubleshooting: cluster autoscaler scale-up",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Duplicate URL variant of GKE docs page"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up?hl=zh-tw",
+   "title": "cluster autoscaler scale up",
+   "rank": 22,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Chinese-language duplicate of GKE docs page"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-16-how-to-fix-azure-kubernetes-service-cluster-autoscaler-not-scaling-issues/markdown",
+   "title": "How to Fix Azure Kubernetes Service Cluster Autoscaler Not Scaling Issues",
+   "rank": 23,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AKS CA scale-up/down blockers with concrete fields and commands"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up?hl=pt",
+   "title": "cluster autoscaler scale up",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Portuguese duplicate of GKE docs page"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up?hl=pt-br",
+   "title": "cluster autoscaler scale up",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Brazilian Portuguese duplicate of GKE docs page"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-09-cluster-autoscaler-scale-up-failures/markdown",
+   "title": "How to Handle Cluster Autoscaler Scale-Up Failures and Unschedulable Pods",
+   "rank": 26,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Covers quota, IAM, IP exhaustion, capacity, registration failures concretely"
+  },
+  {
+   "url": "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up?hl=de",
+   "title": "cluster autoscaler scale up",
+   "rank": 27,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "German duplicate of GKE docs page"
+  },
+  {
+   "url": "https://www.ilert.com/postmortems/neon-outage-may-2025",
+   "title": "Postmortem Library - Neon outage May 2025",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Real outage from IP exhaustion under dynamic load; tangential to autoscalers"
+  },
+  {
+   "url": "https://www.magicpages.co/blog/post-mortem-on-24-june-2025-partial-outage/",
+   "title": "post mortem on 24 june 2025 partial outage",
+   "rank": 29,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Real postmortem: autoscaler couldn't provision due to provider capacity shortage"
+  },
+  {
+   "url": "https://mainbranch.beehiiv.com/p/issue-37",
+   "title": "Main Branch issue 37",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Newsletter recap of GitHub sidecar autoscaling failure; secondary summary"
+  },
+  {
+   "url": "https://in.linkedin.com/in/jayitab",
+   "title": "in.linkedin.com",
+   "rank": 31,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Personal LinkedIn profile, no substantive content"
+  },
+  {
+   "url": "https://gitlab.com/gitlab-com/gl-infra/production/-/issues/4940",
+   "title": "2021-06-21: GKE unable to scale due to lack of SSD availability",
+   "rank": 32,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary incident record: CA failed on capacity exhaustion and pool fallback bug"
+  },
+  {
+   "url": "https://tr.linkedin.com/in/abdullah-deliogullari",
+   "title": "abdullah deliogullari",
+   "rank": 33,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Personal LinkedIn profile, irrelevant"
+  },
+  {
+   "url": "https://yennj12.js.org/yennj12_blog_V4/tags/incidents/",
+   "title": "← Back to Main Site",
+   "rank": 34,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Tag index page listing one post, no content"
+  },
+  {
+   "url": "https://status.pusher.com/incidents/t2dl1x57jb2p",
+   "title": "Elevated error rates on the MT1",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Real incident: scale-up overloaded Redis/control plane; brief"
+  },
+  {
+   "url": "https://www.resumelens.org/blog/kubernetes/hpa-vs-vpa",
+   "title": "The Kubernetes autoscaling stack",
+   "rank": 36,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Many concrete HPA/VPA failure modes with mechanisms and safe patterns"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-09-07-reconcile-vpa-goldilocks-cloud-recommendations/view",
+   "title": "Reconcile VPA, Goldilocks and cloud recommendations",
+   "rank": 37,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mainly VPA recommendation reconciliation; some HPA/VPA conflict points"
+  },
+  {
+   "url": "https://scaleops.com/blog/hpa-vs-vpa-understanding-kubernetes-autoscaling-and-why-its-not-enough-in-2025/",
+   "title": "hpa vs vpa understanding kubernetes autoscaling and why its not enough in 2025",
+   "rank": 38,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Solid list of HPA/VPA failure modes incl. feedback loop; heavy vendor pitch"
+  },
+  {
+   "url": "https://notes.kodekloud.com/docs/Kubernetes-Autoscaling/Vertical-Pod-Autoscaler-VPA/Summary-Closure-and-Limitation-of-HPA-VPA/page",
+   "title": "KodeKloud notes: Limitation of HPA VPA",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Course notes on HPA/VPA limitations; fetch rate-limited"
+  },
+  {
+   "url": "https://notes.kodekloud.com/docs/Kubernetes-Autoscaling/Vertical-Pod-Autoscaler-VPA/Summary-Closure-and-Limitation-of-HPA-VPA/page.md",
+   "title": "> ## Documentation Index",
+   "rank": 40,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Markdown duplicate of course notes page"
+  },
+  {
+   "url": "https://adhdecode.com/debugging-distributed/debugging-kubernetes-workloads-and-storage/debugging-hpa-vpa-autoscaling-kubernetes/",
+   "title": "Topic 131 of 409 in Debugging Distributed Systems",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reasonable HPA/VPA interference explanation but generic course content"
+  },
+  {
+   "url": "https://github-wiki-see.page/m/ghdrako/doc_snipets/wiki/kubernetes-autoscaling-vpe-hpa",
+   "title": "kubernetes autoscaling vpe hpa - ghdrako/doc_snipets GitHub Wiki",
+   "rank": 42,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mirror of personal snippet wiki notes"
+  },
+  {
+   "url": "https://help.archibus.com/system_v2022.01/Content/metrics/metrics_vpa.htm",
+   "title": "Using Virtual Private Archibus (VPA) with Metric Trend Values",
+   "rank": 43,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Unrelated Archibus product docs"
+  },
+  {
+   "url": "https://access.redhat.com/solutions/4492031",
+   "title": "Metrics server and HPA not working due to misconfigured MTU size",
+   "rank": 44,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Specific real HPA metrics failure case; likely paywalled, fetch rate-limited"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-09-10-stop-karpenter-consolidation-disrupting-batch-jobs/view",
+   "title": "Stop Karpenter consolidation disrupting batch jobs",
+   "rank": 45,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concrete consolidation disruption failure and limits of budgets/annotations"
+  },
+  {
+   "url": "https://status.vapi.ai/incident/700262",
+   "title": "Vapi status incident",
+   "rank": 46,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Real incident: Karpenter consolidation evicted Redis, dropped calls; fetch rate-limited"
+  },
+  {
+   "url": "https://dev.to/zop_8abedcc7e12/karpenter-consolidation-6-settings-worth-tuning-in-2026-4bo6",
+   "title": "Karpenter consolidation: 6 settings worth tuning in 2026",
+   "rank": 47,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page returns 404"
+  },
+  {
+   "url": "https://daily.dev/posts/karpenter-disruption-and-drift-how-to-consolidate-nodes-safely-7vmi92mf1",
+   "title": "karpenter disruption and drift how to consolidate nodes safely",
+   "rank": 48,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Aggregator stub linking a Cast AI article"
+  },
+  {
+   "url": "https://sivaro.in/articles/karpenter-node-provisioning-cost-analysis-the-real-math/",
+   "title": "Karpenter Node Provisioning Cost Analysis: The Real Math Behind Auto-Scaling",
+   "rank": 49,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page returns 404; cost-focused SEO content"
+  },
+  {
+   "url": "https://sivaro.in/articles/kubernetes-node-consolidation-karpenter-tutorial-cut-your/",
+   "title": "kubernetes node consolidation karpenter tutorial cut your",
+   "rank": 50,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page returns 404; SEO tutorial title"
+  },
+  {
+   "url": "https://sivaro.in/articles/karpenter-disruption-budgets-cost-impact-the-hidden-leak/",
+   "title": "Karpenter Disruption Budgets Cost Impact: The Hidden Leak",
+   "rank": 51,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page returns 404"
+  },
+  {
+   "url": "https://sivaro.in/articles/karpenter-node-consolidation-not-working-heres-the-real-fix/",
+   "title": "Karpenter Node Consolidation Not Working? Here's the Real Fix",
+   "rank": 52,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Sound blocker list but SEO-heavy, outdated API, dubious config claims"
+  },
+  {
+   "url": "https://sivaro.in/articles/kubernetes-karpenter-node-consolidation-the-real-world/",
+   "title": "Kubernetes Karpenter Node Consolidation: The Real-World Playbook",
+   "rank": 53,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page returns 404"
+  }
+ ]
+}

@@ -20,7 +20,8 @@ policy's output reaches the judge, the policy grades its own exam.
 1. **Blind judge** (Workflow agent, Opus 5.5, effort medium, no skill/plugin tools, no policy files).
    Plain WebSearch, 40-60 URLs, each labelled `useful` / `marginal` / `junk` against the question, with
    `vendor_interest`, `basis` (`fetched` | `snippet`), `rank`, and a short reason. Writes
-   `runs/<id>.judge.json` and `runs/<id>.urls.json` (URL/title/search-result date).
+   `runs/<id>.judge.json` (with `judged_at`, the run date) and `runs/<id>.urls.json` (URL/title/search-result
+   date). These two are tracked: they are the regression set (see "Run log").
    `expansion: true` questions are judged in two rounds: round-2 keywords come only from the body text of
    round-1 pages the judge fetched, recorded as `expansion_keywords` `{keyword, source_url}`; entries carry `round`.
 2. **Arms** (`claude plugin eval`, one case per question, `policy-eval/arms/<id>/case.yaml`, Opus 5.5).
@@ -124,3 +125,20 @@ of every summary is grep-verified against the page (step 7).
   - *Limits.* n = 30, one judge per topic, two runs per arm. The baseline prompts were written by a Haiku caller;
     an Opus main agent writes different ones. The judge's truncation calls depend on the page text, which can be
     longer than what WebFetch read.
+
+## Run log
+
+Dates are when each round ran. Labels age: pages change and "current version" questions go stale, so read a
+result against its date.
+
+| Date | Round | Output |
+|---|---|---|
+| 2026-10-24 | Blind judge, 20 pilot questions | `runs/*.judge.json`, `runs/*.urls.json`, `results/a_summary.json` |
+| 2026-10-24 | Arms, with vs without | `results/pilot.summary.json` |
+| 2026-10-25 | Fidelity round 1 (Haiku caller) and round 2 (Opus caller WebSearch) | `fidelity/*/result.json`, `result.opus.json` |
+| 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
+| 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
+
+The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
+or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes
+new questions, judged in a new dated round.

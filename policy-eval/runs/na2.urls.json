@@ -1,0 +1,205 @@
+[
+ {
+  "url": "https://www.olostep.com/blog/best-vector-database",
+  "title": "Best vector database (Olostep)"
+ },
+ {
+  "url": "https://dupple.com/learn/best-vector-databases",
+  "title": "Best Vector Databases in 2026: 8 Options Tested for RAG and Scale"
+ },
+ {
+  "url": "https://pub.towardsai.net/vector-database-for-rag-a7ddae9bf893",
+  "title": "Vector database for RAG (Towards AI, member-only)"
+ },
+ {
+  "url": "https://www.apxml.com/posts/best-databases-for-rag",
+  "title": "Best databases for RAG (apxml)"
+ },
+ {
+  "url": "https://www.braintrust.dev/articles/best-vector-databases-for-rag-2026",
+  "title": "Best vector databases for RAG 2026 (Braintrust)"
+ },
+ {
+  "url": "https://www.zenml.io/blog/vector-databases-for-rag",
+  "title": "10 Best Vector Databases for RAG Pipelines (ZenML)"
+ },
+ {
+  "url": "https://www.chatrag.ai/blog/2026-03-18-5-critical-factors-for-choosing-the-right-vector-database-for-rag-in-2025",
+  "title": "5 critical factors for choosing the right vector database for RAG",
+  "date": "2026-03-18"
+ },
+ {
+  "url": "https://techsy.io/en/blog/best-vector-databases-2026",
+  "title": "Best Vector Databases in 2026: 9 Picks, Real Pricing, and Code"
+ },
+ {
+  "url": "https://gautamkhorana.com/blog/best-vector-database-for-rag-2026/",
+  "title": "Best vector database for RAG 2026 (Gautam Khorana)"
+ },
+ {
+  "url": "https://medium.com/@pratik-rupareliya/top-15-vector-databases-in-2026-a-production-decision-guide-from-100-enterprise-deployments-dd58a04f51a5",
+  "title": "Top 15 vector databases in 2026: A production decision guide from 100+ enterprise deployments"
+ },
+ {
+  "url": "https://www.groovyweb.co/blog/top-10-ai-vector-databases-2026",
+  "title": "Top 10 AI vector databases 2026 (Groovy Web)"
+ },
+ {
+  "url": "https://dupple.com/learn/pinecone-alternatives",
+  "title": "8 Best Pinecone Alternatives in 2026 (Vector DB Comparison)"
+ },
+ {
+  "url": "https://dev.to/darshit_01/the-best-vector-database-in-2026-qdrant-vs-pinecone-vs-weaviate-vs-milvus-vs-pgvector-3147",
+  "title": "The Best Vector Database in 2026: Qdrant vs Pinecone vs Weaviate vs Milvus vs pgvector"
+ },
+ {
+  "url": "https://geekflare.com/open-source/vector-database/",
+  "title": "Best Open Source Vector Databases in 2026 (Geekflare)"
+ },
+ {
+  "url": "https://encore.dev/articles/best-vector-databases",
+  "title": "Best Vector Databases in 2026 (Encore)"
+ },
+ {
+  "url": "https://encore.dev/resources/best-vector-databases",
+  "title": "Best Vector Databases in 2026 (Encore, resources mirror)"
+ },
+ {
+  "url": "https://www.flur.ee/blog/weaviate-alternatives",
+  "title": "Weaviate alternatives (Fluree)"
+ },
+ {
+  "url": "https://blog.elest.io/qdrant-vs-weaviate-vs-milvus-which-vector-database-for-your-rag-pipeline/",
+  "title": "Qdrant vs Weaviate vs Milvus: Which Vector Database for Your RAG Pipeline?"
+ },
+ {
+  "url": "https://insertchat.com/glossary/pgvector",
+  "title": "What is pgvector? Vector Similarity Search Built Into PostgreSQL"
+ },
+ {
+  "url": "https://www.devart.com/blog/?p=183668",
+  "title": "Devart blog (pgvector for RAG, alternate URL)"
+ },
+ {
+  "url": "https://www.devart.com/blog/pgvector-for-rag.html",
+  "title": "pgvector for RAG: When you don't need a dedicated vector database"
+ },
+ {
+  "url": "https://www.tessell.com/blog/postgresql-vector-database-with-pgvector",
+  "title": "PostgreSQL Vector Database with pgvector (Tessell)"
+ },
+ {
+  "url": "https://agence-scroll.com/en/blog/pgvector-vs-qdrant",
+  "title": "pgvector vs Qdrant (Scroll)"
+ },
+ {
+  "url": "https://www.selfhost.dev/blog/best-vector-database-for-rag-in-2026/",
+  "title": "Best Vector Database for RAG in 2026: The Honest Verdict"
+ },
+ {
+  "url": "https://www.cloudmagazin.com/en/2026/04/02/vector-databases-rag-pinecone-weaviate-qdrant-pgvector-comparison/",
+  "title": "Vector Databases for RAG: Pinecone, Weaviate, Qdrant, pgvector comparison (cloudmagazin)",
+  "date": "2026-04-02"
+ },
+ {
+  "url": "https://ecorpit.com/pgvector-vs-dedicated-vector-database-rag-decision-2026/",
+  "title": "pgvector or a dedicated vector database? A RAG decision guide for 1M to 100M vectors"
+ },
+ {
+  "url": "https://www.bacancytechnology.com/insights/vector-db-for-rag",
+  "title": "We Tested 10 Open Source Vector Databases for RAG (Bacancy)"
+ },
+ {
+  "url": "https://engineersguide.substack.com/p/best-vector-databases-rag",
+  "title": "Best vector databases for production RAG in 2026: Performance and cost guide"
+ },
+ {
+  "url": "https://dev.to/pooyagolchian/rag-pipelines-in-production-vector-database-benchmarks-chunking-strategies-and-hybrid-search-data-51i7",
+  "title": "RAG Pipelines in Production: Vector Database Benchmarks, Chunking Strategies, and Hybrid Search"
+ },
+ {
+  "url": "https://www.dio.me/articles/benchmarking-de-vector-dbs-em-rag-o-que-muda-em-2026-de3aad315650",
+  "title": "Benchmarking de vector DBs em RAG: o que muda em 2026"
+ },
+ {
+  "url": "https://www.f22labs.com/blogs/zvec-vs-qdrant-vs-milvus-vector-database-comparison-for-rag",
+  "title": "Zvec vs Qdrant vs Milvus vector database comparison for RAG"
+ },
+ {
+  "url": "https://www.dio.me/en/articles/benchmarking-de-vector-dbs-em-rag-o-que-muda-em-2026-de3aad315650",
+  "title": "Benchmarking de vector DBs em RAG (English mirror)"
+ },
+ {
+  "url": "https://pooyagolchian.com/blog/rag-pipelines-production-vector-databases-2026/",
+  "title": "RAG pipelines in production: vector databases 2026 (Pooya Golchian)"
+ },
+ {
+  "url": "https://www.parse.gl/prompts/p/we-are-evaluating-vector-databases-who-offers-performance-benchmarking-for-high-scale-rag--f4fd4aa4-e9eb-4fac-916d-c07c62792b4e",
+  "title": "Parse: AI responses on vector DB benchmarking"
+ },
+ {
+  "url": "https://chat2db.ai/resources/blog/chroma-vs-qdrant-vs-pgvector",
+  "title": "Chroma vs Qdrant vs pgvector (Chat2DB)"
+ },
+ {
+  "url": "https://wz-it.com/knowledge/ki/qdrant-vs-pgvector/",
+  "title": "Qdrant vs pgvector (WZ-IT, German)"
+ },
+ {
+  "url": "https://wz-it.com/en/knowledge/ki/qdrant-vs-pgvector/",
+  "title": "Qdrant vs pgvector (WZ-IT, English)"
+ },
+ {
+  "url": "https://datascienceinaction.substack.com/p/when-to-use-which-vector-database",
+  "title": "When to Use Which Vector Database for the RAG?"
+ },
+ {
+  "url": "https://noqta.tn/blog/vector-database-comparison-2026-pgvector-pinecone-qdrant-weaviate",
+  "title": "Vector Database Comparison 2026: Picking Your RAG Backend (Noqta)"
+ },
+ {
+  "url": "https://www.cloudmagazin.com/2026/04/02/vektordatenbanken-rag-pinecone-weaviate-qdrant-pgvector-vergleich/",
+  "title": "Vektordatenbanken für RAG: Vergleich (cloudmagazin, German)",
+  "date": "2026-04-02"
+ },
+ {
+  "url": "https://techsy.io/de/blog/qdrant-vs-chroma-vs-pgvector-vergleich",
+  "title": "Qdrant vs Chroma vs pgvector Vergleich (Techsy, German)"
+ },
+ {
+  "url": "https://zilliz.com/blog/vdbbench-1-0-benchmarking-with-your-real-world-production-workloads",
+  "title": "Announcing VDBBench 1.0: Open-Source VectorDB Benchmarking"
+ },
+ {
+  "url": "https://docs.zilliz.com/docs/perf-benchmark-vectordb",
+  "title": "Performance Benchmarking with VectorDBBench (Zilliz docs)"
+ },
+ {
+  "url": "https://www.pypi.org/project/vectordb-bench/0.0.2/",
+  "title": "vectordb-bench 0.0.2 (PyPI)"
+ },
+ {
+  "url": "https://pypi.org/project/vectordb-bench/",
+  "title": "vectordb-bench (PyPI)"
+ },
+ {
+  "url": "https://docs.zilliz.com/docs/byoc/perf-benchmark-vectordb",
+  "title": "Performance Benchmarking with VectorDBBench (Zilliz BYOC docs)"
+ },
+ {
+  "url": "https://github.com/CalvinNeo/VectorDBBench",
+  "title": "CalvinNeo/VectorDBBench (GitHub fork)"
+ },
+ {
+  "url": "https://docsearch.algolia.com/mcp/docs/repo/zilliztech/vectordbbench",
+  "title": "VectorDBBench (VDBBench) - Algolia DocSearch mirror"
+ },
+ {
+  "url": "https://rmarcus.info/dbscholar/papers/hce58f42a2287a94e",
+  "title": "VecBench: A Controllable Benchmark for Filtered Vector Search (DBScholar listing)"
+ },
+ {
+  "url": "https://arxiv.org/html/2602.11443v1",
+  "title": "Filtered Approximate Nearest Neighbor Search in Vector Databases: System Design and Performance Analysis"
+ }
+]

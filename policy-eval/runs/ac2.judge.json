@@ -1,0 +1,495 @@
+{
+ "id": "ac2",
+ "judged_at": "2026-10-24",
+ "question": "What is the measured efficacy of GLP-1 receptor agonists for weight maintenance after discontinuation?",
+ "mode": "academic",
+ "field": "med",
+ "judged": [
+  {
+   "url": "https://www.medrxiv.org/content/10.1101/2025.06.09.25328726.full.pdf",
+   "title": "Trajectory of weight regain after cessation of GLP-1 receptor agonists: a systematic review and nonlinear meta-regression",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Preprint PDF of Cambridge meta-regression; superseded by peer-reviewed version; fetch blocked."
+  },
+  {
+   "url": "https://www.medrxiv.org/node/1008049",
+   "title": "www.medrxiv.org",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Non-peer-reviewed preprint page of meta-regression; later published in eClinicalMedicine."
+  },
+  {
+   "url": "https://www.medrxiv.org/content/10.1101/2025.06.09.25328726v1.full-text",
+   "title": "2025.06.09.25328726v1.full text",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate preprint full-text; superseded by peer-reviewed article; fetch blocked."
+  },
+  {
+   "url": "https://www.repository.cam.ac.uk/items/c307d6a7-8d00-4aa9-aa6a-f65a59e178c1",
+   "title": "Repository logo",
+   "rank": 4,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Accepted peer-reviewed eClinicalMedicine meta-regression: 60% regain at 1 year, plateau ~75%."
+  },
+  {
+   "url": "https://www.doctors.net.uk/news/patients-regain-60-of-weight-lost-on-glp-1-drugs-within-a-year-of-stopping",
+   "title": "Patients regain 60% of weight lost on GLP-1 drugs within a year of stopping",
+   "rank": 5,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "News summary of Cambridge review; no DOI or link, paywalled."
+  },
+  {
+   "url": "https://www.healthday.com/healthpro-news/weight-loss/weight-regain-seen-after-cessation-of-glp-1-receptor-agonists-in-adults-with-overweight-obesity",
+   "title": "weight regain seen after cessation of glp 1 receptor agonists in adults with overweight obesity",
+   "rank": 6,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Brief news blurb, single figure, no citation to primary study."
+  },
+  {
+   "url": "https://platoai.gbaglobal.org/?p=2595845",
+   "title": "The Impact of GLP-1R Agonist Withdrawal on Weight Regain and Cardiometabolic Effects",
+   "rank": 7,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Auto-generated content aggregator; low authority; fetch failed."
+  },
+  {
+   "url": "https://nference.com/publications/aWZ1vBEAAB8AP7-A/What-happens-to-weight-after-we-stop-prescribing-GLP-1-therapies",
+   "title": "What happens to weight after we stop prescribing GLP-1 therapies?",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Company real-world EHR analysis; unclear peer review; fetch failed."
+  },
+  {
+   "url": "https://www.ciplamed.com/quick-reads/conferencehighlights/eco-2025-weight-regain-following-the-cessation-of-glp-1-ras-for-weight-management",
+   "title": "eco 2025 weight regain following the cessation of glp 1 ras for weight management",
+   "rank": 9,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Pharma-company summary of ECO 2025 abstract; useful numbers but secondary."
+  },
+  {
+   "url": "https://www.thieme-connect.de/products/ejournals/html/10.1055/s-0041-1735670",
+   "title": "s 0041 1735670",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "German journal item on STEP 4; bot wall blocked content."
+  },
+  {
+   "url": "https://thieme-connect.de/products/ejournals/html/10.1055/s-0041-1735670?lang=de",
+   "title": "Adipositas - Ursachen, Folgeerkrankungen, Therapie 2021; 15(03): 150",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate language variant of same German short article."
+  },
+  {
+   "url": "https://thieme-connect.de/products/ejournals/html/10.1055/s-0041-1735670?lang=en",
+   "title": "Subscribe to RSS",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate variant of same German short article."
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7988425/",
+   "title": "Key Points",
+   "rank": 13,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "STEP 4 JAMA RCT full text: -7.9% vs +6.9% after withdrawal."
+  },
+  {
+   "url": "https://www.thieme-connect.com/products/ejournals/html/10.1055/s-0041-1735670",
+   "title": "Adipositas - Ursachen, Folgeerkrankungen, Therapie 2021; 15(03): 150",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate mirror of German article; bot wall blocked content."
+  },
+  {
+   "url": "https://media.endocrine.org/video/what-s-new-in-weight-management-through-the-lifespan/fae4fb6d-df6a-480b-9ae1-5c71010c78a4",
+   "title": "fae4fb6d df6a 480b 9ae1 5c71010c78a4",
+   "rank": 15,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "ENDO 2021 session listing with STEP 4 abstract; thin, login-gated video."
+  },
+  {
+   "url": "https://media.endocrine.org/Video/Whats_New_in_Weight_Management_Through_the_Lifespan/FAE4FB6D-DF6A-480B-9AE1-5C71010C78A4",
+   "title": "FAE4FB6D DF6A 480B 9AE1 5C71010C78A4",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate of ENDO 2021 session page."
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8265765/",
+   "title": "pmc.ncbi.nlm.nih.gov",
+   "rank": 17,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "STEP 4 post hoc responder conference abstract; partial relevance."
+  },
+  {
+   "url": "https://www.novonordisk.com/content/nncorp/global/en/news-and-media/news-and-ir-materials/news-details.html?id=286",
+   "title": "Novo Nordisk",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Manufacturer press release of STEP 4 topline; vendor source."
+  },
+  {
+   "url": "https://www.drpattaylor.com/research/33755728",
+   "title": "www.drpattaylor.com",
+   "rank": 19,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Redirects to telehealth marketing page selling semaglutide; derivative STEP 4 summary."
+  },
+  {
+   "url": "https://www.acc.org/latest-in-cardiology/journal-scans/2025/12/09/16/51/surmount-4",
+   "title": "SURMOUNT-4: Weight Reversal Post Tirzepatide Withdrawal",
+   "rank": 20,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "ACC journal scan of SURMOUNT-4 post hoc with detailed regain distribution."
+  },
+  {
+   "url": "https://www.mmm-online.com/home/channel/zepbound-patients-regained-weight-after-halting-treatment/",
+   "title": "zepbound patients regained weight after halting treatment",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Pharma marketing trade news on SURMOUNT-4; paywalled."
+  },
+  {
+   "url": "https://synapse.patsnap.com/news-detail/50424943-2fce-3962-8805-f6fa118e329e-study-finds-substantial-weight-regain-after-lillys-zepbound-stopped",
+   "title": "Study finds 'substantial' weight regain after Lilly's Zepbound stopped",
+   "rank": 22,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Repackaged news on SURMOUNT-4 with correct key numbers."
+  },
+  {
+   "url": "https://news.cornell.edu/index%2ephp/node/327774",
+   "title": "Discontinuing anti-obesity drug tirzepatide leads to weight regain",
+   "rank": 23,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "University news release on SURMOUNT-4; fetch blocked."
+  },
+  {
+   "url": "https://www.epocrates.com/online/article/stopping-tirzepatide-leads-to-weight-regain-surmount-4-trial-results",
+   "title": "epocrates logo",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Clinical news summary of SURMOUNT-4; fetch blocked."
+  },
+  {
+   "url": "https://pharmaceutical-journal.com/article/news/mounjaro-health-benefits-found-to-reverse-one-year-after-stopping-drug",
+   "title": "Mounjaro health benefits found to reverse one year after stopping drug",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Professional news on SURMOUNT-4 post hoc; secondary but accurate."
+  },
+  {
+   "url": "https://pharmaceutical-journal.com/?p=387473",
+   "title": "Mounjaro health benefits found to reverse one year after stopping drug",
+   "rank": 26,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Duplicate URL of same Pharmaceutical Journal news article."
+  },
+  {
+   "url": "https://pace-cme.org/news/discontinuation-of-dual-gip-and-glp-1-receptor-agonist-leads-to-weight-regain-in-people-with-obesity-or-overweight/2456545",
+   "title": "Discontinuation of dual GIP and GLP-1 receptor agonist leads to weight regain in people with obesity or overweight",
+   "rank": 27,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "CME conference summary of SURMOUNT-4 with detailed endpoints; secondary."
+  },
+  {
+   "url": "https://www.tctmd.com/news/stopping-tirzepatide-leads-rebound-weight-cardiometabolic-risk",
+   "title": "Stopping Tirzepatide Leads to Rebound in Weight, Cardiometabolic Risk",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Good medical news coverage of SURMOUNT-4; secondary."
+  },
+  {
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12535773/",
+   "title": "Rebound or Retention: A Meta-Analysis of Weight Regain After the Discontinuation of Glucagon-Like Peptide-1 (GLP-1) Receptor Agonists and Other Anti-obesity Drugs",
+   "rank": 29,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Cureus meta-analysis; internally inconsistent, high heterogeneity, relies on one trial."
+  },
+  {
+   "url": "https://www.nutritioninsight.com/news/glp1-weight-loss-wegovy-ozempic-fat-obesity.html",
+   "title": "GLP-1 weight regain: Experts debate how many kilos return in one year",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Trade news summarizing two meta-analyses with expert debate."
+  },
+  {
+   "url": "https://athletechnews.com/new-study-glp-1s-weight-loss-drugs-regain",
+   "title": "credit: Alan Ko on Unsplash",
+   "rank": 31,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Industry news recap of BMJ review; partly paywalled."
+  },
+  {
+   "url": "https://www.tctmd.com/news/weight-regained-within-18-months-stopping-glp-1-drugs",
+   "title": "Weight Regained Within 18 Months of Stopping GLP-1 Drugs",
+   "rank": 32,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed medical news on BMJ meta-analysis numbers; secondary."
+  },
+  {
+   "url": "https://pharmaphorum.com/news/study-finds-weight-returns-more-quickly-glp-1-users",
+   "title": "Study finds weight returns more quickly in GLP-1 users",
+   "rank": 33,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Pharma trade news summary of BMJ review."
+  },
+  {
+   "url": "https://www.drugtopics.com/view/model-finds-weight-regain-after-stopping-semaglutide-or-tirzepatide",
+   "title": "Model finds weight regain after stopping semaglutide or tirzepatide",
+   "rank": 34,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "News on Bayesian meta-analysis plus real-world cohort data; secondary."
+  },
+  {
+   "url": "https://www.sciencemediacentre.org/expert-reaction-to-meta-analysis-and-modelling-study-on-weight-regain-after-stopping-glp-1-receptor-agonists/",
+   "title": "Expert reaction to meta-analysis and modelling study on weight regain after stopping GLP-1 receptor agonists",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Independent expert critique of Cambridge study limitations; good cross-check."
+  },
+  {
+   "url": "https://jpost.com/science/article-861938",
+   "title": "article 861938",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "General news on BMC Medicine meta-analysis; thin."
+  },
+  {
+   "url": "https://uspharmacist.com/article/weight-regain-common-after-stopping-glp1-drugs",
+   "title": "Weight regain common after stopping GLP-1 drugs",
+   "rank": 37,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Pharmacist news recap of Cambridge review."
+  },
+  {
+   "url": "https://sciencemediacentre.es/en/node/6496",
+   "title": "A meta-analysis confirms weight regain after discontinuing anti-obesity drugs",
+   "rank": 38,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Expert reactions to BMJ meta-analysis; cross-check."
+  },
+  {
+   "url": "https://ox.ac.uk/news/2026-01-08-new-study-finds-stopping-weight-loss-drugs-linked-faster-regain-ending-diet",
+   "title": "2026 01 08 new study finds stopping weight loss drugs linked faster regain ending diet",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "University press release for BMJ review; fetch blocked."
+  },
+  {
+   "url": "https://epocrates.com/online/article/weight-often-rebounds-after-stopping-weight-loss-meds",
+   "title": "weight often rebounds after stopping weight loss meds",
+   "rank": 40,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Clinical news recap of BMJ review; fetch blocked."
+  },
+  {
+   "url": "https://pubmed.ncbi.nlm.nih.gov/41500720/",
+   "title": "Weight regain after cessation of medication for weight management: systematic review and meta-analysis",
+   "rank": 41,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PubMed record of BMJ 2026 meta-analysis, primary evidence; fetch blocked."
+  },
+  {
+   "url": "https://sciencemediacentre.es/en/meta-analysis-confirms-weight-regain-after-discontinuing-anti-obesity-drugs",
+   "title": "This article is 7 months old",
+   "rank": 42,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Alternate URL of SMC Spain expert reaction to BMJ review."
+  },
+  {
+   "url": "https://www.phc.ox.ac.uk/publications/publication_modal/2349332",
+   "title": "Weight regain after cessation of medication for weight management: systematic review and meta-analysis",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Departmental publication record for BMJ paper; fetch blocked."
+  },
+  {
+   "url": "https://www.arc-oxtv.nihr.ac.uk/news/weight-loss-drug-regain-research",
+   "title": "Cookies on this website",
+   "rank": 44,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "NIHR funder news on BMJ review; fetch failed."
+  },
+  {
+   "url": "https://www.urbanhealthtoday.com/post/weight-returns-rapidly-after-stopping-obesity-medications",
+   "title": "weight returns rapidly after stopping obesity medications",
+   "rank": 45,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Low-authority news recap; fetch blocked."
+  },
+  {
+   "url": "https://connectsci.au/news/news-parent/7629/Progress-lost-within-2-years-of-stopping-weight",
+   "title": "Progress lost within 2 years of stopping weight",
+   "rank": 46,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "News summary of BMJ review with expert comments."
+  },
+  {
+   "url": "https://clinicaltrials.gov/study/NCT03548935",
+   "title": "STEP 1: Research Study Investigating How Well Semaglutide Works in People Suffering From Overweight or Obesity",
+   "rank": 47,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "STEP 1 registry record; extension results not shown; page did not render."
+  },
+  {
+   "url": "https://jci.org/references/scholar/44413/B17",
+   "title": "Weight regain and cardiometabolic effects after withdrawal of semaglutide: the STEP 1 trial extension",
+   "rank": 48,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Citation redirect stub to Google Scholar; no content."
+  },
+  {
+   "url": "https://discovery.ucl.ac.uk/id/eprint/10149199/1/Diabetes Obesity Metabolism - 2022 - Wilding - Weight regain and cardiometabolic effects after withdrawal of semaglutide .pdf",
+   "title": "Diabetes Obesity Metabolism 2022 Wilding Weight regain and cardiometabolic effects after withdrawal of semaglutide",
+   "rank": 49,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Full text of STEP 1 extension: two-thirds of weight loss regained in one year."
+  },
+  {
+   "url": "https://figshare.le.ac.uk/articles/journal_contribution/Weight_regain_and_cardiometabolic_effects_after_withdrawal_of_semaglutide_The_STEP_1_trial_extension/20012732/1",
+   "title": "University of Leicester",
+   "rank": 50,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Repository duplicate of STEP 1 extension; fetch blocked."
+  },
+  {
+   "url": "https://discovery-pp.ucl.ac.uk/id/eprint/10149199",
+   "title": "UCL Discovery Stage",
+   "rank": 51,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Staging repository duplicate of STEP 1 extension record."
+  },
+  {
+   "url": "https://www.seen.es/documentos/verDocumento/articulo-comentado-dr-jose-ignacio-martinez-06-2023",
+   "title": "articulo comentado dr jose ignacio martinez 06 2023",
+   "rank": 52,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Spanish society journal-club commentary PDF; unreadable."
+  },
+  {
+   "url": "https://journals.publishing.umich.edu/mjm/article/id/7687",
+   "title": "journals.publishing.umich.edu",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Student medical journal article; content blocked, relevance unclear."
+  },
+  {
+   "url": "https://vitagri.org/evidence/XL0039/",
+   "title": "Pulse Brain · Growing Health Evidence Index",
+   "rank": 54,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thin evidence-index summary of STEP 1 extension."
+  }
+ ]
+}

@@ -1,0 +1,459 @@
+{
+ "id": "na2",
+ "judged_at": "2026-10-24",
+ "question": "Which vector database should be used for a mid-scale RAG system?",
+ "mode": "non-academic",
+ "field": "cs",
+ "judged": [
+  {
+   "url": "https://www.olostep.com/blog/best-vector-database",
+   "title": "Best vector database (Olostep)",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Overview citing vendor benchmarks; no own data; scraping vendor steers to its product."
+  },
+  {
+   "url": "https://dupple.com/learn/best-vector-databases",
+   "title": "Best Vector Databases in 2026: 8 Options Tested for RAG and Scale",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Tiered guidance but unsourced benchmark claims; affiliate links."
+  },
+  {
+   "url": "https://pub.towardsai.net/vector-database-for-rag-a7ddae9bf893",
+   "title": "Vector database for RAG (Towards AI, member-only)",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Paywalled member story; could not verify content."
+  },
+  {
+   "url": "https://www.apxml.com/posts/best-databases-for-rag",
+   "title": "Best databases for RAG (apxml)",
+   "rank": 4,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Fetch failed; generic listicle per snippet."
+  },
+  {
+   "url": "https://www.braintrust.dev/articles/best-vector-databases-for-rag-2026",
+   "title": "Best vector databases for RAG 2026 (Braintrust)",
+   "rank": 5,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reasonable qualitative profiles, no benchmarks or scale thresholds."
+  },
+  {
+   "url": "https://www.zenml.io/blog/vector-databases-for-rag",
+   "title": "10 Best Vector Databases for RAG Pipelines (ZenML)",
+   "rank": 6,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed 10-DB comparison on retrieval, latency, filtering, pricing; clear trade-offs."
+  },
+  {
+   "url": "https://www.chatrag.ai/blog/2026-03-18-5-critical-factors-for-choosing-the-right-vector-database-for-rag-in-2025",
+   "title": "5 critical factors for choosing the right vector database for RAG",
+   "rank": 7,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Generic SEO checklist ending in product pitch; no DB-specific substance."
+  },
+  {
+   "url": "https://techsy.io/en/blog/best-vector-databases-2026",
+   "title": "Best Vector Databases in 2026: 9 Picks, Real Pricing, and Code",
+   "rank": 8,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thorough comparison, cost example at 10M vectors, decision matrix, disclosures."
+  },
+  {
+   "url": "https://gautamkhorana.com/blog/best-vector-database-for-rag-2026/",
+   "title": "Best vector database for RAG 2026 (Gautam Khorana)",
+   "rank": 9,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short opinion piece, sensible but no evidence."
+  },
+  {
+   "url": "https://medium.com/@pratik-rupareliya/top-15-vector-databases-in-2026-a-production-decision-guide-from-100-enterprise-deployments-dd58a04f51a5",
+   "title": "Top 15 vector databases in 2026: A production decision guide from 100+ enterprise deployments",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Fetch blocked; listicle with unverifiable deployment claims."
+  },
+  {
+   "url": "https://www.groovyweb.co/blog/top-10-ai-vector-databases-2026",
+   "title": "Top 10 AI vector databases 2026 (Groovy Web)",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Agency SEO marketing; broad but unsourced claims."
+  },
+  {
+   "url": "https://dupple.com/learn/pinecone-alternatives",
+   "title": "8 Best Pinecone Alternatives in 2026 (Vector DB Comparison)",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Opinion with some concrete figures; affiliate links; derivative."
+  },
+  {
+   "url": "https://dev.to/darshit_01/the-best-vector-database-in-2026-qdrant-vs-pinecone-vs-weaviate-vs-milvus-vs-pgvector-3147",
+   "title": "The Best Vector Database in 2026: Qdrant vs Pinecone vs Weaviate vs Milvus vs pgvector",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Benchmark numbers without hardware/index params; opinion rankings."
+  },
+  {
+   "url": "https://geekflare.com/open-source/vector-database/",
+   "title": "Best Open Source Vector Databases in 2026 (Geekflare)",
+   "rank": 14,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Disclosed hands-on benchmark: hardware, dataset, recall and latency for 5 DBs."
+  },
+  {
+   "url": "https://encore.dev/articles/best-vector-databases",
+   "title": "Best Vector Databases in 2026 (Encore)",
+   "rank": 15,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Thorough comparison with decision matrix; promotes its pgvector provisioning."
+  },
+  {
+   "url": "https://encore.dev/resources/best-vector-databases",
+   "title": "Best Vector Databases in 2026 (Encore, resources mirror)",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Duplicate of Encore article."
+  },
+  {
+   "url": "https://www.flur.ee/blog/weaviate-alternatives",
+   "title": "Weaviate alternatives (Fluree)",
+   "rank": 17,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Informative but vendor content promoting Fluree."
+  },
+  {
+   "url": "https://blog.elest.io/qdrant-vs-weaviate-vs-milvus-which-vector-database-for-your-rag-pipeline/",
+   "title": "Qdrant vs Weaviate vs Milvus: Which Vector Database for Your RAG Pipeline?",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Overview-level; host sells these DBs; no benchmarks."
+  },
+  {
+   "url": "https://insertchat.com/glossary/pgvector",
+   "title": "What is pgvector? Vector Similarity Search Built Into PostgreSQL",
+   "rank": 19,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Glossary stub (404 on fetch); no decision substance."
+  },
+  {
+   "url": "https://www.devart.com/blog/?p=183668",
+   "title": "Devart blog (pgvector for RAG, alternate URL)",
+   "rank": 20,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Duplicate URL of Devart pgvector article."
+  },
+  {
+   "url": "https://www.devart.com/blog/pgvector-for-rag.html",
+   "title": "pgvector for RAG: When you don't need a dedicated vector database",
+   "rank": 21,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Practical pgvector vs dedicated guidance, indexing, filtering; sells Postgres tools."
+  },
+  {
+   "url": "https://www.tessell.com/blog/postgresql-vector-database-with-pgvector",
+   "title": "PostgreSQL Vector Database with pgvector (Tessell)",
+   "rank": 22,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Useful tuning tips but promotional; managed Postgres vendor."
+  },
+  {
+   "url": "https://agence-scroll.com/en/blog/pgvector-vs-qdrant",
+   "title": "pgvector vs Qdrant (Scroll)",
+   "rank": 23,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concrete limits (dimension caps, quantization) citing docs; clear scale guidance."
+  },
+  {
+   "url": "https://www.selfhost.dev/blog/best-vector-database-for-rag-in-2026/",
+   "title": "Best Vector Database for RAG in 2026: The Honest Verdict",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Decision guide biased; seller of managed pgvector."
+  },
+  {
+   "url": "https://www.cloudmagazin.com/en/2026/04/02/vector-databases-rag-pinecone-weaviate-qdrant-pgvector-comparison/",
+   "title": "Vector Databases for RAG: Pinecone, Weaviate, Qdrant, pgvector comparison (cloudmagazin)",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "High-level, uncited latency table; machine-translated."
+  },
+  {
+   "url": "https://ecorpit.com/pgvector-vs-dedicated-vector-database-rag-decision-2026/",
+   "title": "pgvector or a dedicated vector database? A RAG decision guide for 1M to 100M vectors",
+   "rank": 26,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Scale-tiered thresholds and critical analysis of contested benchmark."
+  },
+  {
+   "url": "https://www.bacancytechnology.com/insights/vector-db-for-rag",
+   "title": "We Tested 10 Open Source Vector Databases for RAG (Bacancy)",
+   "rank": 27,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Claims testing but publishes no numbers; lead-gen agency marketing."
+  },
+  {
+   "url": "https://engineersguide.substack.com/p/best-vector-databases-rag",
+   "title": "Best vector databases for production RAG in 2026: Performance and cost guide",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Fetch rate-limited; snippet suggests benchmark notes, unverified."
+  },
+  {
+   "url": "https://dev.to/pooyagolchian/rag-pipelines-in-production-vector-database-benchmarks-chunking-strategies-and-hybrid-search-data-51i7",
+   "title": "RAG Pipelines in Production: Vector Database Benchmarks, Chunking Strategies, and Hybrid Search",
+   "rank": 29,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "404 on fetch; personal benchmarks without setup per snippet."
+  },
+  {
+   "url": "https://www.dio.me/articles/benchmarking-de-vector-dbs-em-rag-o-que-muda-em-2026-de3aad315650",
+   "title": "Benchmarking de vector DBs em RAG: o que muda em 2026",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Community post; not fetched; likely derivative."
+  },
+  {
+   "url": "https://www.f22labs.com/blogs/zvec-vs-qdrant-vs-milvus-vector-database-comparison-for-rag",
+   "title": "Zvec vs Qdrant vs Milvus vector database comparison for RAG",
+   "rank": 31,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Agency blog, niche comparison; not fetched."
+  },
+  {
+   "url": "https://www.dio.me/en/articles/benchmarking-de-vector-dbs-em-rag-o-que-muda-em-2026-de3aad315650",
+   "title": "Benchmarking de vector DBs em RAG (English mirror)",
+   "rank": 32,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mirror of dio.me community post."
+  },
+  {
+   "url": "https://pooyagolchian.com/blog/rag-pipelines-production-vector-databases-2026/",
+   "title": "RAG pipelines in production: vector databases 2026 (Pooya Golchian)",
+   "rank": 33,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Personal blog; latency numbers without test setup."
+  },
+  {
+   "url": "https://www.parse.gl/prompts/p/we-are-evaluating-vector-databases-who-offers-performance-benchmarking-for-high-scale-rag--f4fd4aa4-e9eb-4fac-916d-c07c62792b4e",
+   "title": "Parse: AI responses on vector DB benchmarking",
+   "rank": 34,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregated AI-chatbot answers page; not a primary source."
+  },
+  {
+   "url": "https://chat2db.ai/resources/blog/chroma-vs-qdrant-vs-pgvector",
+   "title": "Chroma vs Qdrant vs pgvector (Chat2DB)",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Database-tool vendor content blog; not fetched."
+  },
+  {
+   "url": "https://wz-it.com/knowledge/ki/qdrant-vs-pgvector/",
+   "title": "Qdrant vs pgvector (WZ-IT, German)",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Hosting consultancy comparison; not fetched."
+  },
+  {
+   "url": "https://wz-it.com/en/knowledge/ki/qdrant-vs-pgvector/",
+   "title": "Qdrant vs pgvector (WZ-IT, English)",
+   "rank": 37,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "English version of WZ-IT comparison; not fetched."
+  },
+  {
+   "url": "https://datascienceinaction.substack.com/p/when-to-use-which-vector-database",
+   "title": "When to Use Which Vector Database for the RAG?",
+   "rank": 38,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Newsletter overview; not fetched."
+  },
+  {
+   "url": "https://noqta.tn/blog/vector-database-comparison-2026-pgvector-pinecone-qdrant-weaviate",
+   "title": "Vector Database Comparison 2026: Picking Your RAG Backend (Noqta)",
+   "rank": 39,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Decision framework with cited AWS and case-study figures, trends."
+  },
+  {
+   "url": "https://www.cloudmagazin.com/2026/04/02/vektordatenbanken-rag-pinecone-weaviate-qdrant-pgvector-vergleich/",
+   "title": "Vektordatenbanken für RAG: Vergleich (cloudmagazin, German)",
+   "rank": 40,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "German original of cloudmagazin article; duplicate."
+  },
+  {
+   "url": "https://techsy.io/de/blog/qdrant-vs-chroma-vs-pgvector-vergleich",
+   "title": "Qdrant vs Chroma vs pgvector Vergleich (Techsy, German)",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed but relies on vendor benchmarks; overlaps English Techsy piece."
+  },
+  {
+   "url": "https://zilliz.com/blog/vdbbench-1-0-benchmarking-with-your-real-world-production-workloads",
+   "title": "Announcing VDBBench 1.0: Open-Source VectorDB Benchmarking",
+   "rank": 42,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Benchmark tool announcement by Milvus vendor; results favor own product."
+  },
+  {
+   "url": "https://docs.zilliz.com/docs/perf-benchmark-vectordb",
+   "title": "Performance Benchmarking with VectorDBBench (Zilliz docs)",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Tool how-to; useful for own testing, no conclusions."
+  },
+  {
+   "url": "https://www.pypi.org/project/vectordb-bench/0.0.2/",
+   "title": "vectordb-bench 0.0.2 (PyPI)",
+   "rank": 44,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Obsolete package version page; no relevant content."
+  },
+  {
+   "url": "https://pypi.org/project/vectordb-bench/",
+   "title": "vectordb-bench (PyPI)",
+   "rank": 45,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Benchmark tool package; Zilliz-sponsored, no results."
+  },
+  {
+   "url": "https://docs.zilliz.com/docs/byoc/perf-benchmark-vectordb",
+   "title": "Performance Benchmarking with VectorDBBench (Zilliz BYOC docs)",
+   "rank": 46,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Duplicate docs page of vendor tool guide."
+  },
+  {
+   "url": "https://github.com/CalvinNeo/VectorDBBench",
+   "title": "CalvinNeo/VectorDBBench (GitHub fork)",
+   "rank": 47,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Fork with no unique content."
+  },
+  {
+   "url": "https://docsearch.algolia.com/mcp/docs/repo/zilliztech/vectordbbench",
+   "title": "VectorDBBench (VDBBench) - Algolia DocSearch mirror",
+   "rank": 48,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Doc-index mirror page; no substantive content."
+  },
+  {
+   "url": "https://rmarcus.info/dbscholar/papers/hce58f42a2287a94e",
+   "title": "VecBench: A Controllable Benchmark for Filtered Vector Search (DBScholar listing)",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Paper listing page only; no findings."
+  },
+  {
+   "url": "https://arxiv.org/html/2602.11443v1",
+   "title": "Filtered Approximate Nearest Neighbor Search in Vector Databases: System Design and Performance Analysis",
+   "rank": 50,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Independent analysis of filtering behavior in pgvector, Milvus, FAISS."
+  }
+ ]
+}

@@ -1,0 +1,495 @@
+{
+ "id": "od2",
+ "judged_at": "2026-10-24",
+ "question": "What are the rate limits and retry semantics of the Anthropic Messages API?",
+ "mode": "official-docs",
+ "field": "ai",
+ "judged": [
+  {
+   "url": "https://platform.claude.com/docs/en/api/rate-limits",
+   "title": "Rate limits",
+   "rank": 1,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official doc: RPM/ITPM/OTPM, tiers, token bucket, retry-after, headers, spend-cap 429."
+  },
+  {
+   "url": "https://fast.io/resources/claude-3-5-sonnet-rate-limit.md",
+   "title": "Claude 3.5 Sonnet Rate Limits: API Tiers, Message Caps, and Throughput",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Third-party promo-adjacent guide; old model focus, partially outdated tier numbers."
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/npm/@intentsolutionsio/claude-pack@1.0.3/skills/clade-rate-limits/SKILL.md",
+   "title": "clade-rate-limits SKILL.md",
+   "rank": 3,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Skill file with wrong header names and package name; misleading."
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/npm/@intentsolutionsio/anthropic-pack@1.0.3/skills/anth-rate-limits/SKILL.md",
+   "title": "anth-rate-limits SKILL.md",
+   "rank": 4,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Derivative skill file; mostly right but header table errors, unofficial."
+  },
+  {
+   "url": "https://docs.langdock.com/de/developer/completion-api/anthropic.md",
+   "title": "Langdock Anthropic completion API",
+   "rank": 5,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Describes Langdock proxy's own limits, not Anthropic's."
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/npm/@intentsolutionsio/claude-pack@1.0.3/skills/clade-common-errors/SKILL.md",
+   "title": "clade-common-errors SKILL.md",
+   "rank": 6,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Unofficial skill file with dated tiers and wrong package name."
+  },
+  {
+   "url": "https://langchain.hexdocs.pm/0.3.0-rc.0/LangChain.ChatModels.ChatAnthropic.html",
+   "title": "LangChain.ChatModels.ChatAnthropic (LangChain v0.3.0-rc.0)",
+   "rank": 7,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Shows ratelimit header names via callback; no retry semantics."
+  },
+  {
+   "url": "https://support.anthropic.com/?q=limits",
+   "title": "support.anthropic.com search",
+   "rank": 8,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Search results page, no substantive content."
+  },
+  {
+   "url": "https://openskillindex.com/skills/comeonoliver-skillshub-clade-rate-limits",
+   "title": "Skillshub clade-rate-limits",
+   "rank": 9,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Index listing of an unofficial, error-prone skill file."
+  },
+  {
+   "url": "https://www.sitepoint.com/claude-api-429-error-handling-python/",
+   "title": "Claude API 429 error handling in Python",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Third-party tutorial; fetch blocked, likely derivative backoff guidance."
+  },
+  {
+   "url": "https://www.rapidevelopers.com/md/ai-build-errors/error-429-too-many-requests",
+   "title": "How to Fix Error 429 Too Many Requests in Claude",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Derivative explainer with promo filler and weak code."
+  },
+  {
+   "url": "https://ai.pydantic.dev/retries",
+   "title": "Pydantic AI retries",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Framework retry docs; only tangential Anthropic max_retries note."
+  },
+  {
+   "url": "https://portkey.ai/docs/aigw/product/ai-gateway/automatic-retries.md",
+   "title": "Portkey automatic retries",
+   "rank": 13,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Portkey gateway retry config, not Anthropic semantics."
+  },
+  {
+   "url": "https://www.respan.ai/articles/anthropic-api-rate-limits",
+   "title": "Anthropic API rate limits",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Vendor blog; substantive but derivative and promotional."
+  },
+  {
+   "url": "https://www.ssdnodes.com/learn/claude-api-rate-limit-headers-explained",
+   "title": "Claude API rate limit headers explained",
+   "rank": 15,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Decent header/retry-after explainer; third-party, good for cross-check."
+  },
+  {
+   "url": "https://app.unpkg.com/ai@6.0.41/files/src/util/retry-with-exponential-backoff.test.ts",
+   "title": "retry-with-exponential-backoff.test.ts",
+   "rank": 16,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Vercel AI SDK test file; not documentation."
+  },
+  {
+   "url": "https://www.developersdigest.tech/errors/api/anthropic-api/429-rate-limit-error",
+   "title": "Anthropic Claude API error 429",
+   "rank": 17,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "404 on fetch; thin error-page SEO content."
+  },
+  {
+   "url": "https://open-exam-prep.com/study-guides/anthropic-ccdv-f/ch4-api-resilience-backend-state/api-resilience-error-handling",
+   "title": "4.1 API Resilience, Error Handling & Retries",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Unofficial study guide; derivative retry guidance."
+  },
+  {
+   "url": "https://medium.com/@reshtei/anthropic-529-overloaded-error-what-it-means-and-how-to-handle-it-in-production-98f476b2e69e",
+   "title": "Anthropic 529 overloaded_error: What It Means and How to Handle It in Production",
+   "rank": 19,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Blog post; fetch blocked; plausible 429 vs 529 explainer."
+  },
+  {
+   "url": "https://community.zapier.com/troubleshooting-99/claude-529-error-handling-47943",
+   "title": "Claude 529 error handling",
+   "rank": 20,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Zapier user thread; anecdotal, no API semantics."
+  },
+  {
+   "url": "https://portkey.ai/error-library/system-overload-error-10483",
+   "title": "System overload error",
+   "rank": 21,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thin generic error-library entry."
+  },
+  {
+   "url": "https://medium.com/@joe.njenga/claude-code-529-overloaded-error-is-messing-up-workflows-heres-what-to-do-6934ee8a3e71",
+   "title": "Claude Code 529 Overloaded Error",
+   "rank": 22,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Member-only Claude Code blog; not API docs."
+  },
+  {
+   "url": "https://inventivehq.com/knowledge-base/claude/how-to-fix-api-error-529-overloaded",
+   "title": "How to fix API error 529 overloaded",
+   "rank": 23,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Generic knowledge-base fix page; fetch blocked."
+  },
+  {
+   "url": "https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-worldwide/amp/",
+   "title": "Anthropic confirms Claude is down worldwide",
+   "rank": 24,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Outage news; no retry semantics."
+  },
+  {
+   "url": "https://letsdatascience.com/news/anthropic-restores-claude-after-multi-model-outage-24d89d4d",
+   "title": "Anthropic Restores Claude After Multi-Model Outage",
+   "rank": 25,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Outage news; generic backoff remark only."
+  },
+  {
+   "url": "https://claudeissues.com/issue/3555-anthropic-api-overloaded-error-529",
+   "title": "Anthropic API Overloaded Error (529)",
+   "rank": 26,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mirror of Claude Code issue; user complaints."
+  },
+  {
+   "url": "https://claudeissues.com/issue/3869-anthropic-api-overloaded-repeated-529-errors-during-retry-sequence",
+   "title": "Anthropic API Overloaded: Repeated 529 Errors During Retry Sequence",
+   "rank": 27,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mirror issue with 'same' comments; no substance."
+  },
+  {
+   "url": "https://fast.io/resources/anthropic-rate-limits.md",
+   "title": "Anthropic Rate Limits: Claude API Tiers, TPM Caps, and Document Processing",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Third-party guide, mixes legacy and current tier figures."
+  },
+  {
+   "url": "https://www.morphllm.com/claude-rate-limits",
+   "title": "Claude rate limits",
+   "rank": 29,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Third-party tier table; outdated Tier 1-4 numbers; fetch rate-limited."
+  },
+  {
+   "url": "https://support.claude.com/en/articles/8243635",
+   "title": "Our approach to rate limits for the Claude API",
+   "rank": 30,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official support article on tiers and 429 behavior."
+  },
+  {
+   "url": "https://docs.aws.amazon.com/claude-platform/latest/userguide/rate-limits.md",
+   "title": "Rate limits and quotas (Claude Platform on AWS)",
+   "rank": 31,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official AWS doc: headers, retry-after, defers to Anthropic page."
+  },
+  {
+   "url": "https://support.claude.com/en/articles/8243635-our-approach-to-rate-limits-for-the-claude-api",
+   "title": "Our approach to rate limits for the Claude API",
+   "rank": 32,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official support article: per-org RPM/ITPM/OTPM, 429 with retry-after."
+  },
+  {
+   "url": "https://support.claude.com/en/articles/8243635-our-approach-to-api-rate-limits",
+   "title": "Our approach to API rate limits",
+   "rank": 33,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Duplicate slug of official support article."
+  },
+  {
+   "url": "https://support.claude.com/en/articles/8243635-our-approach-to-rate-limits",
+   "title": "Our approach to rate limits",
+   "rank": 34,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Duplicate slug of official support article."
+  },
+  {
+   "url": "https://docs.anthropic.com/claude/reference/rate-limits",
+   "title": "Rate limits (legacy docs URL)",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Legacy official URL redirecting; duplicate of current doc."
+  },
+  {
+   "url": "https://platform.claude.com/docs/en/api/rate-limits.md",
+   "title": "Rate limits (markdown)",
+   "rank": 36,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Markdown copy of official rate-limits doc."
+  },
+  {
+   "url": "https://platform.claude.com/docs/id/cli-sdks-libraries/sdks/python",
+   "title": "Python SDK (Indonesian)",
+   "rank": 37,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official but translated duplicate of SDK retries section."
+  },
+  {
+   "url": "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python",
+   "title": "Python SDK",
+   "rank": 38,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official SDK: 2 retries default, retried codes, max_retries, timeouts."
+  },
+  {
+   "url": "https://github.com/HKUDS/nanobot/issues/2511",
+   "title": "nanobot issue 2511",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Shows retry stacking pitfall with SDK retries; third-party issue."
+  },
+  {
+   "url": "https://tessl.io/registry/tessl/pypi-anthropic/files/docs/guides/error-handling.md",
+   "title": "pypi-anthropic error handling (tessl)",
+   "rank": 40,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "404; derivative mirror of SDK docs."
+  },
+  {
+   "url": "https://pypi.org/project/anthropic/0.25.5",
+   "title": "anthropic 0.25.5 on PyPI",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Old SDK version README; outdated, page failed to render."
+  },
+  {
+   "url": "https://instagit.com/anthropics/anthropic-sdk-python/how-to-configure-client-timeouts-retry-mechanisms.md",
+   "title": "How to Configure Client Timeouts and Retry Mechanisms (md)",
+   "rank": 42,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate of auto-generated SDK explainer."
+  },
+  {
+   "url": "https://instagit.com/anthropics/anthropic-sdk-python/how-to-configure-client-timeouts-retry-mechanisms",
+   "title": "How to Configure Client Timeouts and Retry Mechanisms in the Anthropic Python SDK",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Auto-generated code explainer citing SDK internals; unofficial."
+  },
+  {
+   "url": "https://www.pypi.org/project/anthropic/0.7.5/",
+   "title": "anthropic 0.7.5 on PyPI",
+   "rank": 44,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Very old SDK release page; outdated."
+  },
+  {
+   "url": "https://www.contentstack.com/docs/developers/sdks/content-management-sdk/python/python-management-retry-mechanism",
+   "title": "Implement Retry Mechanism with Python Management SDK",
+   "rank": 45,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Contentstack SDK, unrelated to Anthropic."
+  },
+  {
+   "url": "https://docs.anthropic.com/en/api/errors",
+   "title": "Errors (legacy docs URL)",
+   "rank": 46,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Redirects to official errors page; duplicate URL."
+  },
+  {
+   "url": "https://platform.claude.com/docs/en/api/errors",
+   "title": "Claude API errors",
+   "rank": 47,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official: 429/529 meanings, SDK retries honoring retry-after, SSE errors."
+  },
+  {
+   "url": "https://docs.anthropic.com/claude/reference/errors",
+   "title": "HTTP errors (legacy URL)",
+   "rank": 48,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Legacy official URL; duplicate."
+  },
+  {
+   "url": "https://docs.claude.com/en/api/errors",
+   "title": "HTTP errors",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Redirects to official errors page; duplicate URL."
+  },
+  {
+   "url": "https://tessl.io/registry/tessl/pypi-anthropic/0.66.0/docs/errors.md",
+   "title": "pypi-anthropic 0.66.0 errors (tessl)",
+   "rank": 50,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "404; derivative SDK mirror."
+  },
+  {
+   "url": "https://docs.anthropic.com/zh-TW/api/errors",
+   "title": "Errors (zh-TW)",
+   "rank": 51,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Translated duplicate of official errors page."
+  },
+  {
+   "url": "https://documentation.datalab.to/platform/errors",
+   "title": "Datalab HTTP errors",
+   "rank": 52,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Datalab API errors, unrelated."
+  },
+  {
+   "url": "https://docs.anthropic.com/zh-CN/api/errors",
+   "title": "Errors (zh-CN)",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Translated duplicate of official errors page."
+  },
+  {
+   "url": "https://tessl.io/registry/tessl/pypi-anthropic/0.66.0/files/docs/errors.md",
+   "title": "pypi-anthropic 0.66.0 errors file (tessl)",
+   "rank": 54,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Derivative SDK doc mirror."
+  }
+ ]
+}

@@ -1,0 +1,549 @@
+{
+ "id": "ac3",
+ "judged_at": "2026-10-24",
+ "question": "How reproducible are organoid models of human brain development?",
+ "mode": "academic",
+ "field": "bio",
+ "judged": [
+  {
+   "url": "https://doaj.org/article/d5025635706e4d8fadd634ef9f4403da",
+   "title": "Nature Communications (Dec 2024)",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "DOAJ index record of Hi-Q reproducible organoid paper; fetch 403"
+  },
+  {
+   "url": "https://ngdc.cncb.ac.cn:443/openlb/publication/OLB-PM-31168097",
+   "title": "OLB PM 31168097",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mirror record of Velasco 2019 abstract; fetch failed"
+  },
+  {
+   "url": "https://singlecell.broadinstitute.org/single_cell/study/SCP282",
+   "title": "Individual brain organoids reproducibly form cell diversity of the human cerebral cortex",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Dataset portal for Velasco 2019; abstract only"
+  },
+  {
+   "url": "https://dspace.mit.edu/handle/1721.1/125050",
+   "title": "MIT Libraries logoDSpace@MIT",
+   "rank": 4,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Author manuscript full text of Velasco 2019 key reproducibility study"
+  },
+  {
+   "url": "https://dash.harvard.edu/entities/publication/98e8ce35-b939-4c75-8530-ab9fdfe1f8ce",
+   "title": "98e8ce35 b939 4c75 8530 ab9fdfe1f8ce",
+   "rank": 5,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Repository record of Velasco 2019 with abstract"
+  },
+  {
+   "url": "https://www.waisman.wisc.edu/?p=34268",
+   "title": "Rigor and reproducibility in human brain organoid research: Where we are and where we need to go",
+   "rank": 6,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Returns 404; no content"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10402155",
+   "title": "pmc.ncbi.nlm.nih.gov",
+   "rank": 7,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Full text cross-site reproducibility study; captcha on fetch"
+  },
+  {
+   "url": "https://www.immunosensation.de/publications/reliability-of-high-quantity-human-brain-organoids-for-modeling-microcephaly-glioma-invasion-and-drug-screening",
+   "title": "reliability of high quantity human brain organoids for modeling microcephaly glioma invasion and drug screening",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Institutional abstract listing of Hi-Q paper"
+  },
+  {
+   "url": "https://gw4biomed.ac.uk/development-and-characterisation-of-reproducible-complex-human-brain-organoids-bio-engineering-and-neuronal-networks/",
+   "title": "Development and characterisation of reproducible complex human brain organoids – Bio-engineering and neuronal networks",
+   "rank": 9,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "PhD studentship advert; no evidence"
+  },
+  {
+   "url": "https://pluto.bio/product/curated-data-sets/explore/experiment/gse129519-brain-organoids-reproducibly-generate-the-cellular-diversity-of-the-human-cerebral-cortex",
+   "title": "gse129519 brain organoids reproducibly generate the cellular diversity of the human cerebral cortex",
+   "rank": 10,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Commercial data platform marketing page; no substantive content"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/6906116",
+   "title": "Summary Paragraph",
+   "rank": 11,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text Velasco 2019 Nature on organoid reproducibility"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6906116",
+   "title": "Summary Paragraph",
+   "rank": 12,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text Velasco 2019 Nature, canonical PMC"
+  },
+  {
+   "url": "https://dspace.mit.edu/handle/1721.1/125050?show=full",
+   "title": "dspace.mit.edu",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full metadata view duplicate of Velasco record"
+  },
+  {
+   "url": "https://molecularpost.altervista.org/?p=1770",
+   "title": "molecularpost.altervista.org",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Student blog summary of Velasco 2019; derivative"
+  },
+  {
+   "url": "https://dash.harvard.edu/entities/person/e8e2de47-b2fd-48e4-aaef-0e34c0f62143",
+   "title": "e8e2de47 b2fd 48e4 aaef 0e34c0f62143",
+   "rank": 15,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Author profile page"
+  },
+  {
+   "url": "https://hscrb.harvard.edu/publication/velasco-s-kedaigle-aj-simmons-sk-nash-a-rocha-m-quadrato-g-paulsen-b-nguyen-l-adiconis-x-regev-a-levin-jz-arlotta-p-individual-brain-organoids-reproducibly-form-cell-diversity-of-the-human",
+   "title": "velasco s kedaigle aj ... individual brain organoids reproducibly form cell diversity of the human",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Department publication listing with abstract"
+  },
+  {
+   "url": "https://dash.harvard.edu/entities/person/dcbd7a4e-7fbf-45fa-a740-6b7076623189",
+   "title": "dcbd7a4e 7fbf 45fa a740 6b7076623189",
+   "rank": 17,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Author profile page"
+  },
+  {
+   "url": "https://dash.harvard.edu/entities/person/a1bc328f-6ffa-4d03-8a66-6409b01e16fd",
+   "title": "a1bc328f 6ffa 4d03 8a66 6409b01e16fd",
+   "rank": 18,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Author profile page"
+  },
+  {
+   "url": "https://hcbi.fas.harvard.edu/publications/individual-brain-organoids-reproducibly-form-cell-diversity-human-cerebral",
+   "title": "Individual brain organoids reproducibly form cell diversity of the human cerebral cortex",
+   "rank": 19,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Core facility publication listing; fetch 403"
+  },
+  {
+   "url": "https://alzforum.org/node/1183691",
+   "title": "alzforum.org",
+   "rank": 20,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Paper entry with expert commentary on Velasco; brief"
+  },
+  {
+   "url": "https://www.interaliamag.org/articles/brain-organoids-help-neuroscientists-understand-brain-development-but-arent-perfect-matches-for-real-brains/",
+   "title": "Brain organoids help neuroscientists understand brain development, but aren't perfect matches for real brains",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Popular republished article on organoid fidelity; fetch blocked"
+  },
+  {
+   "url": "https://thetransmitter.org/spectrum/cell-stress-may-sap-organoids-usefulness-in-autism-research",
+   "title": "cell stress may sap organoids usefulness in autism research",
+   "rank": 22,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Science news on Bhaduri stress finding; secondary"
+  },
+  {
+   "url": "https://vufind.lboro.ac.uk/PrimoRecord/cdi_proquest_journals_2357406781",
+   "title": "cdi proquest journals 2357406781",
+   "rank": 23,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Library catalog record; no content"
+  },
+  {
+   "url": "https://www.psych.ox.ac.uk/publications/1104015/modal",
+   "title": "www.psych.ox.ac.uk",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Publication record of organoid-vs-fetal commentary; fetch blocked"
+  },
+  {
+   "url": "https://ecommons.aku.edu/crm/62",
+   "title": "Cell stress in cortical organoids impairs molecular subtype specification",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Repository abstract of Bhaduri 2020; fidelity not reproducibility"
+  },
+  {
+   "url": "https://www.interaliamag.org/?p=12586",
+   "title": "Brain organoids help neuroscientists understand brain development, but aren't perfect matches for real brains",
+   "rank": 26,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate URL of popular article"
+  },
+  {
+   "url": "https://www.biorxiv.org/content/10.1101/2020.08.26.251611.full.pdf",
+   "title": "www.biorxiv.org",
+   "rank": 27,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Preprint quantifying donor, clone, batch variance in organoids; fetch rate-limited"
+  },
+  {
+   "url": "https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2022.1023279/pdf",
+   "title": "www.frontiersin.org",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Review discussing intra-organoid variability; PDF unreadable"
+  },
+  {
+   "url": "https://cancer.ucsf.edu/node/304876",
+   "title": "cancer.ucsf.edu",
+   "rank": 29,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Institutional record of Bhaduri paper; fetch 403"
+  },
+  {
+   "url": "https://ecommons.aku.edu/pakistan_fhs_mc_bbs/831",
+   "title": "Cell stress in cortical organoids impairs molecular subtype specification",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Duplicate repository record of Bhaduri abstract"
+  },
+  {
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6411764/",
+   "title": "Experimental and Computational Methods for the Study of Cerebral Organoids: A Review",
+   "rank": 31,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Review covering batch variability and reproducibility; redirect to PMC"
+  },
+  {
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10987830/",
+   "title": "Brain organoid protocols and limitations",
+   "rank": 32,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2024 review of protocols and reproducibility limits; old host URL"
+  },
+  {
+   "url": "https://pubmed.ncbi.nlm.nih.gov/30890910/",
+   "title": "Experimental and Computational Methods for the Study of Cerebral Organoids: A Review",
+   "rank": 33,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PubMed abstract only; cookie wall on fetch"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6411764",
+   "title": "pmc.ncbi.nlm.nih.gov",
+   "rank": 34,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text review discussing batch syndrome and reproducibility"
+  },
+  {
+   "url": "https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2019.00162/text",
+   "title": "www.frontiersin.org",
+   "rank": 35,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Publisher full text of Poli 2019 review"
+  },
+  {
+   "url": "https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2019.00162/full",
+   "title": "Your new experience awaits. Try the new design now and help us make it even better",
+   "rank": 36,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Publisher full text review on organoid reliability and variability"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11297560",
+   "title": "pmc.ncbi.nlm.nih.gov",
+   "rank": 37,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Sandoval 2024 review on rigor and reproducibility in brain organoids"
+  },
+  {
+   "url": "https://doaj.org/article/5503410fcf7c4ee49349961dce7adcaf",
+   "title": "Cell Reports (Feb 2020)",
+   "rank": 38,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Index record of Tanaka protocol-comparison benchmark; fetch 403"
+  },
+  {
+   "url": "https://www.frontiersin.org/articles/10.3389/fnins.2019.00162/pdf",
+   "title": "www.frontiersin.org",
+   "rank": 39,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PDF of Poli 2019 review"
+  },
+  {
+   "url": "https://www.biorxiv.org/content/10.1101/2023.07.28.550873.full.pdf",
+   "title": "Cross-site reproducibility of human cortical organoids reveals consistent cell type composition and architecture",
+   "rank": 40,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Multi-lab reproducibility preprint full text; fetch rate-limited"
+  },
+  {
+   "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10402155/",
+   "title": "Cross-site reproducibility of human cortical organoids reveals consistent cell type composition and architecture",
+   "rank": 41,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text three-site reproducibility study (via redirect)"
+  },
+  {
+   "url": "https://www.biorxiv.org/content/10.1101/2023.07.11.548571.full.pdf",
+   "title": "Improved Protocol for Reproducible Human Cortical Organoids Reveals Early Alterations in Metabolism with MAPT Mutations",
+   "rank": 42,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Primary study on reproducible cortical organoid protocol across lines"
+  },
+  {
+   "url": "https://hsrc.himmelfarb.gwu.edu/gwhpubs/5656",
+   "title": "Cross-site reproducibility of human cortical organoids reveals consistent cell type composition and architecture",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Repository abstract of published cross-site study"
+  },
+  {
+   "url": "https://www.omicsdi.org/dataset/geo/GSE307960",
+   "title": "www.omicsdi.org",
+   "rank": 44,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Dataset record of multi-lab BrainSphere variability study"
+  },
+  {
+   "url": "https://www.ukdri.ac.uk/publications/improved-protocol-reproducible-human-cortical-organoids-reveals-early-alterations",
+   "title": "improved protocol reproducible human cortical organoids reveals early alterations",
+   "rank": 45,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Institute abstract listing of reproducible protocol paper"
+  },
+  {
+   "url": "https://pubmed.ncbi.nlm.nih.gov/37503195/",
+   "title": "Improved Protocol for Reproducible Human Cortical Organoids Reveals Early Alterations in Metabolism with MAPT Mutations",
+   "rank": 46,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PubMed abstract only; cookie wall on fetch"
+  },
+  {
+   "url": "https://elmi.hbku.edu.qa/en/publications/robust-and-highly-reproducible-generation-of-cortical-brain-organ/",
+   "title": "robust and highly reproducible generation of cortical brain organ",
+   "rank": 47,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "JoVE protocol record; reproducibility claimed, little quantification"
+  },
+  {
+   "url": "https://elearning.uniroma1.it/mod/resource/view.php?id=397137",
+   "title": "elearning.uniroma1.it",
+   "rank": 48,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "University course Moodle page; irrelevant"
+  },
+  {
+   "url": "https://article.accscience.com/read-online/full-issue/OR/1-3/files/basic-html/page39.html",
+   "title": "Page 39 - OR-1-3",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Single page of review on variability; partial fragment"
+  },
+  {
+   "url": "https://hpscreg.eu/browse/publication/5837",
+   "title": "Deciphering brain organoid heterogeneity by identifying key quality determinants",
+   "rank": 50,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Returns 404; no content"
+  },
+  {
+   "url": "https://open.fau.de/handle/openfau/37647",
+   "title": "Deciphering brain organoid heterogeneity by identifying key quality determinants",
+   "rank": 51,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Repository record of 2025 heterogeneity study; access denied"
+  },
+  {
+   "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10987830/",
+   "title": "pmc.ncbi.nlm.nih.gov",
+   "rank": 52,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text 2024 review on protocols, Matrigel and batch variability"
+  },
+  {
+   "url": "https://www.frontiersin.org/journals/molecular-neuroscience/articles/10.3389/fnmol.2022.997119/pdf",
+   "title": "www.frontiersin.org",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Short editorial on improving organoid models; PDF unreadable"
+  },
+  {
+   "url": "https://affigen.com/blogs/news/what-are-the-primary-technical-challenges-in-scaling-up-the-production-of-brain-organoids",
+   "title": "What are the primary technical challenges in scaling up the production of brain organoids?",
+   "rank": 54,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Vendor SEO blog post; fetch rate-limited"
+  },
+  {
+   "url": "https://www.broadinstitute.org/publications/broad1365021",
+   "title": "www.broadinstitute.org",
+   "rank": 55,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Abstract of 2025 organoid heterogeneity quality determinants study"
+  },
+  {
+   "url": "https://academicnewsletter.sufe.edu.cn/info/247978",
+   "title": "An integrated transcriptomic cell atlas of human neural organoids",
+   "rank": 56,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Newsletter mirror of He 2024 atlas abstract; fetch failed"
+  },
+  {
+   "url": "https://www.research-collection.ethz.ch/items/5b271b72-6659-47c8-9806-3ef7d6961d1f",
+   "title": "An integrated transcriptomic cell atlas of human neural organoids",
+   "rank": 57,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Repository record of He 2024 atlas; server error"
+  },
+  {
+   "url": "https://ideas.repec.org/a/nat/nature/v635y2024i8039d10.1038_s41586-024-08172-8.html",
+   "title": "IDEAS home Printed from https://ideas.repec.org/a/nat/nature/v635y2024i8039d10.1038_s41586-024-08172-8.html",
+   "rank": 58,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Index abstract of He 2024 atlas"
+  },
+  {
+   "url": "https://push-zb.helmholtz-munich.de/deliver.php?id=36642",
+   "title": "push-zb.helmholtz-munich.de",
+   "rank": 59,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Likely full PDF of He 2024 atlas comparing protocol fidelity; too large"
+  },
+  {
+   "url": "https://portal.fis.tum.de/en/publications/an-integrated-transcriptomic-cell-atlas-of-human-neural-organoids/",
+   "title": "an integrated transcriptomic cell atlas of human neural organoids",
+   "rank": 60,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "University portal abstract of He 2024 atlas"
+  }
+ ]
+}

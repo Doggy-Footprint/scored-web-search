@@ -1,0 +1,522 @@
+{
+ "id": "na1",
+ "judged_at": "2026-10-24",
+ "question": "How do teams handle database migrations with zero downtime in production?",
+ "mode": "non-academic",
+ "field": "cs",
+ "judged": [
+  {
+   "url": "https://support.tools/database-migration-patterns-zero-downtime-schema-changes/",
+   "title": "Database Migration Patterns: Zero-Downtime Schema Changes",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Broad expand-contract coverage but buggy illustrative code (UPDATE LIMIT in Postgres), generic filler."
+  },
+  {
+   "url": "https://launchdarkly.com/blog/3-best-practices-for-zero-downtime-database-migrations/",
+   "title": "3 best practices for zero downtime database migrations",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Dual-write/cohort framework from real migration, but no detail and framed around feature-flag product."
+  },
+  {
+   "url": "https://chudovo.com/zero-downtime-database-migration-for-legacy-systems-a-practical-developers-guide/",
+   "title": "Zero-Downtime Database Migration for Legacy Systems A Practical Developer's Guide",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Sound expand-contract checklist, no code or tools; consultancy marketing."
+  },
+  {
+   "url": "https://dev.to/stebunovd/migrating-a-production-database-without-any-downtime-2p2d",
+   "title": "Migrating a production database without any downtime",
+   "rank": 4,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Clear phased add/remove/rename plans and deployment reasoning."
+  },
+  {
+   "url": "https://www.tessell.com/blog/zero-downtime-migration-strategies",
+   "title": "Zero downtime migration strategies",
+   "rank": 5,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Platform migration vendor marketing, not schema migrations; unsupported claims."
+  },
+  {
+   "url": "https://devopsdays.org/events/2018-riga/program/michiel-rook-talk-1",
+   "title": "Database schema migrations with zero downtime",
+   "rank": 6,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Talk abstract only; no substantive content on page."
+  },
+  {
+   "url": "https://dev.to/samson_tanimawo/zero-downtime-database-migrations-2nmi",
+   "title": "Zero-Downtime Database Migrations",
+   "rank": 7,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page 404; snippet suggests generic staged-deploy guide."
+  },
+  {
+   "url": "https://datastax.com/blog/accelerate-application-modernization-with-the-zero-downtime-migration-suite",
+   "title": "Accelerate application modernization with the zero downtime migration suite",
+   "rank": 8,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Redirects to IBM product page; vendor promo for Cassandra cluster migration."
+  },
+  {
+   "url": "https://www.agilealliance.org/resources/sessions/zero-downtime-data-migrations-mastering-continuous-deployment/",
+   "title": "Zero downtime data migrations: mastering continuous deployment",
+   "rank": 9,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Session abstract only; talk content members-only."
+  },
+  {
+   "url": "https://cdn.jsdelivr.net/npm/codingbuddy-rules@5.6.3/.ai-rules/skills/database-migration/expand-contract-patterns.md",
+   "title": "Expand-Contract Patterns",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AI-agent rules file in npm package; detailed but unvetted, some flawed examples."
+  },
+  {
+   "url": "https://xata.io/open-source/pgroll",
+   "title": "pgroll: Zero-downtime, reversible schema migrations",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Product page for pgroll; explains view-based expand-contract mechanism briefly."
+  },
+  {
+   "url": "https://thebackenddevelopers.substack.com/p/zero-downtime-database-migrations",
+   "title": "Zero downtime database migrations",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Good concepts and tooling survey but flawed trigger code."
+  },
+  {
+   "url": "https://medium.com/@pooranimuthusamy/zero-downtime-database-migrations-909da8361ab3",
+   "title": "Zero Downtime Database Migrations",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Fetch blocked; generic Medium explainer by snippet."
+  },
+  {
+   "url": "https://blog.thepete.net/blog/2023/12/05/expand/contract-making-a-breaking-change-without-a-big-bang/",
+   "title": "Expand/Contract: making a breaking change without a big bang",
+   "rank": 14,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Clear expert explanation of expand/contract with worked example."
+  },
+  {
+   "url": "https://xata.io/blog/pgroll-expand-contract",
+   "title": "Schema changes and the power of expand-contract with pgroll",
+   "rank": 15,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Clear pattern explanation but promotional, no implementation detail."
+  },
+  {
+   "url": "https://purl.utwente.nl/essays/92098",
+   "title": "Expand-contract with blue-green deployments on Postgres (UT student thesis)",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Student thesis; content not retrievable; tangential evidence."
+  },
+  {
+   "url": "https://www.postgresql.eu/events/pgconfeu2024/schedule/session/5871-postgres-schema-migrations-using-the-expandcontract-pattern/",
+   "title": "Postgres schema migrations using the expand/contract pattern",
+   "rank": 17,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Conference abstract only, links slides/video."
+  },
+  {
+   "url": "https://thearchitectsnotebook.substack.com/p/ep-116-zero-downtime-data-architecture",
+   "title": "The Architect's Notebook: Zero-downtime data architecture",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Paywalled; preview covers only expand phase."
+  },
+  {
+   "url": "https://thecodinggopher.substack.com/p/database-migrations-explained",
+   "title": "Database Migrations Explained",
+   "rank": 19,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Conceptual primer on expand/contract, dual writes, CDC; no code."
+  },
+  {
+   "url": "https://severalnines.com/?p=15095",
+   "title": "Online schema change for MySQL & MariaDB: comparing gh-ost vs pt-online-schema-change",
+   "rank": 20,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed expert comparison of pt-osc and gh-ost mechanics and limitations."
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-online-schema-migrations/view",
+   "title": "How to Use gh-ost for Online Schema Migrations in MySQL",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thin mass-produced how-to; omits prerequisites, some inconsistencies."
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-schema-migrations/view",
+   "title": "gh-ost schema migrations in MySQL",
+   "rank": 22,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Near-duplicate mass-produced post from same content farm series."
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-pt-online-schema-change/view",
+   "title": "What Is pt-online-schema-change for MySQL",
+   "rank": 23,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Basic workflow, some factual errors; mass-produced."
+  },
+  {
+   "url": "https://stackharbor.com/en/knowledge-base/mysql-pt-online-schema-change/",
+   "title": "MySQL pt-online-schema-change",
+   "rank": 24,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Dense practical guide: mechanism, prechecks, throttling, failure cleanup."
+  },
+  {
+   "url": "https://docs.planetscale.com/learn/how-online-schema-change-tools-work",
+   "title": "How online schema change tools work",
+   "rank": 25,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "In-depth explanation of OSC tool internals: row copy, change capture, cut-over."
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-online-schema-migrations/markdown",
+   "title": "How to Use gh-ost for Online Schema Migrations in MySQL (markdown)",
+   "rank": 26,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Markdown duplicate of already-listed thin post."
+  },
+  {
+   "url": "https://severalnines.com/?p=15085",
+   "title": "Online schema change with gh-ost: testing and running migrations",
+   "rank": 27,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Practical gh-ost testing, execution, monitoring walkthrough."
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-pt-online-schema-change/markdown",
+   "title": "What Is pt-online-schema-change for MySQL (markdown)",
+   "rank": 28,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Markdown duplicate of already-listed thin post."
+  },
+  {
+   "url": "https://docs.pingcap.com/tidb/dev/feature-online-ddl/",
+   "title": "TiDB DM: online DDL tool support",
+   "rank": 29,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "About TiDB DM replicating gh-ost/pt-osc changes; off-question."
+  },
+  {
+   "url": "https://github.com/LendingHome/zero_downtime_migrations",
+   "title": "LendingHome/zero_downtime_migrations",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Archived Rails gem; useful bad/good examples but unmaintained."
+  },
+  {
+   "url": "https://postgres.ai/docs/postgres-howtos/schema-design/ddl-operations/how-to-add-a-column",
+   "title": "How to add a column (Postgres how-tos)",
+   "rank": 31,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Expert Postgres how-to: lock_timeout retries, defaults, batched backfill."
+  },
+  {
+   "url": "https://tessl.io/registry/skills/github/timescale/pg-aiguide/postgres-database-migration",
+   "title": "postgres-database-migration skill (timescale/pg-aiguide)",
+   "rank": 32,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AI skill registry entry; substantive lock tables but agent-oriented, failed validation."
+  },
+  {
+   "url": "https://www.bytebase.com/blog/postgres-schema-migration-without-downtime.md",
+   "title": "Postgres Schema Migration without Downtime Best Practice (markdown)",
+   "rank": 33,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Markdown duplicate of Bytebase article."
+  },
+  {
+   "url": "https://dev.to/zny10289/database-migration-strategies-that-actually-work-in-production-240e",
+   "title": "Database migration strategies that actually work in production",
+   "rank": 34,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Likely AI-assisted; sound checklist but incorrect SQL and lock details."
+  },
+  {
+   "url": "https://levelup.gitconnected.com/zero-downtime-database-migrations-how-to-alter-50m-row-tables-without-locking-production-e179ce9dc23a",
+   "title": "Zero-downtime database migrations: how to alter 50M-row tables without locking production",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Member-only Medium story; not accessible."
+  },
+  {
+   "url": "https://v2.postgres.ai/docs/postgres-howtos/schema-design/ddl-operations/how-to-add-a-column",
+   "title": "How to add a column (postgres.ai v2)",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mirror duplicate of postgres.ai how-to."
+  },
+  {
+   "url": "https://www.bytebase.com/blog/postgres-schema-migration-without-downtime/",
+   "title": "Postgres schema migration without downtime",
+   "rank": 37,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Deep Postgres lock behavior, NOT VALID constraints, CIC, lock_timeout with SQL."
+  },
+  {
+   "url": "https://pypi.org/project/zero-downtime-migrations/0.5/",
+   "title": "zero-downtime-migrations 0.5 (PyPI)",
+   "rank": 38,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Old version page of Django package; page did not render."
+  },
+  {
+   "url": "https://dev.to/bnevilleoneill/how-to-migrate-a-database-schema-at-scale-1ml9",
+   "title": "How to migrate a database schema at scale",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Decent expand/contract intro; examples inconsistent, little operational depth."
+  },
+  {
+   "url": "https://medium.com/feed/@vloban",
+   "title": "Medium feed @vloban",
+   "rank": 40,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "RSS feed URL, not an article."
+  },
+  {
+   "url": "https://discourse.mozilla.org/t/migrating-databases-with-minimal-downtime/70472",
+   "title": "Migrating databases with minimal downtime",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page 404; Taskcluster datastore migration, tangential to schema changes."
+  },
+  {
+   "url": "https://feeds.simonwillison.net/2023/Oct/1/database-migrations/",
+   "title": "1st October 2023 - Link Blog",
+   "rank": 42,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Feed duplicate of link post."
+  },
+  {
+   "url": "https://blog.simonwillison.net/2023/Oct/1/database-migrations/",
+   "title": "Database migrations (Simon Willison link blog)",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short link post pointing to Kravcenko article; derivative."
+  },
+  {
+   "url": "https://simonwillison.net/tags/migrations.atom",
+   "title": "Simon Willison: migrations tag Atom feed",
+   "rank": 44,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Atom feed, not content page."
+  },
+  {
+   "url": "https://medium.com/learning-sql/how-i-achieved-zero-downtime-in-advanced-sql-data-migrations-using-postgresql-and-python-168650e8cfe5",
+   "title": "How I achieved zero downtime in advanced SQL data migrations using PostgreSQL and Python",
+   "rank": 45,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Fetch blocked; personal Medium account, unverified."
+  },
+  {
+   "url": "https://wix.engineering/blog/tags/database",
+   "title": "Wix Engineering blog: database tag",
+   "rank": 46,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tag listing page (404 on fetch), no content."
+  },
+  {
+   "url": "https://essay.utwente.nl/essays/88687",
+   "title": "Zero-downtime PostgreSQL database schema migrations in a continuous deployment environment at ING",
+   "rank": 47,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Student thesis on QuantumDB at ING; text not retrievable."
+  },
+  {
+   "url": "https://openbuildservice.org/2020/04/06/rails6/",
+   "title": "Open Build Service: Rails 6 upgrade",
+   "rank": 48,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Release note mentioning strong_migrations in passing."
+  },
+  {
+   "url": "https://www.stanza.dev/courses/rails-active-record-mastery/migrations-schema/rails-active-record-mastery-zero-downtime-migrations",
+   "title": "Zero-Downtime Migrations (Rails Active Record Mastery)",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Intro Rails lesson; correct sequencing, shallow mechanics."
+  },
+  {
+   "url": "https://discuss.rubyonrails.org/t/announcing-online-migrations-a-gem-that-catches-unsafe-migrations-in-development-and-provides-helpers-to-run-them-easier-in-production/79803",
+   "title": "Announcing online_migrations gem",
+   "rank": 50,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Gem announcement thread; feature list, little explanation."
+  },
+  {
+   "url": "https://skills.cat/skills/thibautbaissac/rails-ai-agents/database-migrations",
+   "title": "database-migrations skill (rails-ai-agents)",
+   "rank": 51,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "AI-agent skill aggregator listing; derivative."
+  },
+  {
+   "url": "https://tessl.io/registry/skills/github/fernandezbaptiste/rails_ai_agents/database-migrations",
+   "title": "database-migrations skill (rails_ai_agents)",
+   "rank": 52,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate AI-agent skill registry listing."
+  },
+  {
+   "url": "https://docsearch.algolia.com/mcp/docs/repo/ankane/strong_migrations",
+   "title": "Strong Migrations (DocSearch MCP)",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Index of strong_migrations README snippets; derivative of primary source."
+  },
+  {
+   "url": "https://ruby.ecosyste.ms/projects/406",
+   "title": "strong_migrations on ruby.ecosyste.ms",
+   "rank": 54,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Package metadata aggregator page."
+  },
+  {
+   "url": "https://awesome.ecosyste.ms/projects/23626",
+   "title": "strong_migrations on awesome.ecosyste.ms",
+   "rank": 55,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregator metadata page."
+  },
+  {
+   "url": "https://awesome.ecosyste.ms/projects/github.com%2Fankane%2Fstrong_migrations",
+   "title": "github.com/ankane/strong_migrations on awesome.ecosyste.ms",
+   "rank": 56,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate aggregator metadata page."
+  },
+  {
+   "url": "https://gsdms.csir.co.za/aanews2/strong-migrations-gem-conflicts-code",
+   "title": "Strong_migrations Gem Conflicts: Code Examples & Resolutions",
+   "rank": 57,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Spam-like page on unrelated institutional domain; unreachable."
+  }
+ ]
+}

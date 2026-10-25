@@ -1,0 +1,239 @@
+[
+ {
+  "url": "https://support.tools/database-migration-patterns-zero-downtime-schema-changes/",
+  "title": "Database Migration Patterns: Zero-Downtime Schema Changes"
+ },
+ {
+  "url": "https://launchdarkly.com/blog/3-best-practices-for-zero-downtime-database-migrations/",
+  "title": "3 best practices for zero downtime database migrations"
+ },
+ {
+  "url": "https://chudovo.com/zero-downtime-database-migration-for-legacy-systems-a-practical-developers-guide/",
+  "title": "Zero-Downtime Database Migration for Legacy Systems A Practical Developer's Guide"
+ },
+ {
+  "url": "https://dev.to/stebunovd/migrating-a-production-database-without-any-downtime-2p2d",
+  "title": "Migrating a production database without any downtime"
+ },
+ {
+  "url": "https://www.tessell.com/blog/zero-downtime-migration-strategies",
+  "title": "Zero downtime migration strategies"
+ },
+ {
+  "url": "https://devopsdays.org/events/2018-riga/program/michiel-rook-talk-1",
+  "title": "Database schema migrations with zero downtime"
+ },
+ {
+  "url": "https://dev.to/samson_tanimawo/zero-downtime-database-migrations-2nmi",
+  "title": "Zero-Downtime Database Migrations"
+ },
+ {
+  "url": "https://datastax.com/blog/accelerate-application-modernization-with-the-zero-downtime-migration-suite",
+  "title": "Accelerate application modernization with the zero downtime migration suite"
+ },
+ {
+  "url": "https://www.agilealliance.org/resources/sessions/zero-downtime-data-migrations-mastering-continuous-deployment/",
+  "title": "Zero downtime data migrations: mastering continuous deployment"
+ },
+ {
+  "url": "https://cdn.jsdelivr.net/npm/codingbuddy-rules@5.6.3/.ai-rules/skills/database-migration/expand-contract-patterns.md",
+  "title": "Expand-Contract Patterns"
+ },
+ {
+  "url": "https://xata.io/open-source/pgroll",
+  "title": "pgroll: Zero-downtime, reversible schema migrations"
+ },
+ {
+  "url": "https://thebackenddevelopers.substack.com/p/zero-downtime-database-migrations",
+  "title": "Zero downtime database migrations"
+ },
+ {
+  "url": "https://medium.com/@pooranimuthusamy/zero-downtime-database-migrations-909da8361ab3",
+  "title": "Zero Downtime Database Migrations"
+ },
+ {
+  "url": "https://blog.thepete.net/blog/2023/12/05/expand/contract-making-a-breaking-change-without-a-big-bang/",
+  "title": "Expand/Contract: making a breaking change without a big bang",
+  "date": "2023-12-05"
+ },
+ {
+  "url": "https://xata.io/blog/pgroll-expand-contract",
+  "title": "Schema changes and the power of expand-contract with pgroll"
+ },
+ {
+  "url": "https://purl.utwente.nl/essays/92098",
+  "title": "Expand-contract with blue-green deployments on Postgres (UT student thesis)"
+ },
+ {
+  "url": "https://www.postgresql.eu/events/pgconfeu2024/schedule/session/5871-postgres-schema-migrations-using-the-expandcontract-pattern/",
+  "title": "Postgres schema migrations using the expand/contract pattern"
+ },
+ {
+  "url": "https://thearchitectsnotebook.substack.com/p/ep-116-zero-downtime-data-architecture",
+  "title": "The Architect's Notebook: Zero-downtime data architecture"
+ },
+ {
+  "url": "https://thecodinggopher.substack.com/p/database-migrations-explained",
+  "title": "Database Migrations Explained"
+ },
+ {
+  "url": "https://severalnines.com/?p=15095",
+  "title": "Online schema change for MySQL & MariaDB: comparing gh-ost vs pt-online-schema-change"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-online-schema-migrations/view",
+  "title": "How to Use gh-ost for Online Schema Migrations in MySQL",
+  "date": "2026-03-31"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-schema-migrations/view",
+  "title": "gh-ost schema migrations in MySQL",
+  "date": "2026-03-31"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-pt-online-schema-change/view",
+  "title": "What Is pt-online-schema-change for MySQL",
+  "date": "2026-03-31"
+ },
+ {
+  "url": "https://stackharbor.com/en/knowledge-base/mysql-pt-online-schema-change/",
+  "title": "MySQL pt-online-schema-change"
+ },
+ {
+  "url": "https://docs.planetscale.com/learn/how-online-schema-change-tools-work",
+  "title": "How online schema change tools work"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-gh-ost-online-schema-migrations/markdown",
+  "title": "How to Use gh-ost for Online Schema Migrations in MySQL (markdown)",
+  "date": "2026-03-31"
+ },
+ {
+  "url": "https://severalnines.com/?p=15085",
+  "title": "Online schema change with gh-ost: testing and running migrations"
+ },
+ {
+  "url": "https://oneuptime.com/blog/post/2026-03-31-mysql-pt-online-schema-change/markdown",
+  "title": "What Is pt-online-schema-change for MySQL (markdown)",
+  "date": "2026-03-31"
+ },
+ {
+  "url": "https://docs.pingcap.com/tidb/dev/feature-online-ddl/",
+  "title": "TiDB DM: online DDL tool support"
+ },
+ {
+  "url": "https://github.com/LendingHome/zero_downtime_migrations",
+  "title": "LendingHome/zero_downtime_migrations"
+ },
+ {
+  "url": "https://postgres.ai/docs/postgres-howtos/schema-design/ddl-operations/how-to-add-a-column",
+  "title": "How to add a column (Postgres how-tos)"
+ },
+ {
+  "url": "https://tessl.io/registry/skills/github/timescale/pg-aiguide/postgres-database-migration",
+  "title": "postgres-database-migration skill (timescale/pg-aiguide)"
+ },
+ {
+  "url": "https://www.bytebase.com/blog/postgres-schema-migration-without-downtime.md",
+  "title": "Postgres Schema Migration without Downtime Best Practice (markdown)"
+ },
+ {
+  "url": "https://dev.to/zny10289/database-migration-strategies-that-actually-work-in-production-240e",
+  "title": "Database migration strategies that actually work in production"
+ },
+ {
+  "url": "https://levelup.gitconnected.com/zero-downtime-database-migrations-how-to-alter-50m-row-tables-without-locking-production-e179ce9dc23a",
+  "title": "Zero-downtime database migrations: how to alter 50M-row tables without locking production"
+ },
+ {
+  "url": "https://v2.postgres.ai/docs/postgres-howtos/schema-design/ddl-operations/how-to-add-a-column",
+  "title": "How to add a column (postgres.ai v2)"
+ },
+ {
+  "url": "https://www.bytebase.com/blog/postgres-schema-migration-without-downtime/",
+  "title": "Postgres schema migration without downtime"
+ },
+ {
+  "url": "https://pypi.org/project/zero-downtime-migrations/0.5/",
+  "title": "zero-downtime-migrations 0.5 (PyPI)"
+ },
+ {
+  "url": "https://dev.to/bnevilleoneill/how-to-migrate-a-database-schema-at-scale-1ml9",
+  "title": "How to migrate a database schema at scale"
+ },
+ {
+  "url": "https://medium.com/feed/@vloban",
+  "title": "Medium feed @vloban"
+ },
+ {
+  "url": "https://discourse.mozilla.org/t/migrating-databases-with-minimal-downtime/70472",
+  "title": "Migrating databases with minimal downtime"
+ },
+ {
+  "url": "https://feeds.simonwillison.net/2023/Oct/1/database-migrations/",
+  "title": "1st October 2023 - Link Blog",
+  "date": "2023-10-01"
+ },
+ {
+  "url": "https://blog.simonwillison.net/2023/Oct/1/database-migrations/",
+  "title": "Database migrations (Simon Willison link blog)",
+  "date": "2023-10-01"
+ },
+ {
+  "url": "https://simonwillison.net/tags/migrations.atom",
+  "title": "Simon Willison: migrations tag Atom feed"
+ },
+ {
+  "url": "https://medium.com/learning-sql/how-i-achieved-zero-downtime-in-advanced-sql-data-migrations-using-postgresql-and-python-168650e8cfe5",
+  "title": "How I achieved zero downtime in advanced SQL data migrations using PostgreSQL and Python"
+ },
+ {
+  "url": "https://wix.engineering/blog/tags/database",
+  "title": "Wix Engineering blog: database tag"
+ },
+ {
+  "url": "https://essay.utwente.nl/essays/88687",
+  "title": "Zero-downtime PostgreSQL database schema migrations in a continuous deployment environment at ING"
+ },
+ {
+  "url": "https://openbuildservice.org/2020/04/06/rails6/",
+  "title": "Open Build Service: Rails 6 upgrade",
+  "date": "2020-04-06"
+ },
+ {
+  "url": "https://www.stanza.dev/courses/rails-active-record-mastery/migrations-schema/rails-active-record-mastery-zero-downtime-migrations",
+  "title": "Zero-Downtime Migrations (Rails Active Record Mastery)"
+ },
+ {
+  "url": "https://discuss.rubyonrails.org/t/announcing-online-migrations-a-gem-that-catches-unsafe-migrations-in-development-and-provides-helpers-to-run-them-easier-in-production/79803",
+  "title": "Announcing online_migrations gem"
+ },
+ {
+  "url": "https://skills.cat/skills/thibautbaissac/rails-ai-agents/database-migrations",
+  "title": "database-migrations skill (rails-ai-agents)"
+ },
+ {
+  "url": "https://tessl.io/registry/skills/github/fernandezbaptiste/rails_ai_agents/database-migrations",
+  "title": "database-migrations skill (rails_ai_agents)"
+ },
+ {
+  "url": "https://docsearch.algolia.com/mcp/docs/repo/ankane/strong_migrations",
+  "title": "Strong Migrations (DocSearch MCP)"
+ },
+ {
+  "url": "https://ruby.ecosyste.ms/projects/406",
+  "title": "strong_migrations on ruby.ecosyste.ms"
+ },
+ {
+  "url": "https://awesome.ecosyste.ms/projects/23626",
+  "title": "strong_migrations on awesome.ecosyste.ms"
+ },
+ {
+  "url": "https://awesome.ecosyste.ms/projects/github.com%2Fankane%2Fstrong_migrations",
+  "title": "github.com/ankane/strong_migrations on awesome.ecosyste.ms"
+ },
+ {
+  "url": "https://gsdms.csir.co.za/aanews2/strong-migrations-gem-conflicts-code",
+  "title": "Strong_migrations Gem Conflicts: Code Examples & Resolutions"
+ }
+]
