@@ -1,73 +1,61 @@
-Related blog [posting](https://blog-steel-ten-13.vercel.app/posts/scored-web-search)
-# Install
-
-```bash
-# Claude Code (mod + skill, v2.1.290+): install from the marketplace
-claude plugin marketplace add Doggy-Footprint/claude-plugins
-claude plugin install scored-web-search@doggy-footprint
-```
-
-Or from a clone:
-
-```bash
-git clone https://github.com/Doggy-Footprint/scored-web-search
-
-# Claude Code (mod + skill, v2.1.290+): load as a plugin
-claude --plugin-dir "$(realpath scored-web-search)"
-
-# Claude Code (skill only): symlink the skill folder; it carries its own scorer
-mkdir -p ~/.claude/skills
-ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/scored-web-search
-
-# Codex (skill only, no mod tools): symlink the skill
-mkdir -p ~/.codex/skills
-ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.codex/skills/scored-web-search
-```
-
-Mobile / claude.ai (skill only, no mod):
-
-1. Download [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip). It is rebuilt on every change under `skills/scored-web-search/`.
-2. In claude.ai, open Settings > Customize > Skills and upload the zip. The skill is account-wide, so the mobile app gets it too.
-3. To update, download the zip again and re-upload. Auto-sync to the mobile app is not verified.
-
-The mod tools (`judge_support`, `scored-web-search:searcher`) are not available on mobile; the skill falls back to general subagents. The scorer queries `api.openalex.org`, `api.semanticscholar.org`, `doi.org` and `hn.algolia.com`; in a cloud environment set the network to Custom (add these domains) or Full.
-
-The mod adds `score_sources`, `judge_support` (SUPPORT judge, model set by `judgeModel` option, default `haiku`), and the `searcher` agent. Built against Claude Code 2.1.296. Skill only runs the same pipeline with general subagents and `scripts/srcscore.py`; the mod adds the side view (`/search-view`).
-
-# Customization (policy)
-
-Check `skills/scored-web-search/scripts/policy.json` and `skills/scored-web-search/scripts/modes/` to edit this skill permanently.
-
----
+포트폴리오: https://blog-steel-ten-13.vercel.app/posts/scored-web-search
 
 # Scored Web Search
 
-AI chat, 특히 클로드에서 web search할 때, 결과물을 heuristic filter로 걸러내어 신뢰도가 낮은 정보를 차단하는 skill입니다.
-달성 목표는 **Precision over Recall**, 모든 유용한 정보를 가져오지 못하더라도 오염된 정보를 걸러내는데 집중하는 스킬입니다.
+웹 검색 결과를 main agent가 읽기 전에 heuristic 점수로 걸러내는 skill입니다. **Precision over Recall**: 유용한 자료를 일부 놓치더라도 저품질 자료가 main context에 들어오지 않게 합니다.
 
-## 왜 만들었나?
+> **현재는 `academic` mode 사용을 권합니다.** 다른 mode는 개선이 필요합니다([평가](#평가)).
 
-> 그거 아시나요? Claude는 검색할 때, 광고도 가리지 않는다는 사실!
-> 그거 아시나요? Claude는 검색한 걸 읽을 때, 모든 자료를 평등하게 바라본다는 사실!
-> 그거 아시나요? 가끔 검색하면 하나 밖에 안 나오는 medium 글을 대표 사례라고 가져온다는 사실!
-> 그거 아니나요? low-quality 자료가 있으면 무시하는 게 아니라 context가 오염된다는 사실!
+# 동작 원리
 
-장난스럽게 말했지만, 고질적인 RAG 문제와, Context rot, context size 문제입니다.
+```
+1. Search  경량 subagent가 URL/title/date만 수집 (요약·snippet 없음)
+2. Score   srcscore.py가 0-100점 + verdict 부여
+2.5 Judge  경량 subagent가 SUPPORT만 열어보고 USE / SKIP 판정
+3. Read    main agent는 PRIMARY + USE 판정 SUPPORT만 읽음
+4. 재검색 (최대 2라운드)
+5. 주장-근거 대조 → 6. 출처·점수 태그를 단 보고서
+```
 
-## 어떻게 작동하나?
+- **점수** = 도메인 tier 기본점(88 / 74 / 60 / 46 / 32 / 14, 미등록은 32) ± 인용수, 게재 여부, GitHub star·HN 점수, 최신성, URL 경로 감점(SEO 경로, 구버전 문서 등).
+- **verdict**: PRIMARY 78+ · SUPPORT 62-77 · SKIM 46-61 · WEAK 30-45 · DROP <30 · BLOCKED 0. main agent가 보는 건 PRIMARY와 SUPPORT 행, 그리고 verdict별 개수뿐입니다.
+- **mode**: `academic`(기본), `non-academic`, `community-opinion`, `news`, `official-docs`. mode마다 도메인 tier와 신호 가중치가 다릅니다.
+- 규칙 전체는 [`SKILL.md`](skills/scored-web-search/SKILL.md), 점수 정책은 [`policy.json`](skills/scored-web-search/scripts/policy.json)과 [`modes/`](skills/scored-web-search/scripts/modes/)에 있습니다.
 
-> LLM은 충분히 똑똑하며, precision이 recall보다 중요하다.
+# 사용법
 
-1. web search는 sub agent에게 맡겨 **토큰 소모**를 줄이고, **context rot**을 방지한다. (Task/Agent 도구가 없는 환경, 예: Codex는 main agent가 직접 검색하되 snippet은 읽지 않고 URL만 추출하는 fallback으로 동작한다)
-2. 출처, 인용수, 저널, 좋아요 수, 별 수 등을 바탕으로 heuristic하게 점수를 매긴다. - 자세한 내용은 `SKILL.md`, `policy` 참고.
-3. main agent(고비용, 고성능)은 선별된 소스를 읽고 리포트를 작성한다.
+```bash
+# Claude Code (mod + skill, v2.1.290+)
+claude plugin marketplace add Doggy-Footprint/claude-plugins
+claude plugin install scored-web-search@doggy-footprint
 
-## 사용법
+# Claude Code / Codex (skill only): clone 후 skill 폴더를 symlink
+git clone https://github.com/Doggy-Footprint/scored-web-search
+mkdir -p ~/.claude/skills
+ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/scored-web-search   # Codex: ~/.codex/skills/
+```
 
-최상단 **Install**을 참고해주시기 바랍니다.
+- **claude.ai / mobile**: [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip)을 Settings > Customize > Skills에 업로드합니다. cloud 환경에서는 `api.openalex.org`, `api.semanticscholar.org`, `doi.org`, `hn.algolia.com`의 network 접근을 허용해야 합니다.
+- **호출**: "scored web search로 ~ 조사해줘"처럼 요청하고, 필요하면 mode를 함께 적습니다. 보고서의 각 주장에는 `(Nature 2025, PRIMARY 91)` 형식의 태그가 붙습니다.
+- **mod**를 쓰면 searcher agent, `score_sources`, `judge_support`(판정 모델 옵션 `judgeModel`, 기본 `haiku`)와 side view `/search-view`가 추가됩니다.
+- **커스터마이징**: `policy.json`과 `modes/*.json`을 고친 뒤 `python3 scripts/check_policy.py`로 검증합니다.
 
-## 설계 결정
+# 평가
 
-1. 재검색 - 검색 중 알게 된 용어가 원 질문의 미해결 부분을 조사하는 데 필요할 때 검색을 확장합니다. 자료가 적다는 것은 확장 사유가 아니며, 조건을 만족하는 새 키워드가 없으면 멈춥니다. 확장은 main agent가 읽은 본문에서 발견해 새 sub agent(KV cache 재활용)에 넘기는 경로로 일어납니다.
-2. 토큰 소모 감소 - 11%🔻, 메인 에이전트가 읽는 소스가 줄어들고, sub agent의 토큰 소모도 많지 않아서 더 드라마틱 감소를 기대했는데, sub agent cold-start 비용이 30k이라 감소폭이 적었다.
-3. `skills/scored-web-search/scripts/policy.json`에 단일 의존하는 점수 게산 - 개발이 쉬워진만큼 이 도구를 쓰는 사람이 AI의 도움을 받아 직접 수정하길 기대했다.
+자세한 방법론은 [`policy-eval/METHODOLOGY.md`](policy-eval/METHODOLOGY.md)에 있습니다. pilot은 2026-10-24에 20문항(mode당 4문항)으로 돌렸습니다.
+
+- **방법**: policy를 모르는 blind judge(Opus 5.5)가 직접 검색한 URL에 `useful` / `marginal` / `junk` 라벨을 붙이고, 이를 policy의 verdict와 비교합니다. plugin을 켠 실행과 끈 실행도 같은 질문으로 비교합니다. 보고서 자체의 정확도는 측정하지 않았습니다.
+- **Policy**: 통과분의 useful 비율이 전체 풀의 20%에서 51%로 올랐습니다. 대신 useful 자료의 67%가 SUPPORT 미만으로 떨어졌습니다.
+
+  baseline은 필터를 거치기 전, blind judge가 라벨을 붙인 전체 풀의 비율입니다.
+
+  | Mode | useful: baseline → 통과분 (precision) | junk: baseline → 통과분 (filter problem) | useful 중 통과 (recall) | 판단 |
+  |---|---|---|---|---|
+  | `academic` | 28% → 68% | 13% → 0% | 63% | 권장 |
+  | `news` | 21% → 52% | 16% → 5% | 42% | 작동하지만 academic보다 약함 |
+  | `official-docs` | 11% → 33% | 29% → 13% | 50% | 작동하지만 academic보다 약함 |
+  | `community-opinion` | 19% → 40% | 33% → 30% | 9% | 개선 필요 |
+  | `non-academic` | 22% → 0% | 23% → 100% (3개) | 0% | 개선 필요 |
+
+- **plugin 켬 vs 끔**: plugin을 끄면 검색 요약 텍스트를 통해 저품질 자료 24건이 main context에 들어왔고, 켜면 0건이었습니다. 원문을 읽은 페이지는 23개에서 150개로 늘었지만, 비용도 $11.42에서 $15.53으로 36% 늘었습니다(20문항 합, list price).
+- **한계**: 질문당 judge 1명, 실행 1회라 benchmark가 아니라 case study입니다. 이후 도메인 보강과 official-docs 개선의 효과는 아직 재측정하지 않았습니다.
