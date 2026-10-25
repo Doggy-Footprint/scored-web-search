@@ -86,28 +86,32 @@ class NonAcademicLadderTests(unittest.TestCase):
                 self.assertEqual(tier_of(academic, "https://%s/x" % d), was)
                 self.assertEqual(tier_of(self.na, "https://%s/x" % d), "3")
 
-    def test_engineering_blogs_are_tier_four(self):
-        """Company and individual alike -- the band the base table already
-        files danluu/jvns.ca/martinfowler at."""
+    def test_engineering_blogs_by_scale_and_track_record(self):
+        """Issue #5: large engineering orgs and proven individuals sit at 2 (the
+        Step 2.5 judge vets each page), vendors writing about their own product
+        area at 3."""
         for d in ("dropbox.tech", "airbnb.tech", "engineering.atspotify.com",
-                  "engineering.linkedin.com", "honeycomb.io", "tailscale.com",
-                  "toss.tech", "d2.naver.com", "techblog.woowahan.com",
+                  "engineering.linkedin.com", "toss.tech", "d2.naver.com",
+                  "techblog.woowahan.com", "severalnines.com",
                   "fasterthanli.me", "hillelwayne.com", "aphyr.com",
                   "lemire.me", "apenwarr.ca"):
             with self.subTest(domain=d):
-                self.assertEqual(tier_of(self.na, "https://%s/some-post" % d), "4")
+                self.assertEqual(tier_of(self.na, "https://%s/some-post" % d), "2")
+        for d in ("honeycomb.io", "tailscale.com", "fly.io", "datadoghq.com"):
+            with self.subTest(domain=d):
+                self.assertEqual(tier_of(self.na, "https://%s/some-post" % d), "3")
 
-    def test_every_blog_the_overlay_files_at_four_resolves_to_four(self):
-        """Not a spot check: every entry the overlay names as tier 4 must come
-        back as tier 4 through match_tier, so no broader pattern shadows one."""
+    def test_every_blog_override_resolves_to_its_own_tier(self):
+        """Not a spot check: every blog the overlay files at 2 must come back as 2
+        through match_tier, so no broader pattern shadows one."""
         for d, tier in overrides("non-academic").items():
-            if str(tier) != "4":
+            if str(tier) != "2":
                 continue
             with self.subTest(domain=d):
-                self.assertEqual(tier_of(self.na, "https://%s/some-post" % d), "4")
+                self.assertEqual(tier_of(self.na, "https://%s/some-post" % d), "2")
 
-    def test_engineering_blogs_rank_below_code_hosts(self):
-        self.assertGreater(P.tier_base(self.na, "3"), P.tier_base(self.na, "4"))
+    def test_no_engineering_blog_left_at_four(self):
+        self.assertEqual([d for d, t in overrides("non-academic").items() if str(t) == "4"], [])
 
     def test_sourceforge_is_tier_five(self):
         """A code host whose listings are mostly abandoned is not the live
@@ -133,8 +137,9 @@ class NonAcademicLadderTests(unittest.TestCase):
                                  ("PRIMARY", "SUPPORT", "SKIM"))
 
     def test_the_four_rungs_are_strictly_ordered(self):
-        rungs = ["https://github.com/owner/repo",
-                 "https://fasterthanli.me/articles/x",
+        # Issue #5 moved proven blogs to tier 2, above the code hosts.
+        rungs = ["https://fasterthanli.me/articles/x",
+                 "https://github.com/owner/repo",
                  "https://sourceforge.net/projects/x/",
                  "https://hackernoon.com/x"]
         bases = [P.tier_base(self.na, tier_of(self.na, u)) for u in rungs]
