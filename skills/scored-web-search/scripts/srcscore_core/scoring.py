@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from .fetchers import FETCH_FAILED, arxiv_lookup, github_repo, hn_item, hn_points, \
     openalex_by_doi, openalex_by_pmid
-from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, \
+from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, fetch_url, \
     extract_person_handle
 from .policy import blocked_name, signal_enabled, tier_base, verdict_for
 from .util import age_years, date_age_years, now_year_frac, host_matches, host_path, human, norm_host
@@ -287,6 +287,7 @@ def trusted_person_points(policy: dict, url: str):
 def _result(item, score, verdict, tier, pat, flags, meta, notes=None):
     return {
         "url": item["url"],
+        "fetch_url": fetch_url(item["url"]),
         "title": meta.get("title") or item.get("title") or "",
         "score": round(score, 1),
         "verdict": verdict,

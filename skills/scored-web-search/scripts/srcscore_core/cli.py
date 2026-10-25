@@ -7,7 +7,7 @@ import json
 import sys
 
 from .fetchers import CACHE_DIR, STATS, Cache
-from .io_format import parse_input, render_md, render_table
+from .io_format import parse_input, render_compact, render_md, render_table
 from .policy import PolicyError, apply_mode, load_policy, validate_policy
 from .scoring import score_many
 
@@ -21,10 +21,14 @@ MODES = ("academic", "non-academic", "community-opinion", "news", "official-docs
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Deterministic source credibility scorer (zero LLM tokens).")
-    ap.add_argument("--in", dest="infile", default="-", help="input file (default: stdin)")
+    ap.add_argument("--in", dest="infiles", action="append", default=[],
+                    help="input file (repeatable, records are concatenated; default: stdin)")
     ap.add_argument("-u", "--url", action="append", default=[],
                     help="score this URL (repeatable)")
-    ap.add_argument("--format", choices=["table", "json", "md", "urls"], default="table")
+    ap.add_argument("--format", choices=["table", "compact", "json", "md", "urls"], default="table",
+                    help="compact: PRIMARY/SUPPORT rows and a count per verdict")
+    ap.add_argument("--full-out", default=None, metavar="PATH",
+                    help="also write the full table to PATH (for --format compact)")
     ap.add_argument("--min", type=float, default=None, help="drop anything below this score")
     ap.add_argument("--top", type=int, default=None, help="keep only the top N")
     ap.add_argument("--field", default=None,
@@ -120,12 +124,13 @@ def main(argv=None):
 
     items = [{"url": u, "title": ""} for u in a.url]
     if not items:
-        try:
-            raw = sys.stdin.read() if a.infile == "-" else open(a.infile, encoding="utf-8").read()
-        except OSError as e:
-            print("srcscore: cannot read input: %s" % e, file=sys.stderr)
-            return 2
-        items = parse_input(raw)
+        for infile in a.infiles or ["-"]:
+            try:
+                raw = sys.stdin.read() if infile == "-" else open(infile, encoding="utf-8").read()
+            except OSError as e:
+                print("srcscore: cannot read input: %s" % e, file=sys.stderr)
+                return 2
+            items += parse_input(raw)
     if not items:
         print("srcscore: no URLs in input", file=sys.stderr)
         return 2
@@ -153,13 +158,23 @@ def main(argv=None):
     if a.top:
         rows = rows[: a.top]
 
+    if a.full_out:
+        try:
+            with open(a.full_out, "w", encoding="utf-8") as f:
+                f.write(render_table(rows) + "\n")
+        except OSError as e:
+            print("srcscore: cannot write --full-out: %s" % e, file=sys.stderr)
+            return 2
+
     if a.format == "json":
         print(json.dumps(rows, ensure_ascii=False, indent=1))
     elif a.format == "md":
         print(render_md(rows))
+    elif a.format == "compact":
+        print(render_compact(rows))
     elif a.format == "urls":
         for r in rows:
-            print(r["url"])
+            print(r["fetch_url"])
     else:
         print(render_table(rows))
     return 0

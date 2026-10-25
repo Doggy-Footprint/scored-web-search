@@ -40,7 +40,9 @@ test('score_sources writes JSON and runs script with mode and field', async ($, 
   const a = argvs[0]
   expect(a[0]).toBe('python3')
   expect(a[1]).toMatch(/\/scripts\/srcscore\.py$/)
-  expect(a.slice(2)).toEqual(['--in', path, '--mode', 'news', '--field', 'cs'])
+  const full = a[a.indexOf('--full-out') + 1]
+  expect(full).toMatch(/\/\.tmp\/score-.*\.txt$/)
+  expect(a.slice(2)).toEqual(['--in', path, '--mode', 'news', '--format', 'compact', '--full-out', full, '--field', 'cs'])
 })
 
 test('score_sources defaults missing/invalid mode to academic, no field', async ($, on) => {

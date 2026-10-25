@@ -37,6 +37,18 @@ export function parseJudgeLines(text) {
   return out
 }
 
+// The searcher's JSON records, reduced to the keys Step 2 takes; [] when the answer holds no JSON array.
+export function parseRecords(answer) {
+  try {
+    const parsed = JSON.parse(String(answer).replace(/^[\s\S]*?(\[[\s\S]*\])[\s\S]*$/, '$1'))
+    if (Array.isArray(parsed)) {
+      return parsed.filter((r) => r && typeof r.url === 'string' && r.url)
+        .map((r) => ({ url: r.url, title: typeof r.title === 'string' ? r.title : '', ...(typeof r.date === 'string' ? { date: r.date } : {}) }))
+    }
+  } catch (err) {}
+  return []
+}
+
 export function countUrls(answer) {
   try {
     const parsed = JSON.parse(String(answer).replace(/^[\s\S]*?(\[[\s\S]*\])[\s\S]*$/, '$1'))

@@ -23,7 +23,7 @@ Paths below are relative to this skill's folder. **If the `score_sources` tool i
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and accept only JSON records containing `url`, `title`, and an optional verified ISO `date` in return. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and have it write JSON records containing `url`, `title`, and an optional verified ISO `date` to a file you name in a temporary directory (one file per subagent, e.g. `urls-1.json`). It returns only the file path and the record count; the records themselves stay out of the main context. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
@@ -33,31 +33,31 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 
 ### Step 2 — Score: hand it to the script
 
-Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
+Pass every subagent's file to `scripts/srcscore.py` (`--in` is repeatable; `--help` for arguments) with `--format compact`.
 
 When the question names a docs version or variant, pass it: `--doc-version nextjs.org=14`, `--doc-variant nextjs.org=app` (variants are listed under `doc_variants` in `scripts/policy.json`). Pages for another version or variant then score as `stale-version` / `wrong-variant`. Without them, only paths that read as superseded on their own are penalised.
 
 In `official-docs` mode, pass the hosts you used for `site:` queries: `--official-domain biomejs.dev`. A host the policy does not know is then scored SUPPORT with `official-claimed` instead of the unregistered default, so Step 2.5 still vets each page. A registered host keeps its tier.
 
-Output is a compact table, roughly 15 tokens per line:
+Output lists only the PRIMARY and SUPPORT rows, roughly 15 tokens per line, and a count per verdict:
 
 ```
 SCORE VERDICT T  SIGNALS                     URL
  98.0 PRIMARY  3  cit=132.0k,y2017,published@NeurIPS  https://arxiv.org/abs/1706.03762
- 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/abs/2601.xxxxx
- 46.2 SKIM     4  ★84.5k                      https://github.com/foo/bar
- 14.0 DROP     6                              https://www.w3schools.com/...
-  0.0 BLOCKED  0  RETRACTED                   https://...
+ 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/html/2601.xxxxx
+-- 47 sources | PRIMARY 1 | SUPPORT 1 | SKIM 9 | WEAK 12 | DROP 22 | BLOCKED 2
 ```
+
+The URL column is the address to fetch: links WebFetch cannot follow are rewritten (old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
 
 | Verdict | Score | What to do with it |
 |---|---|---|
 | PRIMARY | 78+ | Cite directly. Valid source for figures and claims |
 | SUPPORT | 62-77 | Supporting evidence. Never the sole basis for a conclusion |
-| SKIM | 46-61 | Cross-checking only. Cite only when another source says the same |
-| WEAK | 30-45 | Background reading. **Do not cite** |
-| DROP | <30 | Do not open |
-| BLOCKED | 0 | Retracted paper / scraper. Never use |
+| SKIM | 46-61 | Counted, not listed. Do not open |
+| WEAK | 30-45 | Counted, not listed. **Do not cite** |
+| DROP | <30 | Counted, not listed. Do not open |
+| BLOCKED | 0 | Retracted paper / scraper. Counted, not listed |
 
 ### Step 2.5 — Judge: vet SUPPORT sources
 
@@ -72,7 +72,9 @@ Page text never reaches you. No sub agent fallback: skip this step and read SUPP
 - If the judge itself fails, read SUPPORT sources as before and say the judge step was unavailable.
 
 ### Step 3 — Read: open only what passed
-`WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.** The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
+`WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.**
+
+When a WebFetch note says the page was read only up to some character, call again with the `offset` it gives only if what the question needs is likely in the unread part. Anything you did not read is "beyond what was read", never "not reported". The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
 
 Default cap: 8-12 sources. Up to 20 if the user asks for depth.
 

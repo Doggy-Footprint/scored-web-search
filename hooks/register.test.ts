@@ -4,15 +4,24 @@ import { emptyRun, mergeSources } from './view.js'
 
 const RUBRIC_STUB = ($: any, e: any) => ({ value: e.path.endsWith('/skills/scored-web-search/references/judge-rubric.md') ? 'RUBRIC' : '' })
 
+// srcscore.py writes the full table to --full-out; the side view reads it back from there.
+function fakeScorer(on: any, stdout: string, argvs: string[][] = []) {
+  const files: Record<string, string> = {}
+  on('fs.read', ($: any, e: any) => (e.path in files ? { value: files[e.path] } : RUBRIC_STUB($, e)))
+  on('fs.write', () => ({ value: undefined }))
+  on('process.run', ($: any, e: any) => {
+    argvs.push(e.argv)
+    const i = e.argv.indexOf('--full-out')
+    if (i >= 0) files[e.argv[i + 1]] = stdout
+    return { value: { exitCode: 0, stdout, stderr: '' } }
+  })
+}
+
 const USAGE = { input_tokens: 1, output_tokens: 1, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 }
 
 test('score_sources returns the script table', async ($, on) => {
   const argvs: string[][] = []
-  on('fs.write', () => ({ value: undefined }))
-  on('process.run', ($, e) => {
-    argvs.push(e.argv)
-    return { value: { exitCode: 0, stdout: 'TABLE', stderr: '' } }
-  })
+  fakeScorer(on, 'TABLE', argvs)
   const out = await $.tool.call({ tool: 'mcp__scored-web-search__score_sources', records: [{ url: 'https://a.org' }], mode: 'news' })
   expect(out.result).toBe('TABLE')
   expect(argvs[0]).toContain('news')
@@ -72,9 +81,7 @@ const TABLE = [
 
 test('side view tracks score, judge, and read', async ($, on) => {
   const opened: string[] = []
-  on('fs.read', RUBRIC_STUB)
-  on('fs.write', () => ({ value: undefined }))
-  on('process.run', () => ({ value: { exitCode: 0, stdout: TABLE, stderr: '' } }))
+  fakeScorer(on, TABLE)
   on('ui.open', ($, e) => { opened.push(e.id); return { value: { isPlaced: true } } })
   on('http.fetch', () => ({ value: { ok: true, status: 200, headers: {}, text: '<p>body</p>' } }))
   on('model.complete', ($, e) => ({ value: { isAnswered: true, text: e.prompt.includes('/skip') ? 'SKIP|seo filler' : 'USE|data', usage: USAGE } }))

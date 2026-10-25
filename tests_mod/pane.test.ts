@@ -24,11 +24,14 @@ function base(on: any, opts: { stdout?: string[] | string, exit?: number, openDe
   const openArgs: any[] = [], toasts: string[] = [], closed: string[] = []
   const panes: any[] = [...(opts.panes ?? [])]
   let i = 0
-  on('fs.read', ($: any, e: any) => ({ value: 'stub:' + e.path }))
+  const files: Record<string, string> = {}
+  on('fs.read', ($: any, e: any) => ({ value: e.path in files ? files[e.path] : 'stub:' + e.path }))
   on('fs.write', () => ({ value: undefined }))
-  on('process.run', () => {
+  on('process.run', ($: any, e: any) => {
     const outs = Array.isArray(opts.stdout) ? opts.stdout : [opts.stdout ?? T1]
     const s = outs[Math.min(i++, outs.length - 1)]
+    const k = e.argv.indexOf('--full-out')
+    if (k >= 0) files[e.argv[k + 1]] = s
     return { value: { exitCode: opts.exit ?? 0, stdout: s, stderr: '' } }
   })
   on('ui.open', ($: any, e: any) => { opened.push(e.id); openArgs.push(e); if (!opts.keepClosed) panes.push({ id: e.id, title: e.title, isPlaced: !opts.unplaced }); return opts.openDeny ? { deny: 'no' } : { value: { isPlaced: !opts.unplaced } } })

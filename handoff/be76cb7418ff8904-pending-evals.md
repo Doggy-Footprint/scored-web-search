@@ -30,5 +30,8 @@
 - 변경: academic에서 Step 5 Verify를 항상 수행한다. 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
 - 측정: trace 라운드 발생률, 원 출처를 찾아 읽은 비율, 추가 비용(arms cost breakdown).
 
-### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건, 구현 후)
-- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context(`arms.py`). E1, E4와 같은 실행에서 잰다.
+### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건)
+- 변경: `score_sources`와 `srcscore.py --format compact`는 PRIMARY/SUPPORT 행과 verdict별 개수만 돌려준다. 전체 표는 side view와 `.tmp/score-*.txt`에 남는다. searcher 반환은 mod가 `.tmp/batch-<id>.json`에 저장하고 메인에는 batch id만 넘긴다(skill-only는 subagent가 파일을 쓰고 경로만 반환). 표의 URL은 fetch 주소다(PMC 구 주소 → `pmc.ncbi.nlm.nih.gov`, 2312 이후 arXiv abs/pdf → html). Step 3은 WebFetch 잘림 note가 있으면 필요할 때만 `offset`으로 이어 읽게 한다.
+- 기준: `results/pilot.summary.json`(with $0.78/문항, 메인 $0.60, 16.9턴, 메인이 읽은 페이지 7.5, 메인 오버헤드 약 20k자: 표 8.9k + searcher 10.9k).
+- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, `searcher_contract.chars_in_main`(`arms.py`). fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E1, E4와 같은 실행에서 잰다.
+- 주의: batch 파일은 `.tmp`에 있으므로 arms 실행 직후, `.tmp`를 지우기 전에 `arms.py ingest`를 돌린다.

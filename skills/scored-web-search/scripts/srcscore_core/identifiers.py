@@ -10,7 +10,7 @@ from .util import age_years, host_path, norm_host
 __all__ = [
     "ARXIV_RE", "DOI_RE", "GITHUB_RE", "PUBMED_RE", "OPENREVIEW_RE", "BIORXIV_RE",
     "GITHUB_NON_REPO", "HN_ITEM_RE", "extract_ids", "arxiv_id_age_years",
-    "extract_hn_item_id", "extract_person_handle",
+    "extract_hn_item_id", "extract_person_handle", "fetch_url",
 ]
 
 ARXIV_RE = re.compile(
@@ -121,3 +121,28 @@ def extract_person_handle(url: str):
         if m:
             return host, m.group(1).lower()
     return None
+
+
+_PMC_OLD_RE = re.compile(r"^https?://(?:www\.)?ncbi\.nlm\.nih\.gov/pmc/(articles/PMC\d+.*)$", re.I)
+_ARXIV_PAGE_RE = re.compile(
+    r"^https?://(?:www\.)?arxiv\.org/(?:abs|pdf)/((\d{2})(\d{2})\.\d{4,5}(?:v\d+)?)(?:\.pdf)?/?(?:[?#].*)?$", re.I)
+# arXiv renders HTML only for submissions from December 2023 on.
+_ARXIV_HTML_FROM = (23, 12)
+
+
+def fetch_url(url: str) -> str:
+    """The address WebFetch should be given for `url`; `url` itself unless a rule applies.
+
+    WebFetch does not follow cross-host redirects, so an old PMC link
+    (www.ncbi.nlm.nih.gov/pmc/...) dead-ends on a redirect notice. arXiv
+    abs/pdf pages read as an abstract or a PDF; the HTML rendering is the
+    full text, but it is missing for older submissions, hence the cut-off.
+    Pattern-only: no request is made.
+    """
+    m = _PMC_OLD_RE.match(url)
+    if m:
+        return "https://pmc.ncbi.nlm.nih.gov/" + m.group(1)
+    m = _ARXIV_PAGE_RE.match(url)
+    if m and (int(m.group(2)), int(m.group(3))) >= _ARXIV_HTML_FROM:
+        return "https://arxiv.org/html/" + m.group(1)
+    return url
