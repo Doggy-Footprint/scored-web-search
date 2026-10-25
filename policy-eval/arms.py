@@ -19,11 +19,16 @@ from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
 import pricing
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "skills" / "scored-web-search" / "scripts"))
+from srcscore_core.identifiers import fetch_url  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent
 RUNS = ROOT / "runs"
 REPO = ROOT.parent
 SCORER = REPO / "skills" / "scored-web-search" / "scripts" / "srcscore.py"
 JUDGE_USAGE_DIR = REPO / ".tmp"
+BATCH_DIR = REPO / ".tmp"
+BATCH_STUB = re.compile(r"^searcher batch ([A-Za-z0-9_-]+): ")
 LEVELS = ("listed", "exposed", "read")
 LABELS = ("useful", "marginal", "junk", "unlabeled")
 URL_RE = re.compile(r"https?://[^\s\"'<>\]\)|`]+")
@@ -35,9 +40,13 @@ SCORE_TOOL = "mcp__scored-web-search__score_sources"
 
 
 def norm(url):
-    """Join key for URLs from different tools: lowercase host, no fragment/trailing slash/tracking params."""
+    """Join key for URLs from different tools: lowercase host, no fragment/trailing slash/tracking params.
+
+    The scorer's fetch address (fetch_url) is applied first, so a rewritten PMC/arXiv URL in a score table or
+    WebFetch call joins the label of the URL the search returned.
+    """
     try:
-        p = urlsplit(url.strip().rstrip(".,;"))
+        p = urlsplit(fetch_url(url.strip().rstrip(".,;")))
     except ValueError:
         return url
     q = urlencode([(k, v) for k, v in parse_qsl(p.query) if not k.lower().startswith("utm_")])
@@ -129,8 +138,17 @@ def extract(trace_path):
                                            "links": [{"url": l["url"], "title": l.get("title")} for l in links],
                                            "summary_chars": len(rest)})
                 elif name in ("Agent", "Task") and role_of.get(b["tool_use_id"]) == SEARCHER:
-                    recs, extra = searcher_records(text)
-                    ev["searcher_returns"].append({"records": recs, "extra_keys": extra, "chars": len(text)})
+                    stub = BATCH_STUB.match(text.strip())
+                    if stub:
+                        # The mod kept the records out of the main context; read them back from its batch file.
+                        bf = BATCH_DIR / f"batch-{stub[1]}.json"
+                        recs = json.loads(bf.read_text()) if bf.exists() else []
+                        ev["searcher_returns"].append({"records": recs, "extra_keys": [], "chars": len(text),
+                                                       "batch": stub[1], "in_main": False})
+                    else:
+                        recs, extra = searcher_records(text)
+                        ev["searcher_returns"].append({"records": recs, "extra_keys": extra, "chars": len(text),
+                                                       "in_main": True})
                 elif name == SCORE_TOOL:
                     rows = []
                     for line in text.splitlines():
@@ -139,7 +157,8 @@ def extract(trace_path):
                             rows.append({"url": m[5], "score": float(m[1]), "verdict": m[2], "tier": m[3],
                                          "signals": m[4].strip()})
                     ev["score_tables"].append({"round": inp.get("round"), "queries": inp.get("queries"),
-                                               "n_records": len(inp.get("records") or []), "rows": rows})
+                                               "n_records": len(inp.get("records") or []),
+                                               "batches": inp.get("batches") or [], "rows": rows})
                 elif name == JUDGE_TOOL:
                     for line in text.splitlines():
                         m = JUDGE_ROW.match(line.strip())
@@ -278,7 +297,7 @@ def arm_urls(ev):
                 bump(l["url"], "sub_seen")
     for r in ev["searcher_returns"]:
         for rec in r["records"]:
-            bump(rec["url"], "listed")
+            bump(rec["url"], "listed" if r.get("in_main", True) else "sub_seen")
     for t in ev["score_tables"]:
         for row in t["rows"]:
             bump(row["url"], "listed")
@@ -381,6 +400,8 @@ def analyze_arm(ev, labels, scores, q):
         "cost": cost_breakdown(ev),
         "judge_vs_blind": {f"{a}|{b}": n for (a, b), n in judge_cm.items()},
         "searcher_contract": {"returns": len(sr), "records": sum(len(r["records"]) for r in sr),
+                              "batched": sum(1 for r in sr if not r.get("in_main", True)),
+                              "chars_in_main": sum(r["chars"] for r in sr),
                               "extra_keys": sorted({k for r in sr for k in r["extra_keys"]}),
                               "dated": sum(1 for r in sr for rec in r["records"] if rec.get("date"))},
         "rounds": len(ev["score_tables"]), "searches_main": sum(1 for s in ev["searches"] if s["role"] == "main"),

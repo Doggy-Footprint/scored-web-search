@@ -1,11 +1,12 @@
 import { atom, read, update } from 'claude-code'
-import { addRound, buildPane, countUrls, emptyRun, mergeSources, normUrl, parseJudgeLines, parseScoreTable } from './view.js'
+import { addRound, buildPane, countUrls, emptyRun, mergeSources, normUrl, parseJudgeLines, parseRecords, parseScoreTable } from './view.js'
 
 const PANE = 'search-view'
 const SEARCHER = 'scored-web-search:searcher'
 const PAGE_CHARS = 20000
 const JUDGE_CONCURRENCY = 4
 const MODES = ['academic', 'non-academic', 'community-opinion', 'news', 'official-docs']
+const BATCH_ID = /^[A-Za-z0-9_-]+$/
 
 // The skill folder is the single origin of the scorer and the prompts; the skill-only path reads the same files.
 const SKILL_DIR = '/skills/scored-web-search'
@@ -20,7 +21,7 @@ export function register(on, options) {
   on('session.start', async ($, e, next) => {
     await $.tool.register({
       name: 'score_sources',
-      description: 'Scored web search step 2: score collected search records with srcscore.py. Returns the score table (SCORE VERDICT T SIGNALS URL).',
+      description: 'Scored web search step 2: score collected search records with srcscore.py. Returns the PRIMARY and SUPPORT rows of the score table (SCORE VERDICT T SIGNALS URL) and a count per verdict.',
       inputSchema: {
         type: 'object',
         properties: {
@@ -32,6 +33,7 @@ export function register(on, options) {
               required: ['url'],
             },
           },
+          batches: { type: 'array', items: { type: 'string' }, description: 'Batch ids the searcher agent handed back; their records are scored together with `records`' },
           mode: { type: 'string', enum: MODES },
           field: { type: 'string' },
           round: { type: 'string', description: 'Short label for this search round, shown in the side view' },
@@ -41,7 +43,6 @@ export function register(on, options) {
           docVariants: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs variant the question is about, per domain, e.g. {"nextjs.org": "app"}. Pages under another variant are penalised' },
           officialDomains: { type: 'array', items: { type: 'string' }, description: 'official-docs mode only: the product\'s own docs hosts, e.g. ["biomejs.dev"]. An unregistered host is lifted to SUPPORT and flagged official-claimed; registered hosts keep their tier' },
         },
-        required: ['records'],
       },
     })
     await $.tool.register({
@@ -74,9 +75,20 @@ export function register(on, options) {
   on('tool.call', { tool: 'mcp__scored-web-search__score_sources' }, async ($, e) => {
     const mode = MODES.includes(e.mode) ? e.mode : 'academic'
     const dir = $.plugin.root + '/.tmp'
-    const infile = dir + '/urls-' + Date.now() + '.json'
-    await $.fs.write(infile, JSON.stringify(e.records || []))
-    const argv = ['python3', $.plugin.root + SKILL_DIR + '/scripts/srcscore.py', '--in', infile, '--mode', mode]
+    const stamp = Date.now()
+    const records = [...(e.records || [])]
+    for (const id of e.batches || []) {
+      if (!BATCH_ID.test(String(id))) return { result: 'score_sources: invalid batch id ' + JSON.stringify(id) + '\nStop: do not fall back to unscored reading.' }
+      let batch
+      try { batch = JSON.parse(await $.fs.read(batchPath($, id))) } catch (err) {
+        return { result: 'score_sources: unknown batch ' + id + '\nStop: do not fall back to unscored reading.' }
+      }
+      records.push(...batch)
+    }
+    const infile = dir + '/urls-' + stamp + '.json'
+    const fullfile = dir + '/score-' + stamp + '.txt'
+    await $.fs.write(infile, JSON.stringify(records))
+    const argv = ['python3', $.plugin.root + SKILL_DIR + '/scripts/srcscore.py', '--in', infile, '--mode', mode, '--format', 'compact', '--full-out', fullfile]
     if (e.field) argv.push('--field', e.field)
     for (const [dom, v] of Object.entries(e.docVersions || {})) argv.push('--doc-version', dom + '=' + v)
     for (const [dom, v] of Object.entries(e.docVariants || {})) argv.push('--doc-variant', dom + '=' + v)
@@ -84,8 +96,9 @@ export function register(on, options) {
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }
-      const rows = parseScoreTable(r.stdout)
-      await edit($, (run) => mergeSources(run, rows, addRound(run, { label: e.round, parent: e.parentRound, queries: e.queries, count: (e.records || []).length })))
+      // The side view keeps every row; the main context gets only the compact table.
+      const rows = parseScoreTable(await $.fs.read(fullfile))
+      await edit($, (run) => mergeSources(run, rows, addRound(run, { label: e.round, parent: e.parentRound, queries: e.queries, count: records.length })))
       return { result: r.stdout }
     } catch (err) {
       return { result: 'srcscore.py could not run: ' + String(err && err.message || err) + '\nStop: do not fall back to unscored reading.' }
@@ -122,8 +135,9 @@ export function register(on, options) {
     return { result }
   }).catch(($, e, next) => ({ result: 'judge_support failed: ' + next.error.message + '\nJudge unavailable: read SUPPORT sources as before and note it.' }))
 
+  // In the foreground, so its records arrive as the Agent tool's result, where the hook below can take them.
   on('agent.spawn', { subagentType: SEARCHER }, async ($, e, next) => {
-    const r = await next(e)
+    const r = await next({ ...e, background: false })
     try {
       if (r.agentId) {
         await edit($, (run) => run.queries.push({ agentId: r.agentId, label: e.description || String(e.prompt).split('\n')[0].slice(0, 80), urls: null }))
@@ -131,6 +145,21 @@ export function register(on, options) {
       await showPane($)
     } catch (err) {}
     return r
+  })
+
+  // The searcher's records go to a batch file; the main context reads only the batch id it passes to score_sources.
+  on('tool.call', { tool: 'Agent' }, async ($, e, next) => {
+    const r = await next(e)
+    if (e.subagent_type !== SEARCHER || !r.result || r.isError || !Array.isArray(r.result.content)) return r
+    const id = String(r.result.agentId || '').replace(/[^A-Za-z0-9_-]/g, '') || 'b' + Date.now()
+    const records = parseRecords(r.result.content.map((b) => b.text || '').join('\n'))
+    try {
+      await $.fs.write(batchPath($, id), JSON.stringify(records))
+    } catch (err) {
+      return r
+    }
+    const text = 'searcher batch ' + id + ': ' + records.length + ' records saved (not shown). Pass batches: ["' + id + '"] to score_sources.'
+    return { ...r, result: { ...r.result, content: [{ type: 'text', text }] } }
   })
 
   on('turn.complete', async ($, e, next) => {
@@ -164,6 +193,8 @@ export function register(on, options) {
     return next(e)
   })
 }
+
+const batchPath = ($, id) => $.plugin.root + '/.tmp/batch-' + id + '.json'
 
 // Opens on each searcher spawn while closed. An unasked open is drawn only on wide terminals, so say how to see it otherwise.
 async function showPane($) {
