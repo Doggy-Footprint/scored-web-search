@@ -1,0 +1,81 @@
+{
+ "id": "d09",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 1,
+   "chars": 1459,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate quotes, default, Recommended, Released 2.0. Truncation hedge present."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 2,
+   "chars": 1366,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate paraphrase and example; correct default and release."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 2,
+   "chars": 1429,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate. Hedged 'not found' about other errors is not penalised."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 1410,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (minor, not counted): says 'ignored by the type system' where page says 'by the language'; 'assigning' narrower than 'use'",
+   "worst_summary_quote": "effectively ignored by the type system",
+   "worst_page_quote": "effectively ignored by the language",
+   "quote_verified": false,
+   "notes": "Summary quote does not appear verbatim in the page (it is a paraphrase); page quote verified. Otherwise accurate; no material findings."
+  }
+ ]
+}

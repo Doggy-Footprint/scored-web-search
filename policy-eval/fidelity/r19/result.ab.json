@@ -1,0 +1,81 @@
+{
+ "id": "r19",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 1,
+   "chars": 4134,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: minor, omits the n=684 repeat-participant sensitivity check and the near-zero correlated change (not material)",
+   "worst_summary_quote": "Gender was included only as a covariate in a sensitivity analysis",
+   "worst_page_quote": "parameter estimates remained largely unchanged",
+   "quote_verified": true,
+   "notes": "Numbers, quotes and attributions match the page. Includes the Twenge, Coyne and Nesi attributions."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 1,
+   "chars": 2931,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: minor, passive use is described as 'not measured separately' (accurate); no CIs given",
+   "worst_summary_quote": "Passive use was not measured separately",
+   "worst_page_quote": "did not investigate qualitative differences in social media use",
+   "quote_verified": true,
+   "notes": "All figures check out (B=0.13, p=0.039; p=0.060 adjusted; n=684). Kross is ref 28, cited with Twenge as suggesting a causal link."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 2,
+   "chars": 4117,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: minor, a labelled 'Inference' that the significant finding is fragile goes beyond the authors, who say 'statistically weak'",
+   "worst_summary_quote": "the one significant finding is fragile",
+   "worst_page_quote": "statistically weak, and somewhat inconsistent over time",
+   "quote_verified": true,
+   "notes": "Table A2 figure (B=0.14, p=0.060) verified. Gender hedge 'not found in the text read' is not penalised. The inference is flagged as such."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 2,
+   "chars": 3043,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: minor, calls the freed T5-T6 autoregressive path 'post hoc'; the page says it was freed based on modification indices",
+   "worst_summary_quote": "which is a post hoc adjustment",
+   "worst_page_quote": "autoregressive path between T5 and T6 on depressive symptoms was set free",
+   "quote_verified": true,
+   "notes": "The post hoc label is a fair reading of the modification-indices statement. Everything else matches the page."
+  }
+ ]
+}

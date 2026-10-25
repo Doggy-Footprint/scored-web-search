@@ -49,6 +49,63 @@
   "no": 10,
   "na": 2
  },
+ "webfetch_ab": {
+  "B": {
+   "n": 60,
+   "verdicts": {
+    "faithful": 43,
+    "minor loss": 16,
+    "material loss": 1,
+    "not assessable": 0
+   },
+   "counts": {
+    "A": 4,
+    "B": 2,
+    "C": 5,
+    "D": 0
+   },
+   "false_absence": 1,
+   "mean_chars": 2089
+  },
+  "T": {
+   "n": 60,
+   "verdicts": {
+    "faithful": 44,
+    "minor loss": 16,
+    "material loss": 0,
+    "not assessable": 0
+   },
+   "counts": {
+    "A": 3,
+    "B": 1,
+    "C": 3,
+    "D": 0
+   },
+   "false_absence": 0,
+   "mean_chars": 2616
+  },
+  "paired_T_vs_B": {
+   "pos": 7,
+   "neg": 6,
+   "ties": 17,
+   "p": 1.0
+  },
+  "noise_run1_vs_run2": {
+   "B": {
+    "pos": 5,
+    "neg": 1,
+    "ties": 24,
+    "p": 0.2188
+   },
+   "T": {
+    "pos": 4,
+    "neg": 4,
+    "ties": 22,
+    "p": 1.0
+   }
+  },
+  "n_topics": 30
+ },
  "per_topic": [
   {
    "id": "d01",

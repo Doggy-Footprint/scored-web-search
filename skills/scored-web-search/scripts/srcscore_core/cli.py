@@ -42,6 +42,10 @@ def main(argv=None):
                          "penalised as the wrong manual; pages with no version in the "
                          "path are left alone. Without this, only a bare major-version "
                          "path (/docs/13/) is read as superseded.")
+    ap.add_argument("--doc-variant", action="append", default=[], metavar="DOMAIN=VARIANT",
+                    help="the docs variant the question is about, e.g. nextjs.org=app "
+                         "(repeatable; variants are listed in policy.json doc_variants). "
+                         "Pages under another variant of that domain are penalised.")
     ap.add_argument("--modes-dir", default=None, help="override scripts/modes/ location")
     ap.add_argument("--version", action="version", version=VERSION)
     a = ap.parse_args(argv)
@@ -67,6 +71,22 @@ def main(argv=None):
         policy = dict(policy, doc_versions=doc_versions)
         try:
             validate_policy(policy, "merged policy + --doc-version")
+        except PolicyError as e:
+            print("srcscore: %s" % e, file=sys.stderr)
+            return 3
+
+    doc_variant = {}
+    for spec in a.doc_variant:
+        dom, sep, var = spec.partition("=")
+        if not sep or not dom.strip() or not var.strip():
+            print("srcscore: --doc-variant expects DOMAIN=VARIANT, got %r" % spec,
+                  file=sys.stderr)
+            return 2
+        doc_variant[dom.strip().lower()] = var.strip().lower()
+    if doc_variant:
+        policy = dict(policy, doc_variant=doc_variant)
+        try:
+            validate_policy(policy, "merged policy + --doc-variant")
         except PolicyError as e:
             print("srcscore: %s" % e, file=sys.stderr)
             return 3

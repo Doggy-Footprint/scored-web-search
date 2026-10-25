@@ -152,6 +152,54 @@ def validate_policy(p: dict, path: str = "policy") -> None:
             except re.error as e:
                 bad("version_path_regex is not a valid regex: %s" % e)
 
+    for key in ("non_content_path", "wrong_variant"):
+        cfg = p.get("penalties", {}).get(key)
+        if cfg is not None and not isinstance(cfg.get("points"), (int, float)):
+            bad("penalties.%s needs numeric 'points'" % key)
+
+    nc = p.get("non_content_path_regex")
+    if nc is not None:
+        if not isinstance(nc, list) or not all(isinstance(x, str) for x in nc):
+            bad("non_content_path_regex must be a list of regex strings")
+        for x in nc:
+            try:
+                re.compile(x)
+            except re.error as e:
+                bad("non_content_path_regex %r is not a valid regex: %s" % (x, e))
+
+    rr = p.get("release_path_regex")
+    if rr is not None:
+        if not isinstance(rr, dict):
+            bad("release_path_regex must map a domain to a regex")
+        for dom, x in rr.items():
+            try:
+                if not isinstance(x, str) or re.compile(x).groups != 1:
+                    bad("release_path_regex[%r] must have exactly one capture group "
+                        "(the release string)" % dom)
+            except re.error as e:
+                bad("release_path_regex[%r] is not a valid regex: %s" % (dom, e))
+
+    variants = p.get("doc_variants")
+    if variants is not None:
+        if not isinstance(variants, dict) or any(
+                not isinstance(v, dict) or not v
+                or any(not isinstance(pre, str) or not pre.startswith("/") for pre in v.values())
+                for v in variants.values()):
+            bad("doc_variants must map a domain to {variant: '/path/prefix/'}")
+
+    chosen = p.get("doc_variant")
+    if chosen is not None:
+        if not isinstance(chosen, dict):
+            bad("doc_variant must map a domain to a variant name")
+        for dom, want in chosen.items():
+            known = (variants or {}).get(dom)
+            if known is None:
+                bad("doc_variant: %r has no registered variants (known: %s)"
+                    % (dom, ", ".join(sorted(variants or {})) or "none"))
+            if want not in known:
+                bad("doc_variant: %r is not a variant of %s (known: %s)"
+                    % (want, dom, ", ".join(sorted(known))))
+
     dv = p.get("doc_versions")
     if dv is not None:
         if not isinstance(dv, dict) or any(

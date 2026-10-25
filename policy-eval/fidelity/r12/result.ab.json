@@ -1,0 +1,81 @@
+{
+ "id": "r12",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "B",
+   "run": 2,
+   "chars": 2590,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: minor, omits dementia n breakdown and P-values; no material issue",
+   "worst_summary_quote": "Lab-to-lab variation of about 25% within samples.",
+   "worst_page_quote": "Both analytical laboratories (UNM and OSU) observed a ~25% within-sample coefficient of variation",
+   "quote_verified": true,
+   "notes": "Accurate numbers; says placenta/testes not measured (correct). Does not mention blood/feces explicitly."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 1,
+   "chars": 2791,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "None material; the 27 vs 28 East Coast discrepancy it flags is real on the page",
+   "worst_summary_quote": "Lab variation about 25% within-sample coefficient of variation between two labs.",
+   "worst_page_quote": "Both analytical laboratories (UNM and OSU) observed a ~25% within-sample coefficient of variation",
+   "quote_verified": true,
+   "notes": "Most complete and well hedged; feces absence hedged as 'not found in the text read'."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 2,
+   "chars": 3843,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C (minor, not counted): closing Inference paragraph adds reader-side reasoning not in the page",
+   "worst_summary_quote": "the dementia cases were not matched on storage time or other factors the page describes",
+   "worst_page_quote": "the 2016 samples were stored for 84–96 months compared to only 2–4 months for the 2024 samples",
+   "quote_verified": false,
+   "notes": "Page quote supports storage-time facts but not the claim about dementia matching; quote_verified false for the claim itself. Otherwise accurate and detailed. Cohort sizes 13+9+5 stated as n=28 (page arithmetic is 27)."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 2573,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (minor, not counted): dementia cohort called 'mostly Alzheimer's' when it is 6 of 12",
+   "worst_summary_quote": "12 brains from people with a dementia diagnosis, mostly Alzheimer's disease.",
+   "worst_page_quote": "These cases included Alzheimer",
+   "quote_verified": true,
+   "notes": "Accurate otherwise; correctly says blood, placenta, lung, feces not examined."
+  }
+ ]
+}

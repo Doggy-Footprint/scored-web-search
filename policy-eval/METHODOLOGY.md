@@ -91,3 +91,36 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
 20 questions: ordinals 1, 2, 3 and 6 (the expansion probe) of each mode (`make_cases.py`).
 Exit criteria before the full set: labels not degenerate (no label > 90%), a fetched majority per question,
 the skill fired in the with-arm, and at least one substantive disagreement per question.
+
+## Summary fidelity
+
+How faithful the built-in tool summaries the agent reads are to their pages: `fidelity/`. Page text comes from
+`pagetext.py` (curl, no model); verbatim tool results come from subagent transcripts (`toolresult.py`). Neither
+raw file is tracked. Categories and verdict rules are in `fidelity/INSTRUCTIONS.md` step 6, and the worst finding
+of every summary is grep-verified against the page (step 7).
+
+- **Rounds 1-2** (`result.json`, `result.opus.json`): WebSearch with a Haiku and an Opus caller, and WebFetch,
+  30 topics. Single run per topic, one judge that knew the round.
+- **WebFetch prompt A/B** (`result.ab.json`, `INSTRUCTIONS_AB.md`, `ab.py`). Does the SKILL.md Step 3 fidelity
+  block change what the Haiku summariser loses?
+  - *Arms.* B = the round-1 `fetch_prompt` verbatim; T = the same prompt + the block (`ab.py` BLOCK, the text SKILL.md
+    Step 3 carried during the run). Only the prompt differs.
+  - *Runs.* One Haiku agent per topic makes four WebFetch calls, B T B T, on the round-1 URL. Same URL inside the
+    tool's 15-minute cache, so all four summarise the same fetch. B is re-run rather than reused from round 1, so
+    page and model drift hit both arms alike.
+  - *Ground truth.* The page re-fetched right after (`fetch.raw.ab.txt`).
+  - *Blinding.* The four summaries are written as `ab.S1`-`ab.S4` in a per-topic hash order; the arm map
+    (`ab.map.json`) is not shown to the judge. One Sonnet judge per topic sees the page, the four summaries and
+    the baseline request only: not the block, the arms or earlier results. The block's wording ("not found in
+    the text read", "inference:") can still reveal T to an attentive judge.
+  - *Measures.* Per arm: verdicts, A-D counts, false absences (the page has what the summary says is absent),
+    mean summary length.
+  - *Decision rule, fixed before the run.* Per topic, loss = material 2, minor 1, faithful 0, summed over the
+    two runs. T is called better only if the paired sign test of B−T is in T's favour at p < 0.05 **and** the
+    effect is larger than the within-arm run1−run2 split (`noise_run1_vs_run2`); otherwise "not distinguishable".
+  - *Result (2026-10).* Not distinguishable: paired 7 topics for T, 6 for B (p = 1.0); B's own run1−run2 split
+    was 5:1. Material 1 (B) vs 0 (T), false absence 1 vs 0, T summaries 25% longer. The block was removed from
+    SKILL.md.
+  - *Limits.* n = 30, one judge per topic, two runs per arm. The baseline prompts were written by a Haiku caller;
+    an Opus main agent writes different ones. The judge's truncation calls depend on the page text, which can be
+    longer than what WebFetch read.

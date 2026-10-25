@@ -1,6 +1,6 @@
 ---
 name: scored-web-search
-description: Filter and rank web sources with heuristic scoring system before the main agent reads them. By using only select sources, this skill reduces context rot, improves the quality of research reports, and also reduces token usage. This skill provides academic, non-academic, community-opinion, news, and official-document modes. Triggering expressions are "scored web search", "search", "research", "investigate", "find", "look up", "back it up", "evidence", "fact check", and similar. This skill intentionally drops some of web-search results - if you need those for example, searching for more possible options, please use regular web search instead.
+description: Filter and rank web sources with heuristic scoring system before the main agent reads them. By using only select sources, this skill reduces context rot, improves the quality of research reports, and keeps low-quality page text out of the main context. This skill provides academic, non-academic, community-opinion, news, and official-document modes. Triggering expressions are "scored web search", "search", "research", "investigate", "find", "look up", "back it up", "evidence", "fact check", and similar. This skill intentionally drops some of web-search results - if you need those for example, searching for more possible options, please use regular web search instead.
 ---
 
 # Scored Web Search
@@ -32,6 +32,8 @@ No sub agent fallback: main agent calls the web-search tool itself. Extract only
 ### Step 2 — Score: hand it to the script
 
 Write all subagent returns as a JSON array to `urls.json` in a temporary directory and run `scripts/srcscore.py` (`--help` for arguments).
+
+When the question names a docs version or variant, pass it: `--doc-version nextjs.org=14`, `--doc-variant nextjs.org=app` (variants are listed under `doc_variants` in `scripts/policy.json`). Pages for another version or variant then score as `stale-version` / `wrong-variant`. Without them, only paths that read as superseded on their own are penalised.
 
 Output is a compact table, roughly 15 tokens per line:
 
@@ -97,7 +99,7 @@ Close the report with one line: `n sources collected → m passed → j judged-o
 
 ## Scoring Policy
 
-The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it. Recency applies once to every source with a known date: academic API publication date/year, repository `pushed_at` or direct HN thread creation date, then supplied publication date. Invalid or future dates fall through to the next candidate. Unknown dates receive no recency adjustment and carry `date-unknown`; `official-docs` disables recency. URL lists and `URL | title` remain supported, but JSON is needed to supply dates.
+The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it. Recency applies once to every source with a known date: academic API publication date/year, repository `pushed_at` or direct HN thread creation date, then supplied publication date. Invalid or future dates fall through to the next candidate. Unknown dates receive no recency adjustment and carry `date-unknown`; `official-docs` disables recency. URL lists and `URL | title` remain supported, but JSON is needed to supply dates. URL paths can also cost a source one band (-28): `non-content` for listings and build artefacts (a site's `/search` page, `.diff`, `__pycache__`, copies of installed packages), `stale-version` for superseded docs or a registry page pinned to one release, `wrong-variant` for another docs variant than the one passed.
 
 | Tier | Base | Trust level |
 |---|---|---|

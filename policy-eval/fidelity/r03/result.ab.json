@@ -1,0 +1,81 @@
+{
+ "id": "r03",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 3026,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: per-trial efficacy and CIs omitted (beyond window, not counted)",
+   "worst_summary_quote": "Not found in the text read: per-trial efficacy percentages, per-trial confidence intervals",
+   "worst_page_quote": "82.6% (57.9 to 94.1)",
+   "quote_verified": true,
+   "notes": "Per-trial results sit past the read window (~114k chars); absence claim is hedged ('text read', truncation noted). Pooled numbers, sizes, dates correct."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 1,
+   "chars": 2336,
+   "verdict": "material loss",
+   "counts": {
+    "A": 0,
+    "B": 1,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 1,
+   "worst": "B: unhedged claim that page gives no per-trial efficacy figures, but it does",
+   "worst_summary_quote": "The page gives no per-trial efficacy percentages or confidence intervals for Arexvy, Abrysvo, or mRNA-1345.",
+   "worst_page_quote": "82.6% (57.9 to 94.1)",
+   "quote_verified": true,
+   "notes": "Unlike others, never says the text was only partly read; reader would believe the review has no per-trial VE. C: 'aged ~60+' not stated in page text read. Pooled numbers and caveats otherwise accurate."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 2,
+   "chars": 2316,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: per-trial VE omitted, framed as 'not in the excerpt' (beyond window)",
+   "worst_summary_quote": "Per-trial efficacy percentages and confidence intervals are not in the excerpt",
+   "worst_page_quote": "66.7% (96.66% CI, 28.8 to 85.8)",
+   "quote_verified": true,
+   "notes": "Hedged as excerpt. Minor: lists hospitalisation as Papi endpoint (it is an other outcome); assigns 'one RSV season' follow-up to each trial by inference."
+  },
+  {
+   "slot": "S4",
+   "arm": "T",
+   "run": 1,
+   "chars": 2986,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: per-trial VE omitted, explicitly flagged as truncated read (beyond window)",
+   "worst_summary_quote": "Trial-level efficacy percentages for these three trials: not found in the text read.",
+   "worst_page_quote": "85.7% (96.66% CI, 32.0 to 98.7)",
+   "quote_verified": true,
+   "notes": "Best hedging; accurate pooled data, sizes, dates, SAE figures. Hedged note on mResvia mapping."
+  }
+ ]
+}

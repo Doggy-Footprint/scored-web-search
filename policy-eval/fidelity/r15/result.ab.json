@@ -1,0 +1,81 @@
+{
+ "id": "r15",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "B",
+   "run": 2,
+   "chars": 1352,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "All figures match the page."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 1,
+   "chars": 1895,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: DOI doi:10.1007/s00376-026-5876-0 is not in the page text",
+   "worst_summary_quote": "doi:10.1007/s00376-026-5876-0",
+   "worst_page_quote": "",
+   "quote_verified": false,
+   "notes": "grep finds no 'doi' or 's00376' in the raw text; may come from a hyperlink outside the text. Otherwise faithful."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 1,
+   "chars": 1499,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (not counted, minor): 'three warmest years on record' for 'top three warmest in their observational histories'",
+   "worst_summary_quote": "ranked among its three warmest years on record",
+   "worst_page_quote": "among the top three warmest in their observational histories",
+   "quote_verified": true,
+   "notes": "Figures correct; the wording shift is cosmetic."
+  },
+  {
+   "slot": "S4",
+   "arm": "T",
+   "run": 2,
+   "chars": 2339,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: DOI 10.1007/s00376-026-5876-0 is not in the page text",
+   "worst_summary_quote": "linked via DOI 10.1007/s00376-026-5876-0",
+   "worst_page_quote": "",
+   "quote_verified": false,
+   "notes": "grep finds no DOI in the raw text; may come from a hyperlink outside the text. Absence claims at the end are hedged and correct."
+  }
+ ]
+}

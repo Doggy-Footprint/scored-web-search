@@ -1,0 +1,81 @@
+{
+ "id": "d01",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 2162,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "D (minor, not counted): says the page does not say AnyIO differs on spawning after shutdown, although the page lists it as a difference from AnyIO",
+   "worst_summary_quote": "The page does not say AnyIO behaves differently here.",
+   "worst_page_quote": "asyncio.TaskGroup does not allow starting new tasks after an exception in",
+   "quote_verified": true,
+   "notes": "Hedges are accurate; inference labelled; omits TaskHandle/create_task difference."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 2,
+   "chars": 1523,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor, not counted): omits the create_task() return-type difference (Task vs TaskHandle)",
+   "worst_summary_quote": "The page notes several differences:",
+   "worst_page_quote": "The create_task() method returns an asyncio.Task",
+   "quote_verified": true,
+   "notes": "Accurate and concise; no false absences."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 1,
+   "chars": 2016,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor, not counted): omits the create_task() return-type difference",
+   "worst_summary_quote": "The page lists these differences:",
+   "worst_page_quote": "The create_task() method returns an asyncio.Task",
+   "quote_verified": true,
+   "notes": "Quotes accurate; hedged absences are true (single-exception wrapping not described)."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 1733,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: 'Usually only one exception occurs' is not on the page; page only says more than one is possible",
+   "worst_summary_quote": "Usually only one exception occurs, but more can happen",
+   "worst_page_quote": "It is possible for more than one task to raise an exception in a task group.",
+   "quote_verified": true,
+   "notes": "C finding is a mild unsupported framing, not likely to mislead on the answer; counted as C but verdict minor."
+  }
+ ]
+}

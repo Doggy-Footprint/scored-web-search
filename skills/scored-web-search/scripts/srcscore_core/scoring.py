@@ -16,7 +16,8 @@ from .util import age_years, date_age_years, now_year_frac, host_matches, host_p
 
 __all__ = [
     "match_tier", "citation_points", "recency_points", "engagement_points",
-    "engagement_floor_points", "path_penalty", "version_penalty",
+    "engagement_floor_points", "path_penalty", "regex_path_penalty", "version_penalty",
+    "variant_penalty",
     "trusted_person_points", "score_one", "score_many",
 ]
 
@@ -115,6 +116,18 @@ def path_penalty(url: str, patterns, cfg):
     return float(cfg["points"]), cfg.get("flag")
 
 
+def regex_path_penalty(url: str, patterns, cfg):
+    """`path_penalty` for markers a substring cannot express, such as "the first
+    segment is /search". Each pattern is searched in the same normalised path.
+    Returns (points, flag) or (0.0, None)."""
+    if not cfg:
+        return 0.0, None
+    low = _path_of(url)
+    if not any(re.search(rx, low) for rx in (patterns or [])):
+        return 0.0, None
+    return float(cfg["points"]), cfg.get("flag")
+
+
 def _path_of(url: str) -> str:
     """Lowercased path with a guaranteed leading and trailing slash, so that
     `/legacy/` style patterns match a trailing segment too."""
@@ -142,6 +155,9 @@ def version_penalty(policy: dict, url: str, doc_versions: dict = None):
 
     A URL with no version segment at all (`/docs/`, `/doc/stable/`, `/latest/`)
     is the site's own pointer at what is current, and is never penalised.
+
+    Package registries (`release_path_regex`, e.g. pypi.org/project/x/0.7.5/)
+    use the same two readings, minus the precise-release exemption.
     Returns (points, flag) or (0.0, None).
     """
     if doc_versions is None:
@@ -150,12 +166,22 @@ def version_penalty(policy: dict, url: str, doc_versions: dict = None):
     rx = policy.get("version_path_regex")
     if not cfg or not rx:
         return 0.0, None
-    m = re.search(rx, _path_of(url))
+    host = norm_host(url)
+    path = _path_of(url)
+    m = re.search(rx, path)
+    # A package-registry page pinned to one release is never the registry's
+    # default page, so the precise-release exemption below does not apply.
+    release = False
+    if not m:
+        for dom, rrx in (policy.get("release_path_regex") or {}).items():
+            if host_matches(host, str(dom).lower()):
+                m = re.search(rrx, path)
+                release = m is not None
+                break
     if not m:
         return 0.0, None
     found = m.group(1).lstrip("vV")
     pinned = None
-    host = norm_host(url)
     for dom, want in (doc_versions or {}).items():
         if host_matches(host, str(dom).lower()):
             pinned = str(want).lstrip("vV")
@@ -164,9 +190,35 @@ def version_penalty(policy: dict, url: str, doc_versions: dict = None):
         if found == pinned:
             return 0.0, None
         return float(cfg["points"]), cfg.get("flag")
-    if "." in found:  # a precise release is usually the current one
+    if "." in found and not release:  # a precise release is usually the current one
         return 0.0, None
     return float(cfg["points"]), cfg.get("flag")
+
+
+def variant_penalty(policy: dict, url: str, doc_variant: dict = None):
+    """Penalty for docs written for a variant the reader is not on, such as the
+    Next.js Pages Router when the question is about the App Router.
+
+    Only fires when the reader named a variant for this domain with
+    `--doc-variant`: which variant a question is about is a fact about the
+    question, and the URL alone cannot tell. A page under neither variant's
+    prefix is shared material and is left alone.
+    Returns (points, flag) or (0.0, None)."""
+    if doc_variant is None:
+        doc_variant = policy.get("doc_variant")
+    cfg = policy["penalties"].get("wrong_variant")
+    if not cfg or not doc_variant:
+        return 0.0, None
+    host = norm_host(url)
+    path = _path_of(url)
+    for dom, want in doc_variant.items():
+        if not host_matches(host, str(dom).lower()):
+            continue
+        prefixes = policy.get("doc_variants", {}).get(dom, {})
+        for name, prefix in prefixes.items():
+            if name != want and path.startswith(str(prefix).lower()):
+                return float(cfg["points"]), cfg.get("flag")
+    return 0.0, None
 
 
 def engagement_floor_points(policy: dict, tier: str, gh, hn, measurable: bool = True):
@@ -285,14 +337,17 @@ def score_one(item: dict, policy: dict, cache, field: str,
     engagement_on = signal_enabled(policy, "engagement")
     recency_on = signal_enabled(policy, "recency_decay")
 
-    # URL-path signals: SEO slug, and documentation that is not the current
-    # (or the requested) version.
+    # URL-path signals: SEO slug, a path that is not a document at all, and
+    # documentation that is not the current (or the requested) version or variant.
     for pts, flag in (
             path_penalty(url, policy["seo_path_patterns"],
                          policy["penalties"]["seo_path"]),
             path_penalty(url, policy.get("version_path_patterns"),
                          policy["penalties"].get("version_path")),
-            version_penalty(policy, url)):
+            regex_path_penalty(url, policy.get("non_content_path_regex"),
+                               policy["penalties"].get("non_content_path")),
+            version_penalty(policy, url),
+            variant_penalty(policy, url)):
         if flag and flag not in flags:
             adj += pts
             flags.append(flag)

@@ -1,0 +1,81 @@
+{
+ "id": "d10",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 1,
+   "chars": 2453,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B: minor, quotes 'es equivalente a no-cache' with the page saying 'el siguiente ejemplo es equivalente a no-cache' (not material)",
+   "worst_summary_quote": "es equivalente a `no-cache`",
+   "worst_page_quote": "el siguiente ejemplo es equivalente a no-cache",
+   "quote_verified": true,
+   "notes": "Extra request-directive and conflict material is accurate; closing inference is labelled."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 2,
+   "chars": 1045,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate and concise."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 2,
+   "chars": 1605,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate; includes request-side context."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 969,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Accurate and concise."
+  }
+ ]
+}

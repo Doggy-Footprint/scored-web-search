@@ -37,6 +37,8 @@ export function register(on, options) {
           round: { type: 'string', description: 'Short label for this search round, shown in the side view' },
           queries: { type: 'array', items: { type: 'string' }, description: 'Search keywords given to Step 1 for this round, shown in the side view' },
           parentRound: { type: 'string', description: 'For a re-search or follow-up: the round label it came from' },
+          docVersions: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs version the question is about, per domain, e.g. {"nextjs.org": "14"}. Other versions of that domain are penalised' },
+          docVariants: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs variant the question is about, per domain, e.g. {"nextjs.org": "app"}. Pages under another variant are penalised' },
         },
         required: ['records'],
       },
@@ -75,6 +77,8 @@ export function register(on, options) {
     await $.fs.write(infile, JSON.stringify(e.records || []))
     const argv = ['python3', $.plugin.root + SKILL_DIR + '/scripts/srcscore.py', '--in', infile, '--mode', mode]
     if (e.field) argv.push('--field', e.field)
+    for (const [dom, v] of Object.entries(e.docVersions || {})) argv.push('--doc-version', dom + '=' + v)
+    for (const [dom, v] of Object.entries(e.docVariants || {})) argv.push('--doc-variant', dom + '=' + v)
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }
