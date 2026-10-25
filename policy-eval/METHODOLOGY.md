@@ -138,6 +138,7 @@ result against its date.
 | 2026-10-25 | Fidelity round 1 (Haiku caller) and round 2 (Opus caller WebSearch) | `fidelity/*/result.json`, `result.opus.json` |
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
+| 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes

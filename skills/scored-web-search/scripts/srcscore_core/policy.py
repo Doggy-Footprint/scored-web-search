@@ -206,6 +206,18 @@ def validate_policy(p: dict, path: str = "policy") -> None:
                 not isinstance(v, str) or not v for v in dv.values()):
             bad("doc_versions must map a domain to a non-empty version string")
 
+    od = p.get("official_domain")
+    if od is not None:
+        if not isinstance(od, dict) or od.get("tier") not in p["tiers"] or not od.get("flag"):
+            bad("official_domain needs a known 'tier' and a 'flag'")
+
+    claimed = p.get("official_domains")
+    if claimed is not None:
+        if od is None:
+            bad("official_domains given but this mode has no official_domain config")
+        if not isinstance(claimed, list) or not all(isinstance(x, str) and x for x in claimed):
+            bad("official_domains must be a list of domain strings")
+
 
 def tier_base(policy: dict, tier: str) -> float:
     return float(policy["tiers"][tier]["base"])

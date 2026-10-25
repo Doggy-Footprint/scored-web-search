@@ -114,7 +114,9 @@
     "zenn.dev": "4",
     "juejin.cn": "4",
     "threads.net": "1",
-    "ppomppu.co.kr": "6"
+    "ppomppu.co.kr": "6",
+    "addyo.substack.com": "2",
+    "rubyevents.org": "2"
   },
   "engagement_floor": {
     "_readme": "A tier-1 discussion host with no measurable engagement is a venue, not evidence. `min_points` is read against HN points or GitHub stars, whichever is higher, and the penalty is set so that nothing below the floor can reach SUPPORT even with the engagement bonus it does earn (at 9 points: 88 + 6.0 - 36 = 58, SKIM). The step at `min_points` is deliberate: the claim is categorical - below the floor the thread is not evidence, above it the venue tier stands - so a ramp would blur the line the mode draws. The known cost of the step is that this mode has almost no SUPPORT band for threads: a thread is either below the floor (SKIM) or carries the full tier-1 base (PRIMARY). The floor does not fire when no lookup happened or the lookup failed - a rate limit is not evidence of silence.",
