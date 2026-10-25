@@ -7,7 +7,7 @@
 | 묶음 | 도구 | 포함 항목 |
 |---|---|---|
 | arms 재실행 | `claude plugin eval` + `policy-eval/arms.py` | E1, E3, E4, E5 |
-| held-out blind judge | Workflow blind judge (METHODOLOGY Runs 1) + `contrast.py` | E2, E3 |
+| held-out blind judge | Workflow blind judge (METHODOLOGY Runs 1) + `contrast.py` | E6(선행), E2, E3 |
 
 ## 항목
 
@@ -35,3 +35,11 @@
 - 기준: `results/pilot.summary.json`(with $0.78/문항, 메인 $0.60, 16.9턴, 메인이 읽은 페이지 7.5, 메인 오버헤드 약 20k자: 표 8.9k + searcher 10.9k).
 - 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, `searcher_contract.chars_in_main`(`arms.py`). fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E1, E4와 같은 실행에서 잰다.
 - 주의: batch 파일은 `.tmp`에 있으므로 arms 실행 직후, `.tmp`를 지우기 전에 `arms.py ingest`를 돌린다.
+
+### E6. blind judge의 snippet 라벨을 개별 페이지 판정으로 교체 (방법론 변경, 미반영)
+- 문제: blind judge(Runs 1)와 union labeller(Runs 4)는 fetch하지 않은 URL에 `basis: snippet` 라벨을 매긴다. WebSearch는 결과마다 snippet을 주지 않고 묶음 요약 하나를 돌려준다. 그래서 이 라벨은 제목과 묶음 요약만 보고 매긴 것이고, URL 하나하나를 평가한 게 아니다.
+- 현황(2026-10-24, 1148 URL): snippet 457건(40%). 이 중 fetch 실패가 131건, 미시도가 약 326건이다. 라벨 분포는 fetched가 useful 28%·junk 15%, snippet이 useful 9%·junk 35%다. A의 recall/precision loss와 arms contamination이 이 라벨에 기대고 있다.
+- 제안: 수집과 판정을 나눈다. 수집은 지금처럼 Opus WebSearch로 하고 라벨을 매기지 않는다. 판정은 URL마다 독립 labeller가 본문을 읽고 한다. 본문을 못 얻은 URL은 `unreachable`로 표시하고 측정에서 뺀다.
+- 주의: WebFetch에는 이미 Haiku 요약기가 들어 있다. Haiku agent가 WebFetch로 판정하면 Haiku 요약을 보고 Haiku가 판정하게 된다. plugin arm도 WebFetch로 읽으므로 judge와 오류가 서로 상관될 수 있다. `fidelity/pagetext.py`(curl, 모델 없음)는 PDF를 추출하지 못한다.
+- 미결정: (1) 본문 출처: pagetext raw, WebFetch, raw를 먼저 쓰고 실패하면 WebFetch 중 무엇 (2) labeller 모델: Haiku, Sonnet, Opus, Haiku + Opus 표본 일치도 확인 중 무엇 (3) 다시 판정할 범위: snippet 457건만, 또는 1148건 전부(전부면 regression 기준선의 날짜가 바뀐다) (4) Runs 4에도 적용할지
+- 완료 조건: METHODOLOGY Runs 1·4를 갱신한다. 정한 범위로 다시 판정하고 Run log에 기록한다. `contrast.py`와 `arms.py analyze`를 다시 실행해 이전 수치와 비교한다. E2·E3 측정 전에 반영한다.
