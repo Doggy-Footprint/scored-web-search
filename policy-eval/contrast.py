@@ -34,7 +34,11 @@ def main():
 
     judge_doc = json.loads((RUNS / f"{args.run_id}.judge.json").read_text())
     judged = judge_doc["judged"]
-    scored = score(RUNS / f"{args.run_id}.urls.txt", args.mode, args.field)
+    # .urls.json carries search-result dates for the recency signal; .urls.txt is the older URL-only form.
+    urls_file = RUNS / f"{args.run_id}.urls.json"
+    if not urls_file.exists():
+        urls_file = RUNS / f"{args.run_id}.urls.txt"
+    scored = score(urls_file, args.mode, args.field)
 
     rows, unscored = [], []
     for j in judged:

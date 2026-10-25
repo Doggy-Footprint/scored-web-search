@@ -1,0 +1,11 @@
+{"id":"r09","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":0,"D":0},
+ "worst":"A: Original Power et al. study is reduced to 'transformer on modular arithmetic'; omits weight decay, training-data fraction, step counts (about 10^3 to 10^5+) and that the paper itself was not retrieved (flagged as own knowledge)",
+ "worst_summary_quote":"the search results didn't include the paper itself, so the details below come from my own knowledge of it",
+ "worst_page_quote":"Training the model 100× longer than it took to memorize was necessary to see generalization emerge.",
+ "worst_page_url":"https://www.zeroentropy.dev/concepts/grokking/",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader gets only the memorize-then-jump outline of the original study without its setup details or the weight-decay dependence, with later papers' claims dominating the answer.",
+ "verbatim_source":"transcript","pages_compared":5,"pages_reused":3,"links_total":10,"links_shared_with_haiku_round":4,
+ "haiku_worst_repeated":"yes",
+ "notes":"Opus summary discloses the original paper was not in results, same gap as Haiku round. Carvalho 'primarily attributable' slightly stronger than page's 'a key factor' (minor). Original arXiv 2201.02177 not in Links."}

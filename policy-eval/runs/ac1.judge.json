@@ -1,0 +1,549 @@
+{
+ "id": "ac1",
+ "judged_at": "2026-10-24",
+ "question": "Do chain-of-thought traces faithfully reflect the model's actual reasoning process?",
+ "mode": "academic",
+ "field": "ai",
+ "judged": [
+  {
+   "url": "https://arxiv.org/pdf/2307.13702",
+   "title": "Measuring Faithfulness in Chain-of-Thought Reasoning",
+   "rank": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary Lanham et al. paper on CoT faithfulness interventions."
+  },
+  {
+   "url": "https://powerdrill.ai/discover/discover-Towards-Faithful-Chain-of-Thought-clxoc8k0k17sj01b8lh8i49lu",
+   "title": "Towards Faithful Chain-of-Thought: Large Language Models are Bridging Reasoners",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "AI-generated summary aggregator of a relevant paper; fetch failed."
+  },
+  {
+   "url": "https://www.themoonlight.io/review/reasoning-models-dont-always-say-what-they-think",
+   "title": "[Literature Review] Reasoning Models Don't Always Say What They Think",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "AI-generated review of primary paper; derivative."
+  },
+  {
+   "url": "https://www.themoonlight.io/en/review/reasoning-models-dont-always-say-what-they-think",
+   "title": "[Literature Review] Reasoning Models Don't Always Say What They Think",
+   "rank": 4,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate AI-generated review; derivative."
+  },
+  {
+   "url": "https://www.themoonlight.io/fr/review/reasoning-models-dont-always-say-what-they-think",
+   "title": "[Revue de papier] Reasoning Models Don't Always Say What They Think",
+   "rank": 5,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "French duplicate of AI-generated review; derivative."
+  },
+  {
+   "url": "https://anthropic.com/research/measuring-faithfulness-in-chain-of-thought-reasoning",
+   "title": "measuring faithfulness in chain of thought reasoning",
+   "rank": 6,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official Anthropic research page with abstract and paper link."
+  },
+  {
+   "url": "https://anthropic.com/news/measuring-faithfulness-in-chain-of-thought-reasoning",
+   "title": "measuring faithfulness in chain of thought reasoning",
+   "rank": 7,
+   "judgment": "useful",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Same Anthropic paper page, abstract plus PDF link."
+  },
+  {
+   "url": "https://astro.paperswithcode.com/paper/faithful-chain-of-thought-reasoning",
+   "title": "Faithful Chain-of-Thought Reasoning",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregator entry for Lyu et al. method paper; tangential, fetch failed."
+  },
+  {
+   "url": "https://ar5iv.labs.arxiv.org/html/2307.13702",
+   "title": "Measuring Faithfulness in Chain-of-Thought Reasoning",
+   "rank": 9,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full HTML text of Lanham et al. paper."
+  },
+  {
+   "url": "https://sotaverified.org/papers/faithful-chain-of-thought-reasoning",
+   "title": "faithful chain of thought reasoning",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Paper aggregator listing; thin, fetch failed."
+  },
+  {
+   "url": "https://blog.quintarelli.it/2025/04/reasoning-models-dont-always-say-what-they-think/",
+   "title": "Reasoning models don't always say what they think",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short Italian opinion blog quoting Anthropic; no results."
+  },
+  {
+   "url": "https://blog.quintarelli.it/?p=37559",
+   "title": "Reasoning models don't always say what they think",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Duplicate of same short opinion blog post."
+  },
+  {
+   "url": "https://www.computing.co.uk/news/2025/ai/ai-models-hiding-reasoning-on-purpose",
+   "title": "AI models are hiding their reasoning on purpose",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Trade news coverage of Anthropic paper; sensational headline."
+  },
+  {
+   "url": "https://www.alphaxiv.org/audio/2505.05410",
+   "title": "Reasoning Models Don't Always Say What They Think",
+   "rank": 14,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Abstract and key numbers of Chen et al. 2025 paper."
+  },
+  {
+   "url": "https://pub.towardsai.net/reasoning-models-dont-reason-the-way-you-think-bcc87f54e42f",
+   "title": "Reasoning Models Don't Reason the Way You Think",
+   "rank": 15,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Medium-style explainer; derivative, fetch blocked."
+  },
+  {
+   "url": "https://sinoxiv.napstic.cn/article/24647312",
+   "title": "sinoxiv.napstic.cn",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Preprint-mirror abstract of Chen et al.; derivative copy."
+  },
+  {
+   "url": "https://alphaxiv.org/audio/2505.05410v1",
+   "title": "We're hiring",
+   "rank": 17,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate alphaXiv version page; title suggests boilerplate."
+  },
+  {
+   "url": "https://herbertroitblat.substack.com/p/the-fog-of-illusion",
+   "title": "The fog of illusion",
+   "rank": 18,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Critiques Illusion of Thinking paper; not about CoT faithfulness."
+  },
+  {
+   "url": "https://www.greaterwrong.com/posts/ghESoA8mo3fv9Yx3E/why-do-some-language-models-fake-alignment-while-others-don/comment/oqRjN7rPjTHzWMXpH",
+   "title": "www.greaterwrong.com",
+   "rank": 19,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Forum comment opinions on CoT faithfulness; anecdotal."
+  },
+  {
+   "url": "https://neurips.cc/virtual/2023/poster/71118",
+   "title": "Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought Prompting",
+   "rank": 20,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "NeurIPS venue page with Turpin et al. abstract."
+  },
+  {
+   "url": "https://arxiv.org/html/2305.04388v2",
+   "title": "License: CC BY 4.0",
+   "rank": 21,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text of Turpin et al. unfaithful CoT paper."
+  },
+  {
+   "url": "https://arxiv.org/abs/2305.04388v2",
+   "title": "arxiv.org",
+   "rank": 22,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Canonical arXiv abstract for Turpin et al."
+  },
+  {
+   "url": "https://alphaxiv.org/overview/2305.04388v2",
+   "title": "alphaxiv.org",
+   "rank": 23,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AI overview mirror of Turpin et al.; derivative."
+  },
+  {
+   "url": "https://par.nsf.gov//servlets/purl/10542779",
+   "title": "par.nsf.gov",
+   "rank": 24,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "NSF public-access PDF of Turpin et al. paper."
+  },
+  {
+   "url": "https://nips.cc/virtual/2023/poster/71118",
+   "title": "nips.cc",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate NeurIPS poster page."
+  },
+  {
+   "url": "https://par.nsf.gov/biblio/10542779-language-models-dont-always-say-what-think-unfaithful-explanations-chain-thought-prompting",
+   "title": "skip to main content",
+   "rank": 26,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "NSF bibliographic record; fetch failed, duplicate."
+  },
+  {
+   "url": "https://www.greaterwrong.com/posts/6eKL9wDqeiELbKPDj/unfaithful-explanations-in-chain-of-thought-prompting",
+   "title": "Unfaithful Explanations in Chain-of-Thought Prompting",
+   "rank": 27,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "First author's post summarizing findings and causes."
+  },
+  {
+   "url": "https://tldr.takara.ai/p/2305.04388",
+   "title": "DS1 spectrogram: Language Models Don't Always Say What They Think: Unfaithful",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Abstract-summary aggregator; derivative."
+  },
+  {
+   "url": "https://lr.in.psf.lt/r/MachineLearning/duplicates/13k1ay3",
+   "title": "r/MachineLearning May 17 '23",
+   "rank": 29,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Reddit proxy mirror of duplicates listing; no substance."
+  },
+  {
+   "url": "https://huggingface.co/datasets/rl-llm-wiki/knowledge-base/discussions/207",
+   "title": "source: arxiv:2307.13702 — Measuring Faithfulness in Chain-of-Thought Reasoning",
+   "rank": 30,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Community wiki summary; wrong metadata ID."
+  },
+  {
+   "url": "https://arxiv.org/abs/2307.13702v1",
+   "title": "arxiv.org",
+   "rank": 31,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Canonical arXiv abstract of Lanham et al."
+  },
+  {
+   "url": "https://arxiv.org/abs/2502.14829v3",
+   "title": "arxiv.org",
+   "rank": 32,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "FUR paper: parametric faithfulness via unlearning reasoning steps."
+  },
+  {
+   "url": "https://arxiv.org/html/2502.14829v1",
+   "title": "Measuring Faithfulness of Chains of Thought",
+   "rank": 33,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text of Tutek et al. unlearning faithfulness paper."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2502.14829v3",
+   "title": "arxiv.org",
+   "rank": 34,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PDF of latest Tutek et al. version."
+  },
+  {
+   "url": "https://arxiv.org/abs/2502.14829v1",
+   "title": "arxiv.org",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Older version abstract; duplicate."
+  },
+  {
+   "url": "https://sinoxiv.napstic.cn/article/3853408",
+   "title": "sinoxiv.napstic.cn",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mirror abstract of Lanham et al.; derivative."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2510.19851",
+   "title": "Can Reasoning Models Obfuscate Reasoning? Stress-Testing Chain-of-Thought Monitorability",
+   "rank": 37,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Relevant 2025 paper on CoT obfuscation and monitorability."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2510.27378",
+   "title": "Measuring Chain-of-Thought Monitorability Through Faithfulness and Verbosity",
+   "rank": 38,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Relevant 2025 paper combining faithfulness and verbosity."
+  },
+  {
+   "url": "https://www.matsprogram.org/research/measuring-chain-of-thought-monitorability-through-faithfulness-and-verbosity",
+   "title": "MATS Fellow:",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Program listing page restating abstract."
+  },
+  {
+   "url": "https://arxiv.org/abs/2510.27378v2",
+   "title": "arxiv.org",
+   "rank": 40,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Canonical abstract of monitorability/verbosity paper."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2510.19851v1",
+   "title": "arxiv.org",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate PDF version of obfuscation paper."
+  },
+  {
+   "url": "https://scour.ing/p/https://arxiv.org/abs/2511.08525",
+   "title": "Title:Investigating CoT Monitorability in Large Reasoning Models",
+   "rank": 42,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Sign-up wall for feed service; no paper content."
+  },
+  {
+   "url": "https://arxiv.org/abs/2511.08525v2",
+   "title": "arxiv.org",
+   "rank": 43,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Paper on faithful verbalization and CoT monitor reliability."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2510.27378v2",
+   "title": "arxiv.org",
+   "rank": 44,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate PDF version of verbosity paper."
+  },
+  {
+   "url": "https://arxiv.org/html/2510.19851",
+   "title": "Can Reasoning Models Obfuscate Reasoning? Stress-Testing Chain-of-Thought",
+   "rank": 45,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text with quantitative obfuscation results."
+  },
+  {
+   "url": "https://iclr.cc/virtual/2025/32771",
+   "title": "Chain-of-Thought Reasoning in the Wild is not Always Faithful",
+   "rank": 46,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "ICLR workshop page with Arcuschin et al. abstract."
+  },
+  {
+   "url": "https://arxiv.org/html/2503.08679v4",
+   "title": "Chain-of-Thought Reasoning In The Wild",
+   "rank": 47,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Full text: unfaithful CoT on natural prompts, rates."
+  },
+  {
+   "url": "https://proceedings.mlr.press/v306/arcuschin26b.html",
+   "title": "Chain-of-Thought Reasoning In The Wild Is Not Always Faithful",
+   "rank": 48,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Peer-reviewed ICML 2026 proceedings entry."
+  },
+  {
+   "url": "https://icml.cc/virtual/2026/poster/64450",
+   "title": "Chain-of-Thought Reasoning In The Wild Is Not Always Faithful",
+   "rank": 49,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "ICML 2026 poster page with abstract and lay summary."
+  },
+  {
+   "url": "https://alphaxiv.org/overview/2503.08679v4",
+   "title": "alphaxiv.org",
+   "rank": 50,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AI overview mirror of Arcuschin et al."
+  },
+  {
+   "url": "https://aitopics.org/class/Country/North America/Cuba/Matanzas Province/Varadero",
+   "title": "aitopics.org",
+   "rank": 51,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mis-tagged geographic aggregator page; old abstract version."
+  },
+  {
+   "url": "https://aitopics.org/class/Country/North America/United States/Wisconsin/Sheboygan County/Sheboygan",
+   "title": "aitopics.org",
+   "rank": 52,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mis-tagged geographic aggregator with unrelated items."
+  },
+  {
+   "url": "https://arxiv.org/abs/2503.08679v1",
+   "title": "arxiv.org",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Superseded v1 with outdated rates."
+  },
+  {
+   "url": "https://mlanthology.org/iclrw/2025/arcuschin2025iclrw-chainofthought",
+   "title": "Chain-of-Thought Reasoning in the Wild Is Not Always Faithful",
+   "rank": 54,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Index listing with abstract only."
+  },
+  {
+   "url": "https://matsprogram.org/zh/research/chain-of-thought-reasoning-in-the-wild-is-not-always-faithful",
+   "title": "MATS Fellow:",
+   "rank": 55,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Chinese duplicate of program listing page."
+  },
+  {
+   "url": "https://matsprogram.org/research/chain-of-thought-reasoning-in-the-wild-is-not-always-faithful",
+   "title": "MATS Fellow:",
+   "rank": 56,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Program listing restating abstract."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2602.14469",
+   "title": "arxiv.org",
+   "rank": 57,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Post-hoc rationalization in reverse CoT data generation; tangential."
+  },
+  {
+   "url": "https://www.matsprogram.org/research/reclvPXKrBI89WVvw",
+   "title": "MATS Alumnus",
+   "rank": 58,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Returns 404; no content."
+  },
+  {
+   "url": "https://www.alphaxiv.org/abs/2603.01437.md",
+   "title": "Post-Hoc Reasoning in Chain of Thought: Decoding and Steering",
+   "rank": 59,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Mechanistic evidence answers pre-committed before CoT."
+  },
+  {
+   "url": "https://arxiv.org/pdf/2503.08679",
+   "title": "arxiv.org",
+   "rank": 60,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "PDF of Arcuschin et al. paper."
+  }
+ ]
+}

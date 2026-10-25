@@ -1,0 +1,607 @@
+{
+ "id": "na6",
+ "judged_at": "2026-10-24",
+ "question": "How do teams keep one slow downstream service from taking down the rest of the system?",
+ "mode": "non-academic",
+ "field": "cs",
+ "expansion_keywords": [
+  {
+   "keyword": "deadline propagation",
+   "source_url": "https://sre.google/sre-book/addressing-cascading-failures/"
+  },
+  {
+   "keyword": "retry budget",
+   "source_url": "https://sre.google/sre-book/addressing-cascading-failures/"
+  },
+  {
+   "keyword": "load shedding",
+   "source_url": "https://sre.google/sre-book/addressing-cascading-failures/"
+  },
+  {
+   "keyword": "slow call rate threshold",
+   "source_url": "https://oneuptime.com/blog/post/2026-01-24-cascading-failures-microservices/view"
+  }
+ ],
+ "judged": [
+  {
+   "url": "https://oneuptime.com/blog/post/2026-01-24-cascading-failures-microservices/markdown",
+   "title": "How to Fix 'Cascading Failures' in Microservices",
+   "rank": 1,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Markdown copy of fetched OneUptime article covering breakers, bulkheads, timeouts with code"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-01-24-cascading-failures-microservices/view",
+   "title": "How to Fix 'Cascading Failures' in Microservices",
+   "rank": 2,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Substantive practical guide: breakers, bulkheads, timeouts, retries, degradation, config and metrics"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-24-how-to-handle-cascading-failures-with-istio/view",
+   "title": "How to Handle Cascading Failures with Istio",
+   "rank": 3,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concrete mesh-level timeouts, circuit breaking, limited retries, local rate limiting with YAML"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-24-how-to-handle-cascading-failures-with-istio/markdown",
+   "title": "How to Handle Cascading Failures with Istio",
+   "rank": 4,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Markdown duplicate of fetched Istio cascading-failure guide"
+  },
+  {
+   "url": "https://notes.kodekloud.com/docs/Prep-Course-Istio-Certified-Associate-ICA-Certification/Traffic-Management/Circuit-Breakers/page.md",
+   "title": "Istio Circuit Breakers (KodeKloud ICA notes)",
+   "rank": 5,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Course notes on Istio DestinationRule circuit breaking; narrow, introductory"
+  },
+  {
+   "url": "https://systemdr.substack.com/p/mitigating-cascading-failures-in",
+   "title": "Mitigating Cascading Failures in Distributed Systems: Architectural Analysis",
+   "rank": 6,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Clear causal model of slow leaf services, deadline budgets, bulkheads, leading indicators"
+  },
+  {
+   "url": "https://algomaster.io/learn/system-design/circuit-breaker-pattern",
+   "title": "Circuit Breaker Pattern - AlgoMaster",
+   "rank": 7,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Good problem framing but core mechanics paywalled"
+  },
+  {
+   "url": "https://www.designgurus.io/answers/detail/what-is-the-circuit-breaker-pattern-and-how-does-it-prevent-cascading-failures-in-a-system",
+   "title": "What is the circuit breaker pattern and how does it prevent cascading failures",
+   "rank": 8,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Generic interview-prep intro to circuit breakers; course promotion"
+  },
+  {
+   "url": "https://algomaster.io/learn/microservices/cascading-failures",
+   "title": "Cascading Failures - AlgoMaster",
+   "rank": 9,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Only brief intro visible; rest paywalled"
+  },
+  {
+   "url": "https://careersatdoordash.com/?p=9335",
+   "title": "DoorDash Engineering: cascading failures",
+   "rank": 10,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "First-party engineering experience on cascading failure mitigation; fetch blocked (403)"
+  },
+  {
+   "url": "https://olifes.duckdns.org/chunk/11108",
+   "title": "Bulkhead pattern",
+   "rank": 11,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Scraped mirror chunk on dynamic DNS host; unresolvable"
+  },
+  {
+   "url": "https://gravitee.io/corpus/gen-1919/middleware-distributed-applications/circuit-breaker-and-bulkhead-patterns-for-distributed-application-middleware.html",
+   "title": "Circuit Breaker and Bulkhead Patterns for Distributed Application Middleware",
+   "rank": 12,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Auto-generated vendor corpus page; returns 404"
+  },
+  {
+   "url": "https://codemia.io/courses/system_design_fundamentals/resilience_patterns",
+   "title": "Resilience Patterns: Circuit Breakers, Bulkheads, and Load Shedding",
+   "rank": 13,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thorough lesson: breakers, bulkhead sizing via Little's Law, load shedding, layering, anti-patterns"
+  },
+  {
+   "url": "https://codemia.io/archive/retries-timeouts-and-bulkheads",
+   "title": "Retries, Timeouts, and Bulkheads: The Resilience Patterns That Only Work Together",
+   "rank": 14,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short opinion post on pattern interaction; anecdotal, little detail"
+  },
+  {
+   "url": "https://vikas-newsletter-2dac00.beehiiv.com/p/the-pattern-that-prevents-system-wide-failure",
+   "title": "the pattern that prevents system wide failure",
+   "rank": 15,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Brief bulkhead overview, no implementation depth"
+  },
+  {
+   "url": "https://than-is-on.duckdns.org/system-design/ch18-fault-tolerance.html",
+   "title": "Chapter 18: Fault Tolerance - Failover, Circuit Breakers, Retries",
+   "rank": 16,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Unverified system-design chapter on dynamic DNS host; could not fetch"
+  },
+  {
+   "url": "https://dev.to/sawantudayan/availability-bulkhead-pattern-4hb9",
+   "title": "Availability: Bulkhead Pattern",
+   "rank": 17,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Conceptual bulkhead intro with pitfalls; moderate depth, derivative"
+  },
+  {
+   "url": "https://juststeveking.com/articles/the-second-pattern-bulkhead/",
+   "title": "The Second Pattern: Bulkhead",
+   "rank": 18,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Real incident of slow dependency; why breakers miss slowness; bulkhead code and tradeoffs"
+  },
+  {
+   "url": "https://optimi.com/en/guides/dependency-resilience",
+   "title": "Reliability guide: dependency resilience",
+   "rank": 19,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Snippet only; generic dependency resilience guide, fetch rate-limited"
+  },
+  {
+   "url": "https://www.groundcover.com/learn/performance/cascading-failures",
+   "title": "Cascading Failures - groundcover",
+   "rank": 20,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Solid overview of causes, prevention, detection; some product promotion and uncited figures"
+  },
+  {
+   "url": "https://www.groundcover.com/learn/performance/circuit-breaker-pattern",
+   "title": "Circuit Breaker Pattern - groundcover",
+   "rank": 21,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Generic circuit breaker explainer with unverified statistic"
+  },
+  {
+   "url": "https://designgurus.substack.com/p/system-design-interview-guide-how",
+   "title": "System Design Nuggets: how to prevent cascading failures",
+   "rank": 22,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Interview-prep newsletter; fetch rate-limited"
+  },
+  {
+   "url": "https://blog.mi.hdm-stuttgart.de/?p=22581",
+   "title": "Cascading Failures in Large-Scale Distributed Systems",
+   "rank": 23,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Well-sourced synthesis: DynamoDB case, Nolan antipatterns, retry budgets, deadlines"
+  },
+  {
+   "url": "https://dev.to/mohanarpit/how-to-avoid-cascading-failures-in-distributed-systems-28o8",
+   "title": "How to avoid cascading failures in distributed systems",
+   "rank": 24,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "TL;DR notes of another article; thin, mixed with unrelated topic"
+  },
+  {
+   "url": "https://dzone.com/articles/contain-partial-failures",
+   "title": "Contain Partial Failures",
+   "rank": 25,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Relevant title; fetch blocked (403)"
+  },
+  {
+   "url": "https://bitmaybewise.substack.com/p/sre-book-notes-addressing-cascading",
+   "title": "SRE book notes: Addressing Cascading Failures",
+   "rank": 26,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Derivative notes on SRE chapter testing/recovery"
+  },
+  {
+   "url": "https://sre.google/sre-book/addressing-cascading-failures/",
+   "title": "Chapter 22 - Addressing Cascading Failures",
+   "rank": 27,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Authoritative: load shedding, deadlines, retry budgets, fail fast, noncritical backend testing"
+  },
+  {
+   "url": "https://openlibrary.org/books/OL27208603M/Site_Reliability_Engineering",
+   "title": "Site Reliability Engineering (Open Library)",
+   "rank": 28,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Library catalog record, no content"
+  },
+  {
+   "url": "https://www.wristers.nl/boek/9781491929124",
+   "title": "Site Reliability Engineering (wristers.nl)",
+   "rank": 29,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Bookstore listing, no content"
+  },
+  {
+   "url": "https://oreilly.com/library/view/site-reliability-engineering/9781491929117/ch22.html",
+   "title": "Chapter 22. Addressing Cascading Failures (O'Reilly)",
+   "rank": 30,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Same SRE chapter behind O'Reilly login; free version available"
+  },
+  {
+   "url": "https://sre.google/sre-book/table-of-contents/",
+   "title": "Table of Contents - SRE Book",
+   "rank": 31,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Table of contents only"
+  },
+  {
+   "url": "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter",
+   "title": "Timeouts, retries, and backoff with jitter",
+   "rank": 32,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Authoritative Amazon guidance on timeouts, retry limits, backoff, jitter, token buckets"
+  },
+  {
+   "url": "https://medium.com/lumigo/amazon-builders-library-in-focus-1-timeouts-retries-and-backoff-with-jitter-f8e48587c79e",
+   "title": "Amazon Builders' Library in focus #1 (Medium)",
+   "rank": 33,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Secondary summary, duplicate of Lumigo blog"
+  },
+  {
+   "url": "https://lumigo.io/blog/amazon-builders-library-in-focus-1-timeouts-retries-and-backoff-with-jitter",
+   "title": "Amazon Builders' Library in focus #1: Timeouts, retries, and backoff with jitter",
+   "rank": 34,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Secondary summary of Amazon article; good for cross-check"
+  },
+  {
+   "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/retry-backoff.md",
+   "title": "Retry with backoff pattern - AWS Prescriptive Guidance",
+   "rank": 35,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Official but narrow retry pattern doc"
+  },
+  {
+   "url": "https://github.com/Netflix/Hystrix/wiki/Architecture",
+   "title": "Hystrix Wiki: How it Works",
+   "rank": 36,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary source on per-dependency thread pools, rejection, breakers, fallbacks"
+  },
+  {
+   "url": "https://www.baeldung.com/introduction-to-hystrix",
+   "title": "Introduction to Hystrix - Baeldung",
+   "rank": 37,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tutorial for maintenance-mode library; fetch blocked"
+  },
+  {
+   "url": "https://www.infoq.com/news/2012/12/netflix-hystrix-fault-tolerance",
+   "title": "Netflix Hystrix fault tolerance (InfoQ)",
+   "rank": 38,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2012 news item; outdated, thin"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-01-30-grpc-deadlines-best-practices/view",
+   "title": "gRPC Deadlines Best Practices",
+   "rank": 1,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Practical deadline propagation with Go/Python code, anti-patterns, monitoring"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-03-20-grpc-deadlines-timeouts-ipv4/markdown",
+   "title": "How to Handle gRPC Deadlines and Timeouts over IPv4",
+   "rank": 2,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Overlapping, IPv4-specific variant of deadline posts"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-02-24-how-to-configure-deadline-propagation-with-istio/markdown",
+   "title": "How to Configure Deadline Propagation with Istio",
+   "rank": 3,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Narrow Istio deadline header guide; not fetched"
+  },
+  {
+   "url": "https://grpc.io/docs/guides/deadlines/",
+   "title": "Deadlines - gRPC",
+   "rank": 4,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Official deadline propagation semantics and language defaults"
+  },
+  {
+   "url": "https://oneuptime.com/blog/post/2026-07-28-divide-end-to-end-deadline-microservice-call-chain/view",
+   "title": "How to Divide an End-to-End Deadline Across a Microservice Call Chain",
+   "rank": 5,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed deadline budgeting, cancellation, bounded retries across call chains"
+  },
+  {
+   "url": "https://builder.aws.com/content/3Eun1EEyX6p2e3VYNyRLSJzLuMV/using-load-shedding-to-avoid-overload",
+   "title": "Using load shedding to avoid overload",
+   "rank": 6,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Authoritative Amazon load shedding, goodput, deadlines, queue management"
+  },
+  {
+   "url": "https://tildes.net/~comp/1jbf/good_retry_bad_retry_an_incident_story",
+   "title": "good retry bad retry an incident story",
+   "rank": 7,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Link aggregator thread pointing to Yandex retry article"
+  },
+  {
+   "url": "https://www.yusufaytas.com/?p=3631",
+   "title": "yusufaytas.com",
+   "rank": 8,
+   "round": 2,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Resolves to unrelated blog index"
+  },
+  {
+   "url": "https://devpath.com/courses/distributed-systems-practitioners/reacting-to-backpressure",
+   "title": "Reacting to Backpressure",
+   "rank": 9,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Course lesson snippet; likely gated"
+  },
+  {
+   "url": "https://oneuptime.com/blog/tag/retry-budget",
+   "title": "retry budget tag - OneUptime",
+   "rank": 10,
+   "round": 2,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tag listing page, no content"
+  },
+  {
+   "url": "https://quanghoang.substack.com/p/50-days-of-sd-load-shedding",
+   "title": "#5 - Mot trieu lon bia (load shedding)",
+   "rank": 11,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Vietnamese newsletter on load shedding; derivative"
+  },
+  {
+   "url": "https://dzone.com/articles/retry-budget-distributed-systems",
+   "title": "Retry budget in distributed systems (DZone)",
+   "rank": 12,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Relevant topic; fetch blocked"
+  },
+  {
+   "url": "https://www.coddykit.com/courses/api_scalability/rate-based-load-shedding-and-backpressure-8160152",
+   "title": "Rate-based load shedding and backpressure",
+   "rank": 13,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Course page snippet, thin"
+  },
+  {
+   "url": "https://dev.materialize.com/api/rust/tower/retry/budget/index.html",
+   "title": "tower::retry::budget",
+   "rank": 14,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "API docs for retry budget in Rust tower; narrow, third-party mirror"
+  },
+  {
+   "url": "https://technology.inmobi.com/articles/2023/07/05/resilience4j-improve-app-stability-using-circuit-breakers",
+   "title": "Resilience4j: Improve App Stability Using Circuit Breakers",
+   "rank": 15,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Redirects to homepage; snippet only"
+  },
+  {
+   "url": "https://camel.apache.org/components/eips/resilience4jConfiguration-eip.html",
+   "title": "Resilience4j Configuration - Apache Camel",
+   "rank": 16,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Config reference for slow-call and bulkhead settings; no rationale"
+  },
+  {
+   "url": "https://en.paradigmadigital.com/dev/resilience4j-designing-fault-resilient-java-microservices/",
+   "title": "Resilience4j: designing fault-resilient Java microservices",
+   "rank": 17,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Practical Resilience4j patterns, decision table, payment example; minor code issues"
+  },
+  {
+   "url": "https://www.appsdeveloperblog.com/?p=6056",
+   "title": "Enforcing Resilience in Spring Boot with Resilience4J",
+   "rank": 18,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tutorial snippet; not fetched"
+  },
+  {
+   "url": "https://devrimozcay1.substack.com/p/why-we-removed-resilience4j-from",
+   "title": "Why We Removed Resilience4j From Half Our Services",
+   "rank": 19,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Paywalled anecdote, claims unsupported in visible text"
+  },
+  {
+   "url": "https://docs.datadoghq.com/integrations/resilience4j/",
+   "title": "Resilience4j integration - Datadog",
+   "rank": 20,
+   "round": 2,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Monitoring integration doc, not about preventing cascades"
+  }
+ ]
+}

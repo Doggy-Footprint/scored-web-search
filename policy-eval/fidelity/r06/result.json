@@ -1,0 +1,7 @@
+{"id":"r06","kind":"research",
+ "websearch":{"verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},
+  "worst":"none material; minor wording: '7 points' vs page '7% improvement'","worst_summary_quote":"a gain of more than 7 points over Gopher","worst_page_quote":"greater than a 7% improvement over Gopher","worst_page_url":"https://arxiv.org/abs/2203.15556",
+  "quote_verified":true,"reader_gets_wrong":"Nothing material; the points-vs-percent wording is a negligible imprecision.","verbatim_source":"transcript",
+  "pages_compared":5,"notes":"Primary source is arXiv abs (pdf link skipped, abs is closely related). All claims including OpenAI contrast (analyticsvidhya) found in fetched pages."},
+ "webfetch":{"verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},"url":"https://arxiv.org/abs/2203.15556","fetch_prompt":"Summarize what this paper (Hoffmann et al., \"Training Compute-Optimal Large Language Models,\" the Chinchilla paper) found about compute-optimal training of large language models. Cover the main finding on how model size and number of training tokens should scale with compute, the specific ratio of tokens to parameters it recommends, and how the 70B Chinchilla model compared with Gopher (280B). Keep it concise and factual, and note anything the page does not state.",
+  "worst":"none","worst_summary_quote":"","worst_page_quote":"","quote_verified":true,"reader_gets_wrong":"Nothing material.","verbatim_source":"transcript","notes":"Abstract-only page; summary accurately flags what the page does not state."}}

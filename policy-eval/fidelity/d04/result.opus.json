@@ -1,0 +1,6 @@
+{"id":"d04","kind":"official docs","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":1,"C":0,"D":0},
+ "worst":"A: omits const/static elision (implicit 'static) and default trait-object bound rules; only says trait objects follow separate rules","worst_summary_quote":"Trait object lifetimes follow separate rules.","worst_page_quote":"Both constant and static declarations of reference types have implicit 'static lifetimes unless an explicit lifetime is specified.","worst_page_url":"https://doc.rust-lang.org/reference/lifetime-elision.html",
+ "quote_verified":true,"reader_gets_wrong":"A reader would not learn that references in const/static items are elided to 'static, though the three core function rules are stated correctly.","verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"yes","notes":"Core three rules accurate. Minor B: calls the Nomicon an older, more detailed version, but it lacks the trait-object and const/static sections the Reference has. Compared Reference, googlesource copy, w3cub copy, MIT Reference, MIT Nomicon."}

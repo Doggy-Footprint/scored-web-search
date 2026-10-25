@@ -1,0 +1,81 @@
+{
+ "id": "r16",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 1,
+   "chars": 4410,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B: calls page's 'reject' at P=0.092 an inconsistency and speculates 'randomized' is looser term; analyst inference, not page content",
+   "worst_summary_quote": "Treat this as an inconsistency in the page.",
+   "worst_page_quote": "July–December 2022 ( t (1306) = 1.33, P = 0.092)",
+   "quote_verified": true,
+   "notes": "All facts accurate; flagged inferences labelled; most complete, incl. limitations, registration, volunteers; omits attrition result (outside question)"
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 2,
+   "chars": 3373,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: says page cites other randomized studies by same group incl. ref 17; page lists ref 17 only as a citation",
+   "worst_summary_quote": "The page cites other randomized studies by the same group, including ref. 17",
+   "worst_page_quote": "Does working from home work? Evidence from a Chinese experiment",
+   "quote_verified": true,
+   "notes": "Accurate numbers; includes 0.0103 log spec; 'only significant result' framing slightly strong; omits take-up/volunteer limitation"
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 2,
+   "chars": 2788,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B: garbles conflict-of-interest attribution (J.L. is not first/lead author)",
+   "worst_summary_quote": "The first author notes the lead author and co-founder of Trip.com holds equity in the firm.",
+   "worst_page_quote": "J.L. is the co-founder, former CEO and current chairman of Trip.com, with equity holdings",
+   "quote_verified": true,
+   "notes": "Otherwise accurate; says paper does not discuss 0.0103 as finding though noted in Extended Data legend; adds COVID early end, attrition"
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 2686,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: omits lines-of-code log2(1+lines) result P=0.0103 favouring treatment; says equivalence supported null",
+   "worst_summary_quote": "Lines of code: No difference for 653 computer engineers. Equivalence tests supported a null effect.",
+   "worst_page_quote": "the difference has a P value of 0.0103, with treatment having the higher average values",
+   "quote_verified": true,
+   "notes": "Accurate otherwise; limitations good incl. volunteer differences; omits take-up and attrition-sample caveat"
+  }
+ ]
+}

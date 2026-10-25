@@ -1,0 +1,549 @@
+{
+ "id": "nw3",
+ "judged_at": "2026-10-24",
+ "question": "How have semiconductor export restrictions changed in the past year?",
+ "mode": "news",
+ "field": "news",
+ "judged": [
+  {
+   "url": "https://www.blankrome.com/news-and-events/trade-rules-trump-administration-revises-export-restrictions-on-advanced-semiconductors-while-levying-additional-tariffs/",
+   "title": "trade rules trump administration revises export restrictions on advanced semiconductors while levying additional tariffs",
+   "rank": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Law-firm analysis of Jan 2026 chip export revision and tariffs; fetch rate-limited."
+  },
+  {
+   "url": "https://www.blankrome.com/publications/trade-rules-trump-administration-revises-export-restrictions-advanced-semiconductors",
+   "title": "trade rules trump administration revises export restrictions advanced semiconductors",
+   "rank": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate URL of same Blank Rome piece."
+  },
+  {
+   "url": "https://www.morganlewis.com/pubs/2026/01/bis-revises-export-review-policy-for-advanced-ai-chips-destined-for-china-and-macau",
+   "title": "bis revises export review policy for advanced ai chips destined for china and macau",
+   "rank": 3,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed Jan 2026 analysis of case-by-case review rule and Section 232 tariff."
+  },
+  {
+   "url": "https://www.willkie.com/publications/2026/01/bis-paves-the-way-for-chip-exports-to-china-while-privileging-domestic-investment",
+   "title": "bis paves the way for chip exports to china while privileging domestic investment",
+   "rank": 4,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary-quality law-firm alert on Jan 13 2026 rule and 25% tariff."
+  },
+  {
+   "url": "https://www.gibsondunn.com/wp-content/uploads/2026/01/trump-administration-new-tariffs-on-and-export-licensing-requirements-for-advanced-semiconductors-create-challenging-new-cross-currents-new-opportunities-for-us-manufacturers.pdf",
+   "title": "trump administration new tariffs on and export licensing requirements for advanced semiconductors",
+   "rank": 5,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed Jan 22 2026 analysis of three executive actions on chip exports."
+  },
+  {
+   "url": "https://www.techinsights.com/ko/node/61400",
+   "title": "Compliance Monitor Commentary - March 2026",
+   "rank": 6,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Brief teaser of March 2026 developments; full analysis behind paywall."
+  },
+  {
+   "url": "https://chambers.com/content/item/7337",
+   "title": "Back to USA Rankings",
+   "rank": 7,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Broad 2026 trade overview; chips covered at high level only."
+  },
+  {
+   "url": "https://techinsights.com/ja/node/61400",
+   "title": "Compliance Monitor Commentary - March 2026",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Locale duplicate of TechInsights teaser."
+  },
+  {
+   "url": "https://timewell.jp/en/columns/tags/Rapidus",
+   "title": "timewell.jp",
+   "rank": 9,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Tag listing page with teaser only; vendor site."
+  },
+  {
+   "url": "https://news.metal.com/newscontent/103698563",
+   "title": "US Temporarily Eases Restrictions: Samsung, SK Hynix Get Approval for Chip Equipment Export to China in 2026",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short Dec 2025 rewrite of Reuters report on equipment licenses."
+  },
+  {
+   "url": "https://www.wsgr.com/print/v2/content/250466/BIS-Implements-New-Semiconductor--and-Supercomputer-related-Export-Controls-and-End-Use-Controls.pdf",
+   "title": "BIS Implements New Semiconductor and Supercomputer related Export Controls and End Use Controls",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2022 rule analysis; background only, outdated for past year."
+  },
+  {
+   "url": "https://www.winston.com/print/v2/content/1053803/bis-imposes-new-controls-targeting-chinas-semiconductor-and-advanced-computing-industries.pdf",
+   "title": "bis imposes new controls targeting chinas semiconductor and advanced computing industries",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Older (2022) rule analysis; background only."
+  },
+  {
+   "url": "https://centrelawgroup.com/blog/bis-opens-door-for-nvidia-h200-amd-mi325x-exports-to-china-with-a-25-u-s-cut-opportunity-or-trapdoor/",
+   "title": "BIS Opens Door for Nvidia H200 & AMD MI325X Exports to China",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Small-firm blog, derivative summary of Jan 2026 rule."
+  },
+  {
+   "url": "https://www.strtrade.com/trade-news-resources/str-trade-report/trade-report/october/more-products-and-countries-added-to-export-restrictions-on-advanced-chips",
+   "title": "more products and countries added to export restrictions on advanced chips",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "2023 rule summary; outdated for past-year question."
+  },
+  {
+   "url": "https://www.jdsupra.com/topics/macau/export-controls/china/",
+   "title": "News & Analysis as of",
+   "rank": 15,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Aggregator topic listing, no substantive content itself."
+  },
+  {
+   "url": "https://www.finnegan.com/en/insights/articles/us-further-tightens-export-controls-and-further-restricts-chinas-access-to-advanced-semiconductor-and-chip-technology.html",
+   "title": "US further tightens export controls and restricts China's access to advanced semiconductor technology",
+   "rank": 16,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2023 analysis; outdated background. Fetch 403."
+  },
+  {
+   "url": "https://www.longtermwiki.com/resources/9048db53387ec0c5",
+   "title": "www.longtermwiki.com",
+   "rank": 17,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Wiki cache of 2022 BIS release; unmaintained."
+  },
+  {
+   "url": "https://www.clearygottlieb.com/news-and-insights/publication-listing/bis-further-restricts-exports-of-artificial-intelligence-and-advanced-chips-to-china",
+   "title": "BIS Further Restricts Exports of Artificial Intelligence and Advanced Chips to China",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Solid but April 2025 analysis of transition-era rules; edge of window."
+  },
+  {
+   "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm",
+   "title": "NVIDIA CORP - Form 10-K - FY2026",
+   "rank": 19,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary filing detailing H20 and H200 license history and impacts."
+  },
+  {
+   "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000052/nvda-20260426.htm",
+   "title": "NVIDIA CORP - Form 10-Q - FY2026",
+   "rank": 20,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary filing with latest H200 license status, inspection and tariff conditions."
+  },
+  {
+   "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000038/a2026-annualxreportxwebxfi.pdf",
+   "title": "NVIDIA CORP - Form ARS - FY2026",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Annual report largely duplicating 10-K content."
+  },
+  {
+   "url": "https://news.bloomberglaw.com/international-trade/nvidia-gets-us-license-for-small-amount-of-h200-exports-to-china",
+   "title": "Nvidia Gets US License for Small Amount of H200 Exports to China",
+   "rank": 22,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable Feb 2026 news on H200 license; paywalled but key facts visible."
+  },
+  {
+   "url": "https://news.bgov.com/international-trade/nvidia-gets-us-license-for-small-amount-of-h200-exports-to-china",
+   "title": "Nvidia Gets US License for Small Amount of H200 Exports to China",
+   "rank": 23,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Syndicated duplicate of Bloomberg Law story, paywalled."
+  },
+  {
+   "url": "https://news.bloombergtax.com/international-trade/nvidia-gets-us-license-for-small-amount-of-h200-exports-to-china",
+   "title": "Nvidia Gets US License for Small Amount of H200 Exports to China",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Syndicated duplicate of Bloomberg Law story."
+  },
+  {
+   "url": "https://tomshardware.com/tech-industry/nvidia-has-received-pos-from-chinese-customers",
+   "title": "nvidia has received pos from chinese customers",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short news on H200 orders and licenses; partial."
+  },
+  {
+   "url": "https://news.bloomberglaw.com/tech-and-telecom-law/nvidia-h200-chip-china-export-review-process-eased-by-the-us",
+   "title": "Nvidia H200 Chip China Export Review Process Eased by the US",
+   "rank": 26,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable Jan 2026 news on BIS easing; paywalled summary."
+  },
+  {
+   "url": "https://www.igorslab.de/en/nvidia-is-relaunching-the-h200-in-china-but-the-relaunch-remains-politically-entangled/",
+   "title": "nvidia is relaunching the h200 in china but the relaunch remains politically entangled",
+   "rank": 27,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Derivative tech-blog roundup citing Reuters; useful for cross-check."
+  },
+  {
+   "url": "https://www.3dtested.com/tech-industry/nvidia-has-received-pos-from-chinese-customers",
+   "title": "nvidia has received pos from chinese customers",
+   "rank": 28,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Apparent scraped copy of Tom's Hardware; fetch failed."
+  },
+  {
+   "url": "https://www.datacenterdynamics.com/en/news/department-of-commerce-formally-rescinds-ai-diffusion-rule-says-deploying-huawei-ascend-chips-violates-us-export-rules/",
+   "title": "department of commerce formally rescinds ai diffusion rule",
+   "rank": 29,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Trade-press report on May 2025 rescission and Huawei guidance; fetch 403."
+  },
+  {
+   "url": "https://techcrunch.com/2025/05/13/trump-administration-officially-rescinds-bidens-ai-diffusion-rules/",
+   "title": "Trump administration officially rescinds Biden's AI Diffusion Rule",
+   "rank": 30,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable report on May 2025 diffusion-rule rescission."
+  },
+  {
+   "url": "https://techcrunch.com/2025/05/13/trump-admin-officially-rescinds-bidens-ai-diffusion-rule/",
+   "title": "Trump admin officially rescinds Biden's AI Diffusion Rule",
+   "rank": 31,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Duplicate TechCrunch URL of same story."
+  },
+  {
+   "url": "https://www.kirkland.com/publications/kirkland-alert/2025/05/bis-rescission-of-the-biden-administration",
+   "title": "Kirkland Alert",
+   "rank": 32,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Law-firm analysis of rescission and three BIS guidance documents."
+  },
+  {
+   "url": "https://www.nextgov.com/artificial-intelligence/2025/05/commerce-rescinds-biden-era-ai-export-controls/405287",
+   "title": "Commerce rescinds Biden-era AI export controls",
+   "rank": 33,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable news on rescission and Huawei Ascend guidance."
+  },
+  {
+   "url": "https://www.yahoo.com/news/trump-administration-rescinds-biden-ai-193352703.html",
+   "title": "Trump administration rescinds Biden AI chip export rule",
+   "rank": 34,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Syndicated The Hill story; derivative."
+  },
+  {
+   "url": "https://timewell.jp/en/columns/ai-diffusion-rule-withdrawal-and-alternatives",
+   "title": "ai diffusion rule withdrawal and alternatives",
+   "rank": 35,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Vendor column promoting compliance product; AI-assisted though cites primaries."
+  },
+  {
+   "url": "https://www.ussc.edu.au/the-us-ai-diffusion-rule",
+   "title": "the us ai diffusion rule",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Think-tank explainer of diffusion rule; background, little on later changes."
+  },
+  {
+   "url": "https://babl.ai/commerce-department-rescinds-ai-diffusion-rule-tightens-global-chip-export-controls/",
+   "title": "Commerce Department Rescinds AI Diffusion Rule, Tightens Global Chip Export Controls",
+   "rank": 37,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Page 404s; derivative AI-audit firm blog."
+  },
+  {
+   "url": "https://babl.ai/?p=7594",
+   "title": "Commerce Department Rescinds AI Diffusion Rule, Tightens Global Chip Export Controls",
+   "rank": 38,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate URL, 404."
+  },
+  {
+   "url": "https://casrai.org/news/ai-chip-export-controls",
+   "title": "ai chip export controls",
+   "rank": 39,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Repurposed domain content, unverifiable; page 404."
+  },
+  {
+   "url": "https://casrai.org/wp/?p=2848",
+   "title": "- What changed: the AI chip export control landscape in 2026",
+   "rank": 40,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Repurposed-domain SEO post; 404."
+  },
+  {
+   "url": "https://eastasiaforum.org/us-chip-export-controls/",
+   "title": "Peer reviewed analysis from world leading experts",
+   "rank": 41,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Reputable analysis outlet but tag/listing page; fetch 403."
+  },
+  {
+   "url": "https://techwireasia.com/tag/semiconductor-export-controls/",
+   "title": "semiconductor export controls",
+   "rank": 42,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tag listing page, no substantive content."
+  },
+  {
+   "url": "https://btw.media/tag/export-control",
+   "title": "export control",
+   "rank": 43,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tag page; 404."
+  },
+  {
+   "url": "https://is4.ai/blog/our-blog-1/us-china-ai-chip-export-restrictions-guide-2026-517",
+   "title": "us china ai chip export restrictions guide 2026",
+   "rank": 44,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "AI-drafted SEO guide with unsourced figures and unverifiable quotes."
+  },
+  {
+   "url": "https://www.alixpartners.com/insights/102m1vv",
+   "title": "Stephen Yu",
+   "rank": 45,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Author/profile page snippet; no direct content."
+  },
+  {
+   "url": "https://www.dlapiper.com/insights/publications/2025/11/bis-to-suspend-50-percent-ownership-rule",
+   "title": "bis to suspend 50 percent ownership rule",
+   "rank": 46,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Law-firm alert on Affiliates Rule suspension; fetch rate-limited."
+  },
+  {
+   "url": "https://www.jdsupra.com/topics/entity-list/export-controls/china",
+   "title": "News & Analysis as of",
+   "rank": 47,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Aggregator listing page."
+  },
+  {
+   "url": "https://www.alixpartners.com/insights/102m1vv/2025-a-review-of-foreign-sanctions-and-export-control-developments-involving-chi",
+   "title": "2025 a review of foreign sanctions and export control developments involving china",
+   "rank": 48,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Year-in-review of China export controls; fetch rate-limited."
+  },
+  {
+   "url": "https://www.dlapiper.com/en-ro/insights/publications/2025/11/bis-to-suspend-50-percent-ownership-rule",
+   "title": "bis to suspend 50 percent ownership rule",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Locale duplicate of DLA Piper alert."
+  },
+  {
+   "url": "https://www.dlapiper.com/en-za/insights/publications/2025/11/bis-to-suspend-50-percent-ownership-rule",
+   "title": "bis to suspend 50 percent ownership rule",
+   "rank": 50,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Locale duplicate of DLA Piper alert."
+  },
+  {
+   "url": "https://www.arnoldporter.com/en/perspectives/blogs/enforcement-edge/2025/10/us-commerce-to-suspend-enforcement-of--50-percent-rule-for-one-year",
+   "title": "us commerce to suspend enforcement of 50 percent rule for one year",
+   "rank": 51,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Law-firm analysis of Oct 2025 Affiliates Rule pause."
+  },
+  {
+   "url": "https://www.dlapiper.com/en-be/insights/publications/2025/11/bis-to-suspend-50-percent-ownership-rule",
+   "title": "bis to suspend 50 percent ownership rule",
+   "rank": 52,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Locale duplicate of DLA Piper alert."
+  },
+  {
+   "url": "https://www.wsgr.com/en/insights/bis-formally-suspends-new-affiliates-rule-for-one-year.html",
+   "title": "BIS formally suspends new Affiliates Rule for one year",
+   "rank": 53,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Law-firm alert on formal suspension and Nov 2026 expiry; fetch 403."
+  },
+  {
+   "url": "https://www.kharon.com/brief/bis-50-percent-rule-us-china-trade-deal-scott-bessent",
+   "title": "bis 50 percent rule us china trade deal scott bessent",
+   "rank": 54,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concise sourced brief on Affiliates Rule pause and rare-earth deal."
+  },
+  {
+   "url": "https://www.dutchnews.nl/news/2023/03/dutch-slap-further-restrictions-on-chip-technology-exports/",
+   "title": "Dutch slap further restrictions on chip technology exports",
+   "rank": 55,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "2023 Dutch controls; outdated for past year."
+  },
+  {
+   "url": "https://procurementmag.com/articles/companies-brace-for-netherlands-semiconductor-restrictions",
+   "title": "Companies brace for Netherlands' Semiconductor restrictions",
+   "rank": 56,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Thin trade-mag piece on 2023 rules; fetch 403."
+  },
+  {
+   "url": "https://ajot.com/news/netherlands-plans-curbs-on-china-tech-exports-in-deal-with-us",
+   "title": "netherlands plans curbs on china tech exports in deal with us",
+   "rank": 57,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Older wire rewrite on Dutch curbs; outdated."
+  },
+  {
+   "url": "https://www.asiafinancial.com/?p=85919",
+   "title": "www.asiafinancial.com",
+   "rank": 58,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate shortlink of Asia Financial article."
+  },
+  {
+   "url": "https://www.asiafinancial.com/dutch-restrict-chip-exports-amid-us-push-to-tighten-china-curbs",
+   "title": "dutch restrict chip exports amid us push to tighten china curbs",
+   "rank": 59,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "June 2023 Dutch rules; outdated for past year."
+  },
+  {
+   "url": "https://jordantimes.com/news/business/dutch-match-us-export-curbs-semiconductor-machines",
+   "title": "Dutch match US export curbs on semiconductor machines",
+   "rank": 60,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Wire rewrite of older Dutch curbs; fetch 403."
+  }
+ ]
+}

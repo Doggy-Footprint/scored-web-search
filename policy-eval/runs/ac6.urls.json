@@ -1,0 +1,223 @@
+[
+ {
+  "url": "https://arxiv.org/html/2601.18699",
+  "title": "Mechanistic Analysis of Catastrophic Forgetting in Large Language Models During Continual Fine-tuning"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2601.18699",
+  "title": "arxiv.org"
+ },
+ {
+  "url": "https://evilpiepirate.org/forge/kent/consciousness/src/commit/3eee86a41003a276cb249b49b3e8c473c6b78d9d/training/research/catastrophic-forgetting.md",
+  "title": "catastrophic forgetting"
+ },
+ {
+  "url": "https://tdwi.org/blogs/ai-101/2026/05/catastrophic-forgetting-training-ai-models.aspx",
+  "title": "catastrophic forgetting training ai models"
+ },
+ {
+  "url": "https://www.zeroentropy.dev/concepts/catastrophic-forgetting/",
+  "title": "Catastrophic Forgetting"
+ },
+ {
+  "url": "https://www.practical-devsecops.com/glossary/catastrophic-forgetting/",
+  "title": "Catastrophic Forgetting"
+ },
+ {
+  "url": "https://respan.ai/glossary/catastrophic-forgetting",
+  "title": "catastrophic forgetting"
+ },
+ {
+  "url": "https://theorempath.com/topics/catastrophic-forgetting",
+  "title": "catastrophic forgetting"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2308.08747",
+  "title": "An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-tuning"
+ },
+ {
+  "url": "https://paperswithcode.com/paper/an-empirical-study-of-catastrophic-forgetting",
+  "title": "An Empirical Study of Catastrophic Forgetting in Large Language Models During Continual Fine-tuning"
+ },
+ {
+  "url": "https://huggingface.co/papers/2308.08747",
+  "title": "huggingface.co"
+ },
+ {
+  "url": "https://arxiv.org/abs/2308.08747v1",
+  "title": "arxiv.org"
+ },
+ {
+  "url": "https://en.wikipedia.org/wiki/Catastrophic_interference",
+  "title": "Catastrophic interference"
+ },
+ {
+  "url": "https://static.hlt.bme.hu/semantics/external/pages/backprop/en.wikipedia.org/wiki/Catastrophic_interference.html",
+  "title": "Catastrophic interference"
+ },
+ {
+  "url": "https://work21.gatech.edu/2022/04/27/spring-is-in-the-air-new-research-findings-from-the-wsc",
+  "title": "Spring is in the Air: New Research Findings from the WSC"
+ },
+ {
+  "url": "https://datascientest.com/en/?p=176681",
+  "title": "datascientest.com"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2202.10054",
+  "title": "Fine-Tuning can Distort Pretrained Features and Underperform Out-of-Distribution"
+ },
+ {
+  "url": "https://iclr.cc/virtual/2022/poster/5945",
+  "title": "Fine-Tuning can Distort Pretrained Features and Underperform Out-of-Distribution"
+ },
+ {
+  "url": "https://hackmd.io/@machineS/ByvCpMs0j",
+  "title": "hackmd.io"
+ },
+ {
+  "url": "https://mlanthology.org/iclr/2022/kumar2022iclr-finetuning",
+  "title": "Fine-Tuning Can Distort Pretrained Features and Underperform Out-of-Distribution"
+ },
+ {
+  "url": "https://arxiv.org/pdf/1612.00796",
+  "title": "Overcoming catastrophic forgetting in neural networks"
+ },
+ {
+  "url": "https://arxiv.org/html/2507.10485v1",
+  "title": "Overcoming catastrophic forgetting in neural networks"
+ },
+ {
+  "url": "https://github.com/shivamsaboo17/overcoming-catastrophic-forgetting-in-neural-networks",
+  "title": "overcoming catastrophic forgetting in neural networks"
+ },
+ {
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5380101",
+  "title": "pmc.ncbi.nlm.nih.gov"
+ },
+ {
+  "url": "https://www.themoonlight.io/review/lora-learns-less-and-forgets-less",
+  "title": "[Literature Review] LoRA Learns Less and Forgets Less"
+ },
+ {
+  "url": "https://arxiv.org/html/2405.09673v2",
+  "title": "LoRA Learns Less and Forgets Less"
+ },
+ {
+  "url": "https://iclr.cc/virtual/2025/poster/31465",
+  "title": "LoRA Learns Less and Forgets Less"
+ },
+ {
+  "url": "https://dev.to/aimodels-fyi/lora-learns-less-and-forgets-less-96e",
+  "title": "lora learns less and forgets less 96e"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2608.24192",
+  "title": "Preference Data Selection for Mitigating the Alignment Tax in Large Language Models"
+ },
+ {
+  "url": "https://zenodo.org/records/18254555",
+  "title": "Published January 15, 2026 | Version v1",
+  "date": "2026-01-15"
+ },
+ {
+  "url": "https://tianpan.co/blog/2026-04-13-the-alignment-tax-when-safety-tuning-hurts-your-production-llm",
+  "title": "The Alignment Tax: When Safety Tuning Hurts Your Production LLM"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2111.11964",
+  "title": "Reviewing continual learning from the perspective of human-level intelligence"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2302.00487",
+  "title": "A Comprehensive Survey of Continual Learning: Theory, Method and Application"
+ },
+ {
+  "url": "https://www.alphaxiv.org/resources/2302.00487v3",
+  "title": "A Comprehensive Survey of Continual Learning: Theory, Method and Application"
+ },
+ {
+  "url": "https://arxiv.org/abs/2302.00487v1",
+  "title": "arxiv.org"
+ },
+ {
+  "url": "https://sotaverified.org/papers/reviewing-continual-learning-from-the",
+  "title": "reviewing continual learning from the"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2605.09187",
+  "title": "Emergent Semantic Role Understanding in Language Models"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2205.09357",
+  "title": "Continual Pre-Training Mitigates Forgetting in Language and Vision"
+ },
+ {
+  "url": "https://www.alphaxiv.org/abs/2601.18699.md",
+  "title": "www.alphaxiv.org"
+ },
+ {
+  "url": "https://www.alphaxiv.org/abs/2505.16831v3",
+  "title": "Submitted 16 May 2026"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2506.00382v1",
+  "title": "arxiv.org"
+ },
+ {
+  "url": "https://arxiv.org/pdf/1910.07104",
+  "title": "Orthogonal Gradient Descent for Continual Learning"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2603.26671",
+  "title": "Mitigating Forgetting in Continual Learning with Selective Gradient Projection"
+ },
+ {
+  "url": "https://engineering.purdue.edu/Elmore-EFC/News/Center%20Hosts%20Purdue%20Student%20and%20Postdoctoral%20Researcher%20Poster%20Session/Gobinda_Saha.pdf",
+  "title": "Gobinda Saha"
+ },
+ {
+  "url": "https://ar5iv.labs.arxiv.org/html/2103.09762",
+  "title": "Gradient Projection Memory for Continual Learning"
+ },
+ {
+  "url": "https://iclr.cc/virtual/2021/poster/3289",
+  "title": "Gradient Projection Memory for Continual Learning"
+ },
+ {
+  "url": "https://awesome.ecosyste.ms/projects/github.com%2Fsahagobinda%2FGPM",
+  "title": "awesome.ecosyste.ms"
+ },
+ {
+  "url": "https://tldr.takara.ai/p/2606.10406",
+  "title": "DS1 spectrogram: FOGO: Forgetting-aware Orthogonalization Optimizer"
+ },
+ {
+  "url": "https://www.wizwand.com/paper/68fa69941e209131cea22d07",
+  "title": "Our new X account is live! Follow @wizwand_team for updates"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2403.01244",
+  "title": "Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal"
+ },
+ {
+  "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/087b346ca4d6dd6fcd0663ff6c9a6b69-Abstract-Conference.html",
+  "title": "Self-Evolving Pseudo-Rehearsal for Catastrophic Forgetting with Task Similarity in LLMs"
+ },
+ {
+  "url": "https://arxiv.org/pdf/2411.11932v2.pdf",
+  "title": "arxiv.org"
+ },
+ {
+  "url": "https://ar5iv.labs.arxiv.org/html/2403.01244",
+  "title": "Mitigating Catastrophic Forgetting in Large Language Models"
+ },
+ {
+  "url": "https://mlanthology.org/neurips/2025/wang2025neurips-selfevolving",
+  "title": "Self-Evolving Pseudo-Rehearsal for Catastrophic Forgetting with Task Similarity in LLMs"
+ },
+ {
+  "url": "https://preview.aclanthology.org/credits/2024.acl-long.77",
+  "title": "Mitigating Catastrophic Forgetting in Large Language Models with Self-Synthesized Rehearsal"
+ }
+]

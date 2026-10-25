@@ -1,0 +1,12 @@
+{"id":"r11","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":1,"C":2,"D":0},
+ "worst":"A: rice study's main finding (0.00-0.23% editing at 179 off-target sites; no genome-wide SNV/indel increase; 'highly specific') is dropped, leaving only a 'pegRNAs need fewer homologous sites' caveat",
+ "worst_summary_quote":"the authors concluded that pegRNAs with homology to fewer off-target sites are needed for high specificity",
+ "worst_page_quote":"did not induce significant numbers of genome-wide pegRNA-independent off-target edits in plants",
+ "worst_page_url":"https://english.cas.cn/newsroom/research_news/life/202104/t20210416_267256.shtml",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader may think the rice study found specificity depended on better pegRNA design rather than that prime editors were found highly specific with very low off-target rates.",
+ "verbatim_source":"transcript",
+ "pages_compared":2,"pages_reused":2,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes",
+ "notes":"Usable pages: CAS news and PMC10120949 only (genengnews, PubMed, Springer, Yonsei empty or blocked; patents are PDFs). B: closing line 'sources agree... pegRNA design is the main lever' overgeneralises across unlike sources. C (maybe from unfetched pages): patent figures (3 of 16, 97% vs 0.7%), PE-tag claims, Yu et al. Cell 2023. <0.1% sPE/tPE figure matches PMC. Opus adds a hedge that results are abstracts/unverified and that the patent is not peer-reviewed, which Haiku lacked. No absolute prime editing efficiency given."}

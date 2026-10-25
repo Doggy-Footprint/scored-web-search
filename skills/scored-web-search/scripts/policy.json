@@ -74,6 +74,8 @@
   "penalties": {
     "seo_path": { "points": -6.0, "flag": "seo-path" },
     "version_path": { "points": -28.0, "flag": "stale-version" },
+    "non_content_path": { "points": -28.0, "flag": "non-content" },
+    "wrong_variant": { "points": -28.0, "flag": "wrong-variant" },
     "no_index": {
       "points": -5.0,
       "flag": "no-index",
@@ -93,6 +95,25 @@
   ],
 
   "version_path_regex": "/(?:docs|doc|reference|guide|guides|manual)/(v?[0-9]+(?:\\.[0-9]+)*(?:\\.x)?)/",
+
+  "_non_content_path_regex": "Paths that are listings or build artefacts, not a document: a site search page (first segment only, so /azure/search/ docs are kept), raw diffs, bytecode, and copies of installed packages.",
+  "non_content_path_regex": [
+    "^/search(?:/|$)",
+    "\\.(?:diff|patch|pyc)/$",
+    "/__pycache__/",
+    "/(?:site-packages|anaconda3|node_modules)/"
+  ],
+
+  "_release_path_regex": "Package-registry pages pinned to one release. The unversioned page is the registry's own pointer at the current release.",
+  "release_path_regex": {
+    "pypi.org": "^/project/[^/]+/([^/]+)/$",
+    "npmjs.com": "^/package/(?:@[^/]+/)?[^/]+/v/([^/]+)/$"
+  },
+
+  "_doc_variants": "Docs that ship side-by-side variants under one domain. Only judged when --doc-variant names the reader's variant.",
+  "doc_variants": {
+    "nextjs.org": { "app": "/docs/app/", "pages": "/docs/pages/" }
+  },
 
   "preprint_hosts": [
     "arxiv.org", "biorxiv.org", "medrxiv.org", "chemrxiv.org",

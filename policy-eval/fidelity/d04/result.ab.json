@@ -1,0 +1,81 @@
+{
+ "id": "d04",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "B",
+   "run": 1,
+   "chars": 3743,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: adds a fix suggestion (explicit lifetimes for frob) not on the page; harmless",
+   "worst_summary_quote": "Fix either case by writing the lifetimes explicitly",
+   "worst_page_quote": "It is an error to elide lifetime parameters that cannot be inferred.",
+   "quote_verified": true,
+   "notes": "All three rules, illegal cases, trait-object and const/static covered. Omits T7 error example and other_args example; minor."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 2,
+   "chars": 4394,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "D: lists '_ as first step of an 'order' for trait object defaults; page gives no explicit order for that rule",
+   "worst_summary_quote": "They are applied in this order",
+   "worst_page_quote": "If '_ is used as the lifetime bound then the bound follows the usual elision rules.",
+   "quote_verified": true,
+   "notes": "Precedence of receiver rule is explicitly labelled inference. Correct absence claims (no 'no single assignable lifetime' phrase; no ordering stated)."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 1,
+   "chars": 4939,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "D: nothing material; ordering of rules listed as 1-5 flat list, hedged precedence claims",
+   "worst_summary_quote": "The page does not give a general rule for how these cases are resolved",
+   "worst_page_quote": "In method signatures there is another rule",
+   "quote_verified": true,
+   "notes": "Hedges precedence as inference and not found in text; absence claims are correct. Omits T7 error example; minor."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 2,
+   "chars": 3753,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: asserts rules are applied in order and receiver rule takes precedence, stated as page content without hedge; page states no ordering",
+   "worst_summary_quote": "This rule takes precedence in methods.",
+   "worst_page_quote": "In method signatures there is another rule",
+   "quote_verified": true,
+   "notes": "Claim is true in practice so a reader is not misled on the answer. Also silently renames dyn T to dyn Example in example code. Otherwise complete."
+  }
+ ]
+}

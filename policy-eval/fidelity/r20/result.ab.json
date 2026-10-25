@@ -1,0 +1,81 @@
+{
+ "id": "r20",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 2877,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: pay maintained at 100% condition not stated (minor)",
+   "worst_summary_quote": "Companies were not required to use one model.",
+   "worst_page_quote": "so long as pay was maintained at 100%",
+   "quote_verified": true,
+   "notes": "All figures correct; hedged absences correct; sector quote attributed to 4DWG."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 1,
+   "chars": 1829,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: 'promotes shorter working weeks' about the Autonomy Institute is not stated on the page (minor, inference)",
+   "worst_summary_quote": "The page is published by the Autonomy Institute, which promotes shorter working weeks",
+   "worst_page_quote": "The results are in: the UK's four-day week pilot - The Autonomy Institute",
+   "quote_verified": true,
+   "notes": "Figures all correct; omits sector differences (minor)."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 2,
+   "chars": 2241,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: publisher described as promoting shorter working weeks, not stated on page (minor)",
+   "worst_summary_quote": "the report is published by an organisation that promotes shorter working weeks",
+   "worst_page_quote": "The results are in: the UK's four-day week pilot - The Autonomy Institute",
+   "quote_verified": true,
+   "notes": "Figures all correct; no sector differences (minor)."
+  },
+  {
+   "slot": "S4",
+   "arm": "T",
+   "run": 1,
+   "chars": 2699,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: sector-difference quote only briefly covered; non-profit exercise finding omitted (minor)",
+   "worst_summary_quote": "a \"small group of construction/manufacturing workers\" showing the biggest reduction in burnout and sleep problems",
+   "worst_page_quote": "the small group of construction/manufacturing workers had the biggest reduction in burnout and sleep problems",
+   "quote_verified": true,
+   "notes": "Figures all correct; hedged absences correct; inferences labeled."
+  }
+ ]
+}

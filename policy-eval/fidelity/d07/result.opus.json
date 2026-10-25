@@ -1,0 +1,12 @@
+{"id":"d07","kind":"official docs","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":0,"D":0},
+ "worst":"A: omits the easy/hard case recovery (git rebase --onto) and the ripple-effect warning, and says nothing on what git rebase does",
+ "worst_summary_quote":"For the current wording and the full recovery steps, check the `git-rebase` page on git-scm.com",
+ "worst_page_quote":"The ripple effect of a \"hard case\" recovery is especially bad:",
+ "worst_page_url":"https://code.googlesource.com/git/+/90d1c08efcf9c688df207588d9b72178524a62b6%5E%21",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader gets the core warning right but would not know that recovery splits into easy and hard cases, or that a hard-case recovery forces everyone downstream to redo it.",
+ "verbatim_source":"transcript",
+ "pages_compared":1,"pages_reused":1,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"no",
+ "notes":"Same 9 links as Haiku round; only the commit diff page gave over 2000 chars (3 others retried, under 2000). Opus summary is hedged and points the reader to the current man page; it does not claim the recovery commands are absent. Question part on what git rebase does is unanswered."}

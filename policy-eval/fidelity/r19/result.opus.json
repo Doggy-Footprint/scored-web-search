@@ -1,0 +1,6 @@
+{"id":"r19","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":1,"C":0,"D":0},
+ "worst":"B: says the two studies 'agree that the direction of effect is unclear', though they report opposite directions (depression->use vs use->depression)","worst_summary_quote":"the two studies agree that the direction of effect is unclear","worst_page_quote":"depressive symptoms predicted small increases in active social media use during both early and late adolescence","worst_page_url":"https://pmc.ncbi.nlm.nih.gov/articles/PMC7459880/",
+ "quote_verified":true,"reader_gets_wrong":"A reader may think the studies concur on uncertainty, when each finds a clear but opposite direction, and may not know the news article itself reports a 7-9% rise rather than tripling.","verbatim_source":"transcript",
+ "pages_compared":2,"pages_reused":2,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes","notes":"Same 10 links as Haiku round. Usable pages: PMC Finnish study and fox7 (JAMA page blocked by bot check; fox duplicates skipped). Omits Finnish Helsinki-only sample limitation and fox 7-9% figure, like Haiku round; headline-tripling caution is correct. Core Finnish and ABCD facts (2891, 13-19, five waves, 11,876, 1 year) match pages."}

@@ -1,0 +1,81 @@
+{
+ "id": "d07",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "B",
+   "run": 1,
+   "chars": 2885,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: omits that a hard-case recovery forces everyone downstream to redo a hard-case recovery",
+   "worst_summary_quote": "Otherwise it is a \"hard case\" that requires manual intervention.",
+   "worst_page_quote": "The ripple effect of a \"hard case\" recovery is especially bad",
+   "quote_verified": true,
+   "notes": "Final bullet 'Rebasing is generally fine for local, unpublished work' is not stated by the page (inference, minor C-like, not counted as material)."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 1,
+   "chars": 3083,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Hedged absence statement ('not found in the text read') is accurate; page has no never-rebase-published or force-push guidance."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 2,
+   "chars": 2637,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "Covers duplication, ripple, hard-case ripple, resurrected commits, recommendation."
+  },
+  {
+   "slot": "S4",
+   "arm": "T",
+   "run": 2,
+   "chars": 2813,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none material",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "'Page does not use the word published' is correct; hedged absence claims accurate."
+  }
+ ]
+}

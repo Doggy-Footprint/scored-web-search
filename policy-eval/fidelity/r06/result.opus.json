@@ -1,0 +1,6 @@
+{"id":"r06","kind":"research","caller":"opus",
+ "verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},
+ "worst":"none material; minor wording: '7 points' vs page '7% improvement'","worst_summary_quote":"a gain of more than 7 points over Gopher","worst_page_quote":"greater than a 7% improvement over Gopher","worst_page_url":"https://arxiv.org/abs/2203.15556",
+ "quote_verified":true,"reader_gets_wrong":"Nothing material; points-vs-percent wording is a negligible imprecision.","verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes","notes":"Opus summary attributes the OpenAI contrast to secondary sources (supported by analyticsvidhya) and flags that only abstracts were covered; the 20 tokens/parameter ratio is not stated."}

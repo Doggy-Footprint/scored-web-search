@@ -1,0 +1,4851 @@
+{
+ "ac1": {
+  "id": "ac1",
+  "mode": "academic",
+  "field": "ai",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": true,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 19,
+    "duration_s": 152,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "3": 3
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 24,
+       "5": 28,
+       "1": 3,
+       "2": 4
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "3": 2
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 1,
+       "3": 4,
+       "2": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 10,
+     "main_ok": 8,
+     "main_by_label": {
+      "unlabeled": 6,
+      "useful": 2
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 2,
+      "SUPPORT": 4,
+      "unscored-in-run": 2
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://aigi.ox.ac.uk/publications/chain-of-thought-is-not-explainability/",
+      "code": null,
+      "error": "The safety check for domain aigi.ox.ac.uk is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or sleep t"
+     },
+     {
+      "url": "https://openai.com/index/evaluating-chain-of-thought-monitorability/",
+      "code": null,
+      "error": "The safety check for domain openai.com is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or sleep to w"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.6966,
+     "eval_cost_usd": 0.6966137449999998,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 20,
+       "outputTokens": 11001,
+       "cacheReadInputTokens": 284594,
+       "cacheCreationInputTokens": 37375,
+       "webSearchRequests": 0,
+       "costUSD": 0.5760188
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 260893,
+       "outputTokens": 25156,
+       "cacheReadInputTokens": 5827,
+       "cacheCreationInputTokens": 14955,
+       "webSearchRequests": 8,
+       "costUSD": 0.12059494500000001
+      }
+     },
+     "by_role_usd": {
+      "main": 0.576,
+      "searcher": 0.0061
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 13,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0345
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 11,
+     "UNJUDGED|useful": 2
+    },
+    "searcher_contract": {
+     "returns": 2,
+     "records": 69,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 45412,
+    "report_chars": 5363,
+    "read_urls": [
+     "https://aclanthology.org/2025.emnlp-main.504",
+     "https://aigi.ox.ac.uk/publications/chain-of-thought-is-not-explainability",
+     "https://arxiv.org/abs/2305.04388",
+     "https://arxiv.org/abs/2307.13702",
+     "https://arxiv.org/abs/2503.08679",
+     "https://arxiv.org/abs/2505.05410",
+     "https://arxiv.org/pdf/2307.13702",
+     "https://arxiv.org/pdf/2503.08679"
+    ],
+    "useful_reached": [
+     "https://anthropic.com/research/measuring-faithfulness-in-chain-of-thought-reasoning",
+     "https://arxiv.org/html/2305.04388v2",
+     "https://arxiv.org/pdf/2307.13702",
+     "https://arxiv.org/pdf/2503.08679",
+     "https://arxiv.org/pdf/2510.27378"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 6,
+    "duration_s": 50,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 23,
+       "1": 2
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.4815,
+     "eval_cost_usd": 0.4815364,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 41077,
+       "outputTokens": 7358,
+       "cacheReadInputTokens": 60422,
+       "cacheCreationInputTokens": 15998,
+       "webSearchRequests": 3,
+       "costUSD": 0.4815364
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2019
+     },
+     "web_search_requests": 3,
+     "web_search_usd": 0.03,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.2496
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 3,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 24035,
+    "report_chars": 5459,
+    "read_urls": [],
+    "useful_reached": [
+     "https://arxiv.org/html/2503.08679v4"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://arxiv.org/html/2503.08679v4"
+   ],
+   "useful_only_with": [
+    "https://anthropic.com/research/measuring-faithfulness-in-chain-of-thought-reasoning",
+    "https://arxiv.org/html/2305.04388v2",
+    "https://arxiv.org/pdf/2307.13702",
+    "https://arxiv.org/pdf/2503.08679",
+    "https://arxiv.org/pdf/2510.27378"
+   ]
+  }
+ },
+ "ac2": {
+  "id": "ac2",
+  "mode": "academic",
+  "field": "med",
+  "expansion": false,
+  "n_labels": 54,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 21,
+    "duration_s": 187,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "2": 1
+      },
+      "marginal": {
+       "1": 2,
+       "5": 2,
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "1": 14,
+       "5": 18,
+       "2": 5,
+       "3": 2,
+       "4": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "2": 1,
+       "1": 2
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 13,
+     "main_ok": 3,
+     "main_by_label": {
+      "unlabeled": 3
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 3
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9542252/",
+      "code": null,
+      "error": "The safety check for domain pmc.ncbi.nlm.nih.gov is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or "
+     },
+     {
+      "url": "https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2841273",
+      "code": null,
+      "error": "The safety check for domain jamanetwork.com is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or sleep"
+     },
+     {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13043475/",
+      "code": null,
+      "error": "The safety check for domain pmc.ncbi.nlm.nih.gov is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or "
+     },
+     {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13564392",
+      "code": null,
+      "error": "The safety check for domain pmc.ncbi.nlm.nih.gov is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or "
+     },
+     {
+      "url": "https://pubmed.ncbi.nlm.nih.gov/40186344/",
+      "code": null,
+      "error": "The safety check for domain pubmed.ncbi.nlm.nih.gov is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop "
+     },
+     {
+      "url": "https://www.thelancet.com/journals/eclinm/article/PIIS2589-5370(25)00614-5/fulltext",
+      "code": null,
+      "error": "The safety check for domain www.thelancet.com is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or sle"
+     },
+     {
+      "url": "https://dom-pubs.onlinelibrary.wiley.com/doi/10.1111/dom.14725",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/obr.13929",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.mdpi.com/2218-1989/16/10/757",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.6916,
+     "eval_cost_usd": 0.6916419450000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 22,
+       "outputTokens": 10864,
+       "cacheReadInputTokens": 314688,
+       "cacheCreationInputTokens": 36701,
+       "webSearchRequests": 0,
+       "costUSD": 0.5739135999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 231599,
+       "outputTokens": 25025,
+       "cacheReadInputTokens": 12057,
+       "cacheCreationInputTokens": 15483,
+       "webSearchRequests": 8,
+       "costUSD": 0.117728345
+      }
+     },
+     "by_role_usd": {
+      "main": 0.5739,
+      "searcher": 0.0056
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 4,
+     "tool_internal_usd": {
+      "claude-opus-5-5": -0.0,
+      "claude-haiku-5-5": 0.0321
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 3,
+     "UNJUDGED|useful": 1
+    },
+    "searcher_contract": {
+     "returns": 1,
+     "records": 49,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 44738,
+    "report_chars": 4068,
+    "read_urls": [
+     "https://doi.org/10.3390/metabo16100757",
+     "https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2841273",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC13043475"
+    ],
+    "useful_reached": [
+     "https://acc.org/latest-in-cardiology/journal-scans/2025/12/09/16/51/surmount-4",
+     "https://repository.cam.ac.uk/items/c307d6a7-8d00-4aa9-aa6a-f65a59e178c1"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 9,
+    "duration_s": 63,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "5": 1,
+       "2": 1
+      },
+      "marginal": {
+       "5": 3,
+       "3": 1,
+       "1": 1,
+       "2": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 28,
+       "1": 15,
+       "3": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.8036,
+     "eval_cost_usd": 0.8036472,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 80275,
+       "outputTokens": 11320,
+       "cacheReadInputTokens": 85296,
+       "cacheCreationInputTokens": 22386,
+       "webSearchRequests": 6,
+       "costUSD": 0.8036472
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2669
+     },
+     "web_search_requests": 6,
+     "web_search_usd": 0.06,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.4767
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 6,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 30423,
+    "report_chars": 5451,
+    "read_urls": [],
+    "useful_reached": [
+     "https://acc.org/latest-in-cardiology/journal-scans/2025/12/09/16/51/surmount-4",
+     "https://repository.cam.ac.uk/items/c307d6a7-8d00-4aa9-aa6a-f65a59e178c1"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [],
+   "useful_only_with": []
+  }
+ },
+ "ac3": {
+  "id": "ac3",
+  "mode": "academic",
+  "field": "bio",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 29,
+    "duration_s": 180,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "2": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 11,
+       "1": 10,
+       "3": 7,
+       "2": 8
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 17
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 21,
+     "main_ok": 17,
+     "main_by_label": {
+      "unlabeled": 17
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 9,
+      "unscored-in-run": 8
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.cell.com/stem-cell-reports/fulltext/S2213-6711(24)00217-0",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.cell.com/cell-stem-cell/abstract/S1934-5909(25)00435-7",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://spj.science.org/doi/10.34133/bmr.0104",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.annualreviews.org/content/journals/10.1146/annurev-genom-111522-014009",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.727,
+     "eval_cost_usd": 0.726979595,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 22,
+       "outputTokens": 10842,
+       "cacheReadInputTokens": 327264,
+       "cacheCreationInputTokens": 41536,
+       "webSearchRequests": 0,
+       "costUSD": 0.6146688
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 372184,
+       "outputTokens": 27603,
+       "cacheReadInputTokens": 2902,
+       "cacheCreationInputTokens": 10095,
+       "webSearchRequests": 6,
+       "costUSD": 0.11231079500000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.6147,
+      "searcher": 0.0046
+     },
+     "web_search_requests": 6,
+     "web_search_usd": 0.06,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 5,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0477
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 4,
+     "UNJUDGED|useful": 1
+    },
+    "searcher_contract": {
+     "returns": 1,
+     "records": 46,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 6,
+    "main_peak_context_tokens": 49573,
+    "report_chars": 5864,
+    "read_urls": [
+     "https://idp.nature.com/authorize?response_type=cookie&client_id=grover&redirect_uri=https%3A%2F%2Fwww.nature.com%2Farticles%2Fs41586-019-1289-x",
+     "https://idp.nature.com/authorize?response_type=cookie&client_id=grover&redirect_uri=https%3A%2F%2Fwww.nature.com%2Farticles%2Fs41586-020-1962-0",
+     "https://idp.nature.com/authorize?response_type=cookie&client_id=grover&redirect_uri=https%3A%2F%2Fwww.nature.com%2Farticles%2Fs41586-024-08172-8",
+     "https://nature.com/articles/s41467-024-55226-6",
+     "https://nature.com/articles/s41586-019-1289-x",
+     "https://nature.com/articles/s41586-019-1289-x?error=cookies_not_supported&code=52ddaf40-6fca-4be9-83ee-f285b2a162f9",
+     "https://nature.com/articles/s41586-020-1962-0",
+     "https://nature.com/articles/s41586-020-1962-0?error=cookies_not_supported&code=1f1a1083-163c-4fef-95a6-8b426afa11f7",
+     "https://nature.com/articles/s41586-024-08172-8",
+     "https://nature.com/articles/s41586-024-08172-8?error=cookies_not_supported&code=4c0b57c9-fee5-4f8a-9b5a-214e6b7ba2ff",
+     "https://ncbi.nlm.nih.gov/pmc/articles/PMC10081321",
+     "https://ncbi.nlm.nih.gov/pmc/articles/PMC12577693",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC10081321",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12577693",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12715241",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12946753",
+     "https://pubmed.ncbi.nlm.nih.gov/31996853"
+    ],
+    "useful_reached": [
+     "https://frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2019.00162/full"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 11,
+    "duration_s": 77,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "1": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 28,
+       "3": 6
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 2,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10402155/",
+      "code": null,
+      "error": "The safety check for domain pmc.ncbi.nlm.nih.gov is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or "
+     },
+     {
+      "url": "https://www.nature.com/articles/s41586-019-1289-x",
+      "code": null,
+      "error": "The safety check for domain www.nature.com is rate-limited (too many domain checks from this network; the limit is shared and can stay exhausted for minutes). Do not retry WebFetch in a loop or sleep "
+     }
+    ],
+    "cost": {
+     "total_usd": 0.5949,
+     "eval_cost_usd": 0.5949184,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 57512,
+       "outputTokens": 7788,
+       "cacheReadInputTokens": 131352,
+       "cacheCreationInputTokens": 17855,
+       "webSearchRequests": 4,
+       "costUSD": 0.5949184
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2413
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.3136
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 6,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 25892,
+    "report_chars": 4890,
+    "read_urls": [],
+    "useful_reached": [
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC10402155"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC10402155"
+   ],
+   "useful_only_with": [
+    "https://frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2019.00162/full"
+   ]
+  }
+ },
+ "ac6": {
+  "id": "ac6",
+  "mode": "academic",
+  "field": "ai",
+  "expansion": true,
+  "n_labels": 55,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 22,
+    "duration_s": 139,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "3": 2
+      },
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "3": 28,
+       "5": 12,
+       "2": 3,
+       "1": 2
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 4,
+       "3": 6
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 13,
+     "main_ok": 11,
+     "main_by_label": {
+      "unlabeled": 10,
+      "useful": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 5,
+      "PRIMARY": 6
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.pnas.org/doi/10.1073/pnas.1611835114",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://dl.acm.org/doi/abs/10.5555/3666122.3667316",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.6814,
+     "eval_cost_usd": 0.6814037099999998,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 18,
+       "outputTokens": 10297,
+       "cacheReadInputTokens": 247222,
+       "cacheCreationInputTokens": 35458,
+       "webSearchRequests": 0,
+       "costUSD": 0.5391203999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 475206,
+       "outputTokens": 26115,
+       "cacheReadInputTokens": 5996,
+       "cacheCreationInputTokens": 13162,
+       "webSearchRequests": 8,
+       "costUSD": 0.14228331
+      }
+     },
+     "by_role_usd": {
+      "main": 0.5391,
+      "searcher": 0.0052
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 8,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0571
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 7,
+     "UNJUDGED|useful": 1
+    },
+    "searcher_contract": {
+     "returns": 2,
+     "records": 55,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 43495,
+    "report_chars": 5733,
+    "read_urls": [
+     "https://aclanthology.org/2025.emnlp-main.1108",
+     "https://aclanthology.org/2025.emnlp-main.1108.pdf",
+     "https://arxiv.org/abs/1612.00796",
+     "https://arxiv.org/abs/1802.07569",
+     "https://arxiv.org/abs/2410.21228",
+     "https://arxiv.org/html/2308.08747v4",
+     "https://arxiv.org/pdf/1612.00796",
+     "https://arxiv.org/pdf/1802.07569",
+     "https://arxiv.org/pdf/2410.21228",
+     "https://ncbi.nlm.nih.gov/pmc/articles/PMC9674146",
+     "https://pmc.ncbi.nlm.nih.gov/articles/PMC9674146"
+    ],
+    "useful_reached": [
+     "https://arxiv.org/pdf/1612.00796",
+     "https://arxiv.org/pdf/2202.10054",
+     "https://arxiv.org/pdf/2308.08747"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 9,
+    "duration_s": 73,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "3": 4
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 49,
+       "1": 3,
+       "2": 2
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.7943,
+     "eval_cost_usd": 0.7942859999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 84219,
+       "outputTokens": 10912,
+       "cacheReadInputTokens": 84970,
+       "cacheCreationInputTokens": 20272,
+       "webSearchRequests": 6,
+       "costUSD": 0.7942859999999999
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2514
+     },
+     "web_search_requests": 6,
+     "web_search_usd": 0.06,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.4829
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 6,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 28309,
+    "report_chars": 6186,
+    "read_urls": [],
+    "useful_reached": [
+     "https://arxiv.org/html/2405.09673v2",
+     "https://arxiv.org/pdf/1612.00796",
+     "https://arxiv.org/pdf/2202.10054",
+     "https://arxiv.org/pdf/2308.08747"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://arxiv.org/html/2405.09673v2"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "na1": {
+  "id": "na1",
+  "mode": "non-academic",
+  "field": "cs",
+  "expansion": false,
+  "n_labels": 57,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 17,
+    "duration_s": 183,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 2
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "5": 92,
+       "3": 21,
+       "4": 8,
+       "2": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 5
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 5,
+     "main_ok": 5,
+     "main_by_label": {
+      "unlabeled": 5
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 5
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.9594,
+     "eval_cost_usd": 0.9593953349999998,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 20,
+       "outputTokens": 11656,
+       "cacheReadInputTokens": 298273,
+       "cacheCreationInputTokens": 43484,
+       "webSearchRequests": 0,
+       "costUSD": 0.6407265999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 396133,
+       "outputTokens": 47552,
+       "cacheReadInputTokens": 34381,
+       "cacheCreationInputTokens": 39485,
+       "webSearchRequests": 25,
+       "costUSD": 0.31866873500000004
+      }
+     },
+     "by_role_usd": {
+      "main": 0.6407,
+      "searcher": 0.0136
+     },
+     "web_search_requests": 25,
+     "web_search_usd": 0.25,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 3,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.055
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 3
+    },
+    "searcher_contract": {
+     "returns": 4,
+     "records": 145,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 25,
+    "main_peak_context_tokens": 51521,
+    "report_chars": 5923,
+    "read_urls": [
+     "https://github.com/ankane/strong_migrations",
+     "https://github.com/fabianlindfors/reshape",
+     "https://github.com/github/gh-ost",
+     "https://github.com/sbdchd/squawk",
+     "https://github.com/xataio/pgroll"
+    ],
+    "useful_reached": [
+     "https://bytebase.com/blog/postgres-schema-migration-without-downtime"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 7,
+    "duration_s": 65,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {
+       "5": 2
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 38,
+       "3": 3,
+       "4": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6889,
+     "eval_cost_usd": 0.6888929999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 70805,
+       "outputTokens": 9633,
+       "cacheReadInputTokens": 66065,
+       "cacheCreationInputTokens": 18725,
+       "webSearchRequests": 5,
+       "costUSD": 0.6888929999999999
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2303
+     },
+     "web_search_requests": 5,
+     "web_search_usd": 0.05,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.4086
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 5,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 26762,
+    "report_chars": 6883,
+    "read_urls": [],
+    "useful_reached": []
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [],
+   "useful_only_with": [
+    "https://bytebase.com/blog/postgres-schema-migration-without-downtime"
+   ]
+  }
+ },
+ "na2": {
+  "id": "na2",
+  "mode": "non-academic",
+  "field": "cs",
+  "expansion": false,
+  "n_labels": 50,
+  "scores_net_off": true,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 16,
+    "duration_s": 218,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {
+       "5": 4
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 91,
+       "3": 29,
+       "6": 2
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 9
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 10,
+     "main_ok": 9,
+     "main_by_label": {
+      "unlabeled": 9
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 4,
+      "SUPPORT": 4,
+      "unscored-in-run": 1
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://arxiv.org/pdf/2310.11703",
+      "code": null,
+      "error": "maxContentLength size of 10485760 exceeded"
+     }
+    ],
+    "cost": {
+     "total_usd": 1.0921,
+     "eval_cost_usd": 1.092083485,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 30,
+       "outputTokens": 13351,
+       "cacheReadInputTokens": 452339,
+       "cacheCreationInputTokens": 55911,
+       "webSearchRequests": 0,
+       "costUSD": 0.8048957999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 534008,
+       "outputTokens": 58389,
+       "cacheReadInputTokens": 28251,
+       "cacheCreationInputTokens": 34479,
+       "webSearchRequests": 20,
+       "costUSD": 0.28718768500000014
+      }
+     },
+     "by_role_usd": {
+      "main": 0.8049,
+      "other_subagent": 0.0132
+     },
+     "web_search_requests": 20,
+     "web_search_usd": 0.2,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 15,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.074
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 15
+    },
+    "searcher_contract": {
+     "returns": 3,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 20,
+    "main_peak_context_tokens": 63923,
+    "report_chars": 5482,
+    "read_urls": [
+     "https://arxiv.org/html/2603.23710",
+     "https://arxiv.org/pdf/2603.23710",
+     "https://github.com/erikbern/ann-benchmarks",
+     "https://github.com/pgvector/pgvector",
+     "https://github.com/qdrant/vector-db-benchmark",
+     "https://github.com/timescale/pgvectorscale",
+     "https://github.com/zilliztech/VectorDBBench",
+     "https://github.com/zilliztech/VectorDBBench/blob/main/vectordb_bench/results/leaderboard.json",
+     "https://postgresql.org/about/news/pgvector-080-released-2952"
+    ],
+    "useful_reached": []
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 6,
+    "duration_s": 49,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {
+       "5": 2
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 22,
+       "3": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.4569,
+     "eval_cost_usd": 0.4569464,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 41985,
+       "outputTokens": 6282,
+       "cacheReadInputTokens": 60232,
+       "cacheCreationInputTokens": 15165,
+       "webSearchRequests": 3,
+       "costUSD": 0.4569464
+      }
+     },
+     "by_role_usd": {
+      "main": 0.184
+     },
+     "web_search_requests": 3,
+     "web_search_usd": 0.03,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.2429
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 3,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 23202,
+    "report_chars": 4575,
+    "read_urls": [],
+    "useful_reached": [
+     "https://encore.dev/articles/best-vector-databases"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://encore.dev/articles/best-vector-databases"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "na3": {
+  "id": "na3",
+  "mode": "non-academic",
+  "field": "cs",
+  "expansion": false,
+  "n_labels": 53,
+  "scores_net_off": true,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 18,
+    "duration_s": 229,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 2
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "6": 1,
+       "5": 62,
+       "3": 20,
+       "4": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "3": 12
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 12,
+     "main_ok": 12,
+     "main_by_label": {
+      "unlabeled": 12
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 12
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 1.0846,
+     "eval_cost_usd": 1.084591335,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 32,
+       "outputTokens": 15842,
+       "cacheReadInputTokens": 487478,
+       "cacheCreationInputTokens": 54044,
+       "webSearchRequests": 0,
+       "costUSD": 0.8468156000000002
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 389669,
+       "outputTokens": 48824,
+       "cacheReadInputTokens": 43096,
+       "cacheCreationInputTokens": 31727,
+       "webSearchRequests": 17,
+       "costUSD": 0.23777573500000007
+      }
+     },
+     "by_role_usd": {
+      "main": 0.8468,
+      "other_subagent": 0.0111
+     },
+     "web_search_requests": 17,
+     "web_search_usd": 0.17,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 3,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0567
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 3
+    },
+    "searcher_contract": {
+     "returns": 3,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 3,
+    "searches_main": 0,
+    "searches_sub": 17,
+    "main_peak_context_tokens": 62081,
+    "report_chars": 6211,
+    "read_urls": [
+     "https://github.com/aws/karpenter-provider-aws/issues/7146",
+     "https://github.com/aws/karpenter-provider-aws/issues/7853",
+     "https://github.com/kubernetes-sigs/karpenter/issues/2705",
+     "https://github.com/kubernetes/autoscaler/issues/10137",
+     "https://github.com/kubernetes/autoscaler/issues/10356",
+     "https://github.com/kubernetes/autoscaler/issues/1574",
+     "https://github.com/kubernetes/autoscaler/issues/4774",
+     "https://github.com/kubernetes/autoscaler/issues/6705",
+     "https://github.com/kubernetes/autoscaler/issues/8424",
+     "https://github.com/kubernetes/autoscaler/issues/8817",
+     "https://github.com/kubernetes/autoscaler/issues/9111",
+     "https://github.com/kubernetes/kubernetes/issues/96938"
+    ],
+    "useful_reached": [
+     "https://scaleops.com/blog/kubernetes-hpa"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 7,
+    "duration_s": 76,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "3": 1,
+       "5": 1
+      },
+      "marginal": {
+       "5": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 25,
+       "3": 5,
+       "4": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6132,
+     "eval_cost_usd": 0.6132054,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 54834,
+       "outputTokens": 9785,
+       "cacheReadInputTokens": 83727,
+       "cacheCreationInputTokens": 17678,
+       "webSearchRequests": 4,
+       "costUSD": 0.6132054
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2409
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.3323
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 4,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 25715,
+    "report_chars": 7761,
+    "read_urls": [],
+    "useful_reached": [
+     "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up",
+     "https://scaleops.com/blog/kubernetes-hpa"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://docs.cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-up"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "na6": {
+  "id": "na6",
+  "mode": "non-academic",
+  "field": "cs",
+  "expansion": true,
+  "n_labels": 58,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 5,
+    "duration_s": 166,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 2
+      },
+      "marginal": {
+       "5": 1,
+       "4": 1
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "5": 66,
+       "3": 30,
+       "6": 2,
+       "4": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 1,
+     "main_ok": 1,
+     "main_by_label": {
+      "unlabeled": 1
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 1
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.8577,
+     "eval_cost_usd": 0.8577269600000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 36,
+       "outputTokens": 11648,
+       "cacheReadInputTokens": 424549,
+       "cacheCreationInputTokens": 43067,
+       "webSearchRequests": 0,
+       "costUSD": 0.6625498
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 279347,
+       "outputTokens": 27943,
+       "cacheReadInputTokens": 18071,
+       "cacheCreationInputTokens": 24722,
+       "webSearchRequests": 15,
+       "costUSD": 0.19517716000000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.6625,
+      "other_subagent": 0.0098
+     },
+     "web_search_requests": 15,
+     "web_search_usd": 0.15,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 2,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0354
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 2
+    },
+    "searcher_contract": {
+     "returns": 4,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 15,
+    "main_peak_context_tokens": 51079,
+    "report_chars": 3590,
+    "read_urls": [
+     "https://usenix.org/sites/default/files/conference/protected-files/sre23amer_slides_kleiman.pdf"
+    ],
+    "useful_reached": [
+     "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter",
+     "https://groundcover.com/learn/performance/cascading-failures"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 8,
+    "duration_s": 78,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "5": 3
+      },
+      "marginal": {
+       "5": 2
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "3": 4,
+       "4": 2,
+       "5": 25
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.5633,
+     "eval_cost_usd": 0.563293,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 50414,
+       "outputTokens": 8073,
+       "cacheReadInputTokens": 101645,
+       "cacheCreationInputTokens": 17481,
+       "webSearchRequests": 4,
+       "costUSD": 0.563293
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2202
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.303
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 4,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 25518,
+    "report_chars": 5581,
+    "read_urls": [],
+    "useful_reached": [
+     "https://aws.amazon.com/builders-library/timeouts-retries-and-backoff-with-jitter",
+     "https://oneuptime.com/blog/post/2026-01-24-cascading-failures-microservices/view",
+     "https://sre.google/sre-book/addressing-cascading-failures"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://oneuptime.com/blog/post/2026-01-24-cascading-failures-microservices/view",
+    "https://sre.google/sre-book/addressing-cascading-failures"
+   ],
+   "useful_only_with": [
+    "https://groundcover.com/learn/performance/cascading-failures"
+   ]
+  }
+ },
+ "co1": {
+  "id": "co1",
+  "mode": "community-opinion",
+  "field": "opinion",
+  "expansion": false,
+  "n_labels": 54,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 18,
+    "duration_s": 142,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "4": 1,
+       "5": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 43,
+       "4": 1,
+       "3": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 9
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 9,
+     "main_ok": 9,
+     "main_by_label": {
+      "unlabeled": 9
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 9
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.632,
+     "eval_cost_usd": 0.6320157800000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 18,
+       "outputTokens": 8519,
+       "cacheReadInputTokens": 225427,
+       "cacheCreationInputTokens": 34241,
+       "webSearchRequests": 0,
+       "costUSD": 0.48946540000000005
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 443870,
+       "outputTokens": 33074,
+       "cacheReadInputTokens": 5938,
+       "cacheCreationInputTokens": 12536,
+       "webSearchRequests": 8,
+       "costUSD": 0.14255037999999998
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4895,
+      "searcher": 0.0052
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 1,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0573
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 1
+    },
+    "searcher_contract": {
+     "returns": 2,
+     "records": 57,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 42278,
+    "report_chars": 5411,
+    "read_urls": [
+     "https://news.ycombinator.com/item?id=42336553",
+     "https://news.ycombinator.com/item?id=45230677",
+     "https://news.ycombinator.com/item?id=45405177",
+     "https://news.ycombinator.com/item?id=46542036",
+     "https://news.ycombinator.com/item?id=46820924",
+     "https://news.ycombinator.com/item?id=46866481",
+     "https://news.ycombinator.com/item?id=47077676",
+     "https://news.ycombinator.com/item?id=47388646",
+     "https://news.ycombinator.com/item?id=47648828"
+    ],
+    "useful_reached": [
+     "https://addyo.substack.com/p/the-reality-of-ai-assisted-software",
+     "https://theregister.com/2025/07/11/ai_code_tools_slow_down"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 9,
+    "duration_s": 76,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "5": 2
+      },
+      "marginal": {
+       "5": 2,
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 33,
+       "1": 1,
+       "4": 2,
+       "3": 4
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 1,
+     "main_ok": 1,
+     "main_by_label": {
+      "unlabeled": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 1
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6623,
+     "eval_cost_usd": 0.6623473999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 66152,
+       "outputTokens": 8582,
+       "cacheReadInputTokens": 109029,
+       "cacheCreationInputTokens": 19131,
+       "webSearchRequests": 5,
+       "costUSD": 0.6611018
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 5336,
+       "outputTokens": 1424,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0012456
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2326
+     },
+     "web_search_requests": 5,
+     "web_search_usd": 0.05,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.3785,
+      "claude-haiku-5-5": 0.0012
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 5,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 27168,
+    "report_chars": 4804,
+    "read_urls": [
+     "https://metr.org/blog/2026-02-24-uplift-update"
+    ],
+    "useful_reached": [
+     "https://addyo.substack.com/p/the-reality-of-ai-assisted-software",
+     "https://research.ibm.com/publications/examining-the-use-and-impact-of-an-ai-code-assistant-on-developer-productivity-and-experience-in-the-enterprise"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://research.ibm.com/publications/examining-the-use-and-impact-of-an-ai-code-assistant-on-developer-productivity-and-experience-in-the-enterprise"
+   ],
+   "useful_only_with": [
+    "https://theregister.com/2025/07/11/ai_code_tools_slow_down"
+   ]
+  }
+ },
+ "co2": {
+  "id": "co2",
+  "mode": "community-opinion",
+  "field": "opinion",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": true,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 16,
+    "duration_s": 130,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {
+       "5": 2
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 27,
+       "1": 8,
+       "3": 1,
+       "6": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 8
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 8,
+     "main_ok": 8,
+     "main_by_label": {
+      "unlabeled": 8
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 8
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6188,
+     "eval_cost_usd": 0.618843695,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 14,
+       "outputTokens": 7732,
+       "cacheReadInputTokens": 152685,
+       "cacheCreationInputTokens": 35522,
+       "webSearchRequests": 0,
+       "costUSD": 0.4694089999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 402184,
+       "outputTokens": 34531,
+       "cacheReadInputTokens": 15242,
+       "cacheCreationInputTokens": 14387,
+       "webSearchRequests": 9,
+       "costUSD": 0.149434695
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4694,
+      "searcher": 0.0045
+     },
+     "web_search_requests": 9,
+     "web_search_usd": 0.09,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": -0.0,
+      "claude-haiku-5-5": 0.055
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 2,
+     "records": 53,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 9,
+    "main_peak_context_tokens": 43559,
+    "report_chars": 5851,
+    "read_urls": [
+     "https://news.ycombinator.com/item?id=17565508",
+     "https://news.ycombinator.com/item?id=25014582",
+     "https://news.ycombinator.com/item?id=28650586",
+     "https://news.ycombinator.com/item?id=31284846",
+     "https://news.ycombinator.com/item?id=32366759",
+     "https://news.ycombinator.com/item?id=40521518",
+     "https://news.ycombinator.com/item?id=40981850",
+     "https://news.ycombinator.com/item?id=46264704"
+    ],
+    "useful_reached": []
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 5,
+    "duration_s": 48,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "4": 1,
+       "1": 2,
+       "5": 20,
+       "block": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.4439,
+     "eval_cost_usd": 0.4438788,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 39627,
+       "outputTokens": 6412,
+       "cacheReadInputTokens": 42574,
+       "cacheCreationInputTokens": 14827,
+       "webSearchRequests": 3,
+       "costUSD": 0.4438788
+      }
+     },
+     "by_role_usd": {
+      "main": 0.1759
+     },
+     "web_search_requests": 3,
+     "web_search_usd": 0.03,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.2379
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 3,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 22864,
+    "report_chars": 5203,
+    "read_urls": [],
+    "useful_reached": [
+     "https://softwareengineeringdaily.com/2024/10/16/the-end-of-graphql-matt-bessey"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://softwareengineeringdaily.com/2024/10/16/the-end-of-graphql-matt-bessey"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "co3": {
+  "id": "co3",
+  "mode": "community-opinion",
+  "field": "opinion",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": true,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 24,
+    "duration_s": 256,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {
+       "5": 3
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 86,
+       "1": 50,
+       "4": 7,
+       "3": 37
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 12
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 12,
+     "main_ok": 12,
+     "main_by_label": {
+      "unlabeled": 12
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 12
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 1.1783,
+     "eval_cost_usd": 1.17830862,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 20,
+       "outputTokens": 12842,
+       "cacheReadInputTokens": 318900,
+       "cacheCreationInputTokens": 55044,
+       "webSearchRequests": 0,
+       "costUSD": 0.7610520000000001
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 839667,
+       "outputTokens": 74093,
+       "cacheReadInputTokens": 53217,
+       "cacheCreationInputTokens": 45690,
+       "webSearchRequests": 29,
+       "costUSD": 0.41725661999999997
+      }
+     },
+     "by_role_usd": {
+      "main": 0.7611,
+      "searcher": 0.0197
+     },
+     "web_search_requests": 29,
+     "web_search_usd": 0.29,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 4,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.1076
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 4
+    },
+    "searcher_contract": {
+     "returns": 3,
+     "records": 207,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 34,
+    "main_peak_context_tokens": 63081,
+    "report_chars": 6020,
+    "read_urls": [
+     "https://github.com/QwenLM/Qwen-Image-2.1/issues/13",
+     "https://github.com/QwenLM/Qwen/issues/778",
+     "https://github.com/xigh/open-weight-models",
+     "https://news.ycombinator.com/item?id=36815255",
+     "https://news.ycombinator.com/item?id=40077533",
+     "https://news.ycombinator.com/item?id=40512250",
+     "https://news.ycombinator.com/item?id=43676254",
+     "https://news.ycombinator.com/item?id=47616361",
+     "https://news.ycombinator.com/item?id=47949642",
+     "https://news.ycombinator.com/item?id=48935342",
+     "https://news.ycombinator.com/item?id=49775499",
+     "https://news.ycombinator.com/item?id=50107379"
+    ],
+    "useful_reached": []
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 12,
+    "duration_s": 82,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 36,
+       "3": 9,
+       "1": 4,
+       "4": 2
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "4": 1,
+       "5": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 2,
+     "main_ok": 2,
+     "main_by_label": {
+      "unlabeled": 2
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 2
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.7966,
+     "eval_cost_usd": 0.7965505999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 78932,
+       "outputTokens": 10822,
+       "cacheReadInputTokens": 129496,
+       "cacheCreationInputTokens": 21915,
+       "webSearchRequests": 6,
+       "costUSD": 0.7933872
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 18179,
+       "outputTokens": 2691,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0031634000000000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2769
+     },
+     "web_search_requests": 6,
+     "web_search_usd": 0.06,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.4565,
+      "claude-haiku-5-5": 0.0032
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 6,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 29952,
+    "report_chars": 5643,
+    "read_urls": [
+     "https://theregister.com/columnists/2026/09/15/open-weights-are-not-open-source-why-ais-favorite-label-is-under-dispute/5295436",
+     "https://venturebeat.com/technology/kimi-k3s-full-weights-are-here-but-theyre-open-with-a-caveat-what-enterprises-should-know"
+    ],
+    "useful_reached": []
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [],
+   "useful_only_with": []
+  }
+ },
+ "co6": {
+  "id": "co6",
+  "mode": "community-opinion",
+  "field": "opinion",
+  "expansion": true,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 11,
+    "duration_s": 123,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 5
+      },
+      "marginal": {
+       "5": 5
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 40,
+       "3": 4,
+       "4": 1,
+       "1": 2
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 8
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 8,
+     "main_ok": 8,
+     "main_by_label": {
+      "unlabeled": 8
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 8
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.7424,
+     "eval_cost_usd": 0.7424311700000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 28,
+       "outputTokens": 7922,
+       "cacheReadInputTokens": 287868,
+       "cacheCreationInputTokens": 39868,
+       "webSearchRequests": 0,
+       "costUSD": 0.5350696
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 426731,
+       "outputTokens": 43088,
+       "cacheReadInputTokens": 18747,
+       "cacheCreationInputTokens": 23656,
+       "webSearchRequests": 14,
+       "costUSD": 0.20736157
+      }
+     },
+     "by_role_usd": {
+      "main": 0.5351,
+      "other_subagent": 0.0102
+     },
+     "web_search_requests": 14,
+     "web_search_usd": 0.14,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 3,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0572
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 3
+    },
+    "searcher_contract": {
+     "returns": 3,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 14,
+    "main_peak_context_tokens": 47905,
+    "report_chars": 5639,
+    "read_urls": [
+     "https://news.ycombinator.com/item?id=43074852",
+     "https://news.ycombinator.com/item?id=43454816",
+     "https://news.ycombinator.com/item?id=43953226",
+     "https://news.ycombinator.com/item?id=44222494",
+     "https://news.ycombinator.com/item?id=46291504",
+     "https://news.ycombinator.com/item?id=46424233",
+     "https://news.ycombinator.com/item?id=46866165",
+     "https://news.ycombinator.com/item?id=47206663"
+    ],
+    "useful_reached": [
+     "https://adarshd.substack.com/p/will-ai-replace-junior-developers",
+     "https://addyo.substack.com/p/ai-wont-kill-junior-devs-but-your",
+     "https://cio.com/article/4196339/how-do-you-go-from-junior-to-staff-engineer-when-ai-writes-the-code.html",
+     "https://developers.slashdot.org/story/25/02/17/1317210/new-junior-developers-cant-actually-code",
+     "https://engineeringenablement.substack.com/p/5-strategies-for-mentoring-junior"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 7,
+    "duration_s": 54,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {
+       "5": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 24,
+       "3": 4,
+       "1": 8
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.5593,
+     "eval_cost_usd": 0.5592959999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 55001,
+       "outputTokens": 7507,
+       "cacheReadInputTokens": 83360,
+       "cacheCreationInputTokens": 16560,
+       "webSearchRequests": 4,
+       "costUSD": 0.5592959999999999
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2028
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.3165
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 4,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 24597,
+    "report_chars": 5057,
+    "read_urls": [],
+    "useful_reached": []
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [],
+   "useful_only_with": [
+    "https://adarshd.substack.com/p/will-ai-replace-junior-developers",
+    "https://addyo.substack.com/p/ai-wont-kill-junior-devs-but-your",
+    "https://cio.com/article/4196339/how-do-you-go-from-junior-to-staff-engineer-when-ai-writes-the-code.html",
+    "https://developers.slashdot.org/story/25/02/17/1317210/new-junior-developers-cant-actually-code",
+    "https://engineeringenablement.substack.com/p/5-strategies-for-mentoring-junior"
+   ]
+  }
+ },
+ "nw1": {
+  "id": "nw1",
+  "mode": "news",
+  "field": "news",
+  "expansion": false,
+  "n_labels": 54,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 14,
+    "duration_s": 121,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "3": 6,
+       "5": 20,
+       "2": 2
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "3": 3,
+       "2": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 6,
+     "main_ok": 5,
+     "main_by_label": {
+      "unlabeled": 4,
+      "marginal": 1
+     },
+     "main_by_in_run_verdict": {
+      "SUPPORT": 5
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.consilium.europa.eu/en/policies/artificial-intelligence-act/timeline-artificial-intelligence/",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.5061,
+     "eval_cost_usd": 0.5060883350000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 14,
+       "outputTokens": 7986,
+       "cacheReadInputTokens": 157285,
+       "cacheCreationInputTokens": 30195,
+       "webSearchRequests": 0,
+       "costUSD": 0.432793
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 134019,
+       "outputTokens": 17343,
+       "cacheReadInputTokens": 10906,
+       "cacheCreationInputTokens": 8903,
+       "webSearchRequests": 5,
+       "costUSD": 0.07329533499999999
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4328,
+      "searcher": 0.0031
+     },
+     "web_search_requests": 5,
+     "web_search_usd": 0.05,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 15,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0202
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 12,
+     "UNJUDGED|marginal": 2,
+     "UNJUDGED|useful": 1
+    },
+    "searcher_contract": {
+     "returns": 1,
+     "records": 35,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 5,
+    "main_peak_context_tokens": 38232,
+    "report_chars": 4255,
+    "read_urls": [
+     "https://artificialintelligenceact.eu/ai-act-explorer/digital-omnibus",
+     "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+     "https://gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes",
+     "https://morganlewis.com/pubs/2026/06/eu-approves-delays-and-other-amendments-to-certain-eu-ai-act-obligations-what-businesses-should-know",
+     "https://orrick.com/en/Insights/2026/07/EU-AI-Act-Update-Digital-Omnibus-Finalizes-8-Compliance-Changes"
+    ],
+    "useful_reached": [
+     "https://knowledge.dlapiper.com/dlapiperknowledge/globalemploymentlatestdevelopments/2026/The-Digital-AI-Omnibus-Proposed-deferral-of-high-risk-AI-obligations-under-the-AI-Act"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 8,
+    "duration_s": 69,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "3": 2,
+       "5": 11,
+       "2": 1
+      }
+     },
+     "read": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 2,
+     "main_ok": 1,
+     "main_by_label": {
+      "useful": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 1
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.consilium.europa.eu/en/policies/artificial-intelligence-act/timeline-artificial-intelligence/",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.3856,
+     "eval_cost_usd": 0.38558089999999995,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 27848,
+       "outputTokens": 5481,
+       "cacheReadInputTokens": 120966,
+       "cacheCreationInputTokens": 14793,
+       "webSearchRequests": 2,
+       "costUSD": 0.3835491999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 13147,
+       "outputTokens": 1434,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0020317
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2011
+     },
+     "web_search_requests": 2,
+     "web_search_usd": 0.02,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.1625,
+      "claude-haiku-5-5": 0.002
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 2,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 22830,
+    "report_chars": 4371,
+    "read_urls": [
+     "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus"
+    ],
+    "useful_reached": [
+     "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus",
+     "https://knowledge.dlapiper.com/dlapiperknowledge/globalemploymentlatestdevelopments/2026/The-Digital-AI-Omnibus-Proposed-deferral-of-high-risk-AI-obligations-under-the-AI-Act"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://fpf.org/blog/the-ai-act-implementation-timeline-what-changes-under-the-ai-omnibus"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "nw2": {
+  "id": "nw2",
+  "mode": "news",
+  "field": "news",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 20,
+    "duration_s": 226,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 2
+      },
+      "marginal": {
+       "5": 6
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 60,
+       "4": 9,
+       "3": 7,
+       "2": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "2": 1,
+       "3": 4
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 6,
+     "main_ok": 6,
+     "main_by_label": {
+      "unlabeled": 5,
+      "marginal": 1
+     },
+     "main_by_in_run_verdict": {
+      "SUPPORT": 6
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.912,
+     "eval_cost_usd": 0.9120436250000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 28,
+       "outputTokens": 13135,
+       "cacheReadInputTokens": 459864,
+       "cacheCreationInputTokens": 44536,
+       "webSearchRequests": 0,
+       "costUSD": 0.7110728000000001
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 265746,
+       "outputTokens": 42269,
+       "cacheReadInputTokens": 16885,
+       "cacheCreationInputTokens": 24743,
+       "webSearchRequests": 15,
+       "costUSD": 0.20097082499999996
+      }
+     },
+     "by_role_usd": {
+      "main": 0.7111,
+      "searcher": 0.0114
+     },
+     "web_search_requests": 15,
+     "web_search_usd": 0.15,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 13,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0395
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 12,
+     "UNJUDGED|marginal": 1
+    },
+    "searcher_contract": {
+     "returns": 3,
+     "records": 107,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 3,
+    "searches_main": 0,
+    "searches_sub": 15,
+    "main_peak_context_tokens": 52573,
+    "report_chars": 4674,
+    "read_urls": [
+     "https://abc.net.au/news/2026-10-20/google-cloud-failure-europe-banks/107290238",
+     "https://status.cloud.google.com/incidents/5feV12qHeQoD3VdD8byK",
+     "https://status.cloud.google.com/incidents/ETJGhvY9Xaktw7tgi8dF",
+     "https://status.cloud.google.com/incidents/Xs2XTHzAVC9YnafnPyzj",
+     "https://status.cloud.google.com/incidents/e3yQSE1ysCGjCVEn2q1h",
+     "https://status.cloud.google.com/summary"
+    ],
+    "useful_reached": [
+     "https://datacenterdynamics.com/en/news/google-experiences-service-disruption-in-uk-cloud-region",
+     "https://uptimerobot.com/knowledge-hub/reports-research/google-cloud-london-outage-revolut"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 11,
+    "duration_s": 107,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {
+       "5": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 32
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {
+       "3": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "4": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 3,
+     "main_ok": 2,
+     "main_by_label": {
+      "marginal": 1,
+      "unlabeled": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 2
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.computerweekly.com/news/366652539/Google-Cloud-power-event-knocks-out-UK-banks-courts-and-couriers",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.6382,
+     "eval_cost_usd": 0.6382074999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 55241,
+       "outputTokens": 9265,
+       "cacheReadInputTokens": 151747,
+       "cacheCreationInputTokens": 19730,
+       "webSearchRequests": 4,
+       "costUSD": 0.6344534
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 12656,
+       "outputTokens": 4977,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0037541000000000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2601
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.3344,
+      "claude-haiku-5-5": 0.0038
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 4,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 27767,
+    "report_chars": 5024,
+    "read_urls": [
+     "https://github.com/SecOpsNews/news/issues/75417",
+     "https://status.cloud.google.com/incidents/ETJGhvY9Xaktw7tgi8dF"
+    ],
+    "useful_reached": []
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.143,
+   "useful_only_without": [],
+   "useful_only_with": [
+    "https://datacenterdynamics.com/en/news/google-experiences-service-disruption-in-uk-cloud-region",
+    "https://uptimerobot.com/knowledge-hub/reports-research/google-cloud-london-outage-revolut"
+   ]
+  }
+ },
+ "nw3": {
+  "id": "nw3",
+  "mode": "news",
+  "field": "news",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 11,
+    "duration_s": 147,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 42,
+       "4": 2,
+       "2": 4,
+       "6": 1,
+       "3": 3
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "3": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "2": 1,
+       "3": 4,
+       "1": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 8,
+     "main_ok": 7,
+     "main_by_label": {
+      "useful": 1,
+      "unlabeled": 6
+     },
+     "main_by_in_run_verdict": {
+      "SUPPORT": 6,
+      "PRIMARY": 1
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.scmp.com/tech/big-tech/article/3365383/nvidia-ships-first-h200s-china-forecasts-no-data-centre-computing-revenue",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.7113,
+     "eval_cost_usd": 0.7113022999999998,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 24,
+       "outputTokens": 11207,
+       "cacheReadInputTokens": 267340,
+       "cacheCreationInputTokens": 39611,
+       "webSearchRequests": 0,
+       "costUSD": 0.594592
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 206990,
+       "outputTokens": 28323,
+       "cacheReadInputTokens": 5805,
+       "cacheCreationInputTokens": 14334,
+       "webSearchRequests": 8,
+       "costUSD": 0.1167103
+      }
+     },
+     "by_role_usd": {
+      "main": 0.5946,
+      "other_subagent": 0.0064
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 13,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0303
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 12,
+     "UNJUDGED|useful": 1
+    },
+    "searcher_contract": {
+     "returns": 2,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 47623,
+    "report_chars": 5575,
+    "read_urls": [
+     "https://aljazeera.com/economy/2026/6/1/us-says-ban-on-ai-chip-shipments-applies-to-chinese-firms-outside-china",
+     "https://brookings.edu/articles/ball-games-over-the-us-is-out-of-the-ai-chip-market-in-china",
+     "https://csis.org/analysis/chinas-new-rare-earth-and-magnet-restrictions-threaten-us-defense-supply-chains",
+     "https://freshfields.com/en/our-thinking/blogs/a-fresh-take/bis-rescinds-ai-diffusion-rule-issues-notice-of-high-probability-enforcement-r-102kp9j",
+     "https://mayerbrown.com/en/insights/publications/2026/01/administration-policies-on-advanced-ai-chips-codified",
+     "https://morganlewis.com/pubs/2026/01/bis-revises-export-review-policy-for-advanced-ai-chips-destined-for-china-and-macau",
+     "https://sec.gov/Archives/edgar/data/937966/000162828026011377/asml-2025xannualxreportx.htm"
+    ],
+    "useful_reached": [
+     "https://morganlewis.com/pubs/2026/01/bis-revises-export-review-policy-for-advanced-ai-chips-destined-for-china-and-macau"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 10,
+    "duration_s": 102,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "1": 2,
+       "3": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 41,
+       "3": 2,
+       "2": 1,
+       "1": 1,
+       "4": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 0,
+     "main_ok": 0,
+     "main_by_label": {},
+     "main_by_in_run_verdict": {},
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.782,
+     "eval_cost_usd": 0.7820096,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 76454,
+       "outputTokens": 11165,
+       "cacheReadInputTokens": 128308,
+       "cacheCreationInputTokens": 20904,
+       "webSearchRequests": 6,
+       "costUSD": 0.7820096
+      }
+     },
+     "by_role_usd": {
+      "main": 0.28
+     },
+     "web_search_requests": 6,
+     "web_search_usd": 0.06,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.442
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 6,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 28941,
+    "report_chars": 7460,
+    "read_urls": [],
+    "useful_reached": [
+     "https://morganlewis.com/pubs/2026/01/bis-revises-export-review-policy-for-advanced-ai-chips-destined-for-china-and-macau",
+     "https://sec.gov/Archives/edgar/data/0001045810/000104581026000052/nvda-20260426.htm",
+     "https://sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [
+    "https://sec.gov/Archives/edgar/data/0001045810/000104581026000052/nvda-20260426.htm",
+    "https://sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm"
+   ],
+   "useful_only_with": []
+  }
+ },
+ "nw6": {
+  "id": "nw6",
+  "mode": "news",
+  "field": "news",
+  "expansion": true,
+  "n_labels": 59,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 18,
+    "duration_s": 169,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 2
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "5": 44,
+       "3": 3,
+       "2": 13
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {
+       "2": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "2": 2
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 7,
+     "main_ok": 3,
+     "main_by_label": {
+      "unlabeled": 2,
+      "marginal": 1
+     },
+     "main_by_in_run_verdict": {
+      "SUPPORT": 3
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [
+     {
+      "url": "https://www.consilium.europa.eu/en/press/press-releases/2026/07/23/fighting-child-sexual-abuse-online-interim-measure-protecting-children-now-reinstated/",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.consilium.europa.eu/en/press/press-releases/2026/07/02/council-moves-to-reinstate-interim-measure-to-combat-child-sexual-abuse-online/",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.consilium.europa.eu/en/policies/prevent-child-sexual-abuse-online/timeline-prevention-of-online-child-sexual-abuse/",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     },
+     {
+      "url": "https://www.edps.europa.eu/system/files/2026-02/2026_03_press_release_extension_of_interim_csam_regulation_en.pdf",
+      "code": 403,
+      "error": "The server returned HTTP 403 Forbidden.\n\nThe response body was not retrieved. If this URL requires authentication, use an authenticated tool (e.g. `gh` for GitHub, or an MCP-provided fetch tool) inste"
+     }
+    ],
+    "cost": {
+     "total_usd": 0.746,
+     "eval_cost_usd": 0.7460156,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 22,
+       "outputTokens": 12990,
+       "cacheReadInputTokens": 315761,
+       "cacheCreationInputTokens": 39524,
+       "webSearchRequests": 0,
+       "costUSD": 0.6392321999999999
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 150458,
+       "outputTokens": 19875,
+       "cacheReadInputTokens": 6010,
+       "cacheCreationInputTokens": 13920,
+       "webSearchRequests": 8,
+       "costUSD": 0.1067834
+      }
+     },
+     "by_role_usd": {
+      "main": 0.6392,
+      "searcher": 0.0057
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 19,
+     "tool_internal_usd": {
+      "claude-opus-5-5": -0.0,
+      "claude-haiku-5-5": 0.0211
+     }
+    },
+    "judge_vs_blind": {
+     "UNJUDGED|unlabeled": 18,
+     "UNJUDGED|marginal": 1
+    },
+    "searcher_contract": {
+     "returns": 2,
+     "records": 70,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 47561,
+    "report_chars": 4774,
+    "read_urls": [
+     "https://ec.europa.eu/commission/presscorner/api/files/document/print/en/ip_25_3130/IP_25_3130_EN.pdf",
+     "https://europarl.europa.eu/legislative-train/spotlight-JD22/file-combating-child-sexual-abuse-online",
+     "https://europarl.europa.eu/news/en/press-room/20260306IPR37531/child-sexual-abuse-online-support-for-extending-rules-until-august-2027"
+    ],
+    "useful_reached": [
+     "https://en.wikipedia.org/wiki/Chat_Control"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 9,
+    "duration_s": 73,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 1
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "5": 19,
+       "3": 1
+      }
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "5": 3
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 3,
+     "main_ok": 3,
+     "main_by_label": {
+      "unlabeled": 3
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 3
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.5038,
+     "eval_cost_usd": 0.5038150000000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 39059,
+       "outputTokens": 7513,
+       "cacheReadInputTokens": 108661,
+       "cacheCreationInputTokens": 17807,
+       "webSearchRequests": 3,
+       "costUSD": 0.5006842
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 17273,
+       "outputTokens": 2807,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0031308
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2382
+     },
+     "web_search_requests": 3,
+     "web_search_usd": 0.03,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.2325,
+      "claude-haiku-5-5": 0.0031
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 3,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 25844,
+    "report_chars": 6245,
+    "read_urls": [
+     "https://agenceurope.eu/en/bulletin/article/13949/2/csam-regulation-co-legislators-agree-on-detection-of-public-content-and-tasks-of-eu-centre-for-child-protection",
+     "https://patrick-breyer.de/en/chat-control-2-0-trilogue-update-no-mass-scanning-deal-for-now-european-parliament-stands-firm-against-search-plans",
+     "https://reclaimthenet.org/tag/chat-control"
+    ],
+    "useful_reached": [
+     "https://en.wikipedia.org/wiki/Chat_Control"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.0,
+   "useful_only_without": [],
+   "useful_only_with": []
+  }
+ },
+ "od1": {
+  "id": "od1",
+  "mode": "official-docs",
+  "field": "cs",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 16,
+    "duration_s": 155,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "4": 2
+      },
+      "marginal": {
+       "4": 1,
+       "5": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 31,
+       "4": 5,
+       "1": 7
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {
+       "1": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "1": 6
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 7,
+     "main_ok": 7,
+     "main_by_label": {
+      "unlabeled": 6,
+      "marginal": 1
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 7
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6195,
+     "eval_cost_usd": 0.6194516800000001,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 18,
+       "outputTokens": 8183,
+       "cacheReadInputTokens": 240690,
+       "cacheCreationInputTokens": 34818,
+       "webSearchRequests": 0,
+       "costUSD": 0.490414
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 203606,
+       "outputTokens": 33160,
+       "cacheReadInputTokens": 9408,
+       "cacheCreationInputTokens": 16024,
+       "webSearchRequests": 9,
+       "costUSD": 0.12903768000000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4904,
+      "searcher": 0.0057
+     },
+     "web_search_requests": 9,
+     "web_search_usd": 0.09,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0333
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 2,
+     "records": 59,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 9,
+    "main_peak_context_tokens": 42855,
+    "report_chars": 5160,
+    "read_urls": [
+     "https://bugs.python.org/issue46752",
+     "https://docs.python.org/3/library/asyncio-dev.html",
+     "https://docs.python.org/3/library/asyncio-exceptions.html",
+     "https://docs.python.org/3/library/asyncio-runner.html",
+     "https://docs.python.org/3/library/asyncio-task.html",
+     "https://peps.python.org/pep-0654",
+     "https://peps.python.org/pep-0789"
+    ],
+    "useful_reached": [
+     "https://github.com/python/cpython/issues/102780",
+     "https://github.com/python/cpython/pull/102815/files"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 7,
+    "duration_s": 60,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 3,
+       "5": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 4,
+     "main_ok": 4,
+     "main_by_label": {
+      "unlabeled": 4
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 4
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.2179,
+     "eval_cost_usd": 0.2179275,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 10,
+       "outputTokens": 3236,
+       "cacheReadInputTokens": 83434,
+       "cacheCreationInputTokens": 16061,
+       "webSearchRequests": 0,
+       "costUSD": 0.2099348
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 34762,
+       "outputTokens": 9033,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.0079927
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2099
+     },
+     "web_search_requests": 0,
+     "web_search_usd": 0.0,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.008
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 0,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 24098,
+    "report_chars": 5184,
+    "read_urls": [
+     "https://docs.python.org/3/library/asyncio-exceptions.html",
+     "https://docs.python.org/3/library/asyncio-runner.html",
+     "https://docs.python.org/3/library/asyncio-task.html",
+     "https://raw.githubusercontent.com/python/cpython/main/Lib/asyncio/runners.py"
+    ],
+    "useful_reached": []
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.375,
+   "useful_only_without": [],
+   "useful_only_with": [
+    "https://github.com/python/cpython/issues/102780",
+    "https://github.com/python/cpython/pull/102815/files"
+   ]
+  }
+ },
+ "od2": {
+  "id": "od2",
+  "mode": "official-docs",
+  "field": "ai",
+  "expansion": false,
+  "n_labels": 54,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 17,
+    "duration_s": 202,
+    "contamination": {
+     "listed": {
+      "useful": {
+       "5": 1
+      },
+      "marginal": {
+       "5": 2,
+       "4": 1
+      },
+      "junk": {
+       "5": 1
+      },
+      "unlabeled": {
+       "5": 74,
+       "4": 9,
+       "1": 4
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "5": 2
+      },
+      "marginal": {
+       "1": 1
+      },
+      "junk": {
+       "1": 1
+      },
+      "unlabeled": {
+       "1": 3,
+       "5": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 8,
+     "main_ok": 8,
+     "main_by_label": {
+      "unlabeled": 4,
+      "marginal": 1,
+      "junk": 1,
+      "useful": 2
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 5,
+      "WEAK": 3
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.9445,
+     "eval_cost_usd": 0.9445333450000002,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 20,
+       "outputTokens": 9879,
+       "cacheReadInputTokens": 283424,
+       "cacheCreationInputTokens": 62737,
+       "webSearchRequests": 0,
+       "costUSD": 0.7562408
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 210713,
+       "outputTokens": 28585,
+       "cacheReadInputTokens": 14137,
+       "cacheCreationInputTokens": 22299,
+       "webSearchRequests": 15,
+       "costUSD": 0.188292545
+      }
+     },
+     "by_role_usd": {
+      "main": 0.7562,
+      "searcher": 0.0101
+     },
+     "web_search_requests": 15,
+     "web_search_usd": 0.15,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0282
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 2,
+     "records": 109,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 2,
+    "searches_main": 0,
+    "searches_sub": 15,
+    "main_peak_context_tokens": 70774,
+    "report_chars": 5779,
+    "read_urls": [
+     "https://docs.aws.amazon.com/claude-platform/latest/userguide/rate-limits.html",
+     "https://docs.claude.com/en/api/errors",
+     "https://docs.claude.com/en/api/rate-limits",
+     "https://docs.claude.com/en/api/service-tiers",
+     "https://platform.claude.com/docs/en/api/errors",
+     "https://platform.claude.com/docs/en/api/rate-limits",
+     "https://platform.claude.com/docs/en/api/service-tiers",
+     "https://pypi.org/project/anthropic/0.7.5"
+    ],
+    "useful_reached": [
+     "https://platform.claude.com/docs/en/api/errors",
+     "https://platform.claude.com/docs/en/api/rate-limits",
+     "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 10,
+    "duration_s": 59,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {
+       "4": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 4,
+       "4": 3
+      }
+     },
+     "read": {
+      "useful": {
+       "5": 3
+      },
+      "marginal": {
+       "1": 1
+      },
+      "junk": {},
+      "unlabeled": {
+       "1": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 5,
+     "main_ok": 5,
+     "main_by_label": {
+      "marginal": 1,
+      "unlabeled": 1,
+      "useful": 3
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 5
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.5731,
+     "eval_cost_usd": 0.5730997999999999,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 14302,
+       "outputTokens": 4854,
+       "cacheReadInputTokens": 142579,
+       "cacheCreationInputTokens": 47537,
+       "webSearchRequests": 1,
+       "costUSD": 0.5730997999999999
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4845
+     },
+     "web_search_requests": 1,
+     "web_search_usd": 0.01,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0786
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 1,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 55574,
+    "report_chars": 5125,
+    "read_urls": [
+     "https://docs.anthropic.com/en/api/errors",
+     "https://docs.anthropic.com/en/api/rate-limits",
+     "https://platform.claude.com/docs/en/api/errors",
+     "https://platform.claude.com/docs/en/api/rate-limits",
+     "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    ],
+    "useful_reached": [
+     "https://platform.claude.com/docs/en/api/errors",
+     "https://platform.claude.com/docs/en/api/rate-limits",
+     "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.182,
+   "useful_only_without": [],
+   "useful_only_with": []
+  }
+ },
+ "od3": {
+  "id": "od3",
+  "mode": "official-docs",
+  "field": "cs",
+  "expansion": false,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 14,
+    "duration_s": 117,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {
+       "3": 4,
+       "1": 2,
+       "5": 3
+      },
+      "junk": {},
+      "unlabeled": {
+       "1": 1,
+       "5": 35,
+       "3": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "1": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 6
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 7,
+     "main_ok": 7,
+     "main_by_label": {
+      "unlabeled": 6,
+      "useful": 1
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 7
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.6851,
+     "eval_cost_usd": 0.68505286,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 14,
+       "outputTokens": 7560,
+       "cacheReadInputTokens": 152369,
+       "cacheCreationInputTokens": 49572,
+       "webSearchRequests": 0,
+       "costUSD": 0.5783058
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 143659,
+       "outputTokens": 21668,
+       "cacheReadInputTokens": 9791,
+       "cacheCreationInputTokens": 11594,
+       "webSearchRequests": 8,
+       "costUSD": 0.10674706
+      }
+     },
+     "by_role_usd": {
+      "main": 0.5783,
+      "searcher": 0.0051
+     },
+     "web_search_requests": 8,
+     "web_search_usd": 0.08,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": -0.0,
+      "claude-haiku-5-5": 0.0216
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 1,
+     "records": 53,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 8,
+    "main_peak_context_tokens": 57609,
+    "report_chars": 4837,
+    "read_urls": [
+     "https://authjs.dev/getting-started/installation",
+     "https://authjs.dev/getting-started/migrating-to-v5",
+     "https://better-auth.com/docs/integrations/next",
+     "https://clerk.com/docs/nextjs/getting-started/quickstart",
+     "https://nextjs.org/docs/app/getting-started/proxy",
+     "https://nextjs.org/docs/app/guides/authentication",
+     "https://nextjs.org/learn/dashboard-app/adding-authentication"
+    ],
+    "useful_reached": [
+     "https://nextjs.org/docs/app/guides/authentication"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 6,
+    "duration_s": 40,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 8
+      }
+     },
+     "read": {
+      "useful": {
+       "1": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 1
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 2,
+     "main_ok": 2,
+     "main_by_label": {
+      "unlabeled": 1,
+      "useful": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 2
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.4984,
+     "eval_cost_usd": 0.4984474,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 15134,
+       "outputTokens": 3838,
+       "cacheReadInputTokens": 96957,
+       "cacheCreationInputTokens": 41470,
+       "webSearchRequests": 1,
+       "costUSD": 0.4984474
+      }
+     },
+     "by_role_usd": {
+      "main": 0.4044
+     },
+     "web_search_requests": 1,
+     "web_search_usd": 0.01,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0841
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 1,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 49507,
+    "report_chars": 4505,
+    "read_urls": [
+     "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
+     "https://nextjs.org/docs/app/guides/authentication"
+    ],
+    "useful_reached": [
+     "https://nextjs.org/docs/app/guides/authentication"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.125,
+   "useful_only_without": [],
+   "useful_only_with": []
+  }
+ },
+ "od6": {
+  "id": "od6",
+  "mode": "official-docs",
+  "field": "cs",
+  "expansion": true,
+  "n_labels": 60,
+  "scores_net_off": false,
+  "arms": {
+   "with": {
+    "skill_fired": true,
+    "error": null,
+    "turns": 13,
+    "duration_s": 107,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {
+       "5": 7
+      },
+      "junk": {},
+      "unlabeled": {
+       "5": 26,
+       "1": 1
+      }
+     },
+     "exposed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "read": {
+      "useful": {
+       "1": 2
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 2
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 6,
+     "main_ok": 4,
+     "main_by_label": {
+      "unlabeled": 2,
+      "useful": 2
+     },
+     "main_by_in_run_verdict": {
+      "PRIMARY": 4
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.4454,
+     "eval_cost_usd": 0.44540417500000007,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 16,
+       "outputTokens": 5535,
+       "cacheReadInputTokens": 180655,
+       "cacheCreationInputTokens": 27988,
+       "webSearchRequests": 0,
+       "costUSD": 0.37079900000000005
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 243312,
+       "outputTokens": 18822,
+       "cacheReadInputTokens": 2860,
+       "cacheCreationInputTokens": 6675,
+       "webSearchRequests": 4,
+       "costUSD": 0.074605175
+      }
+     },
+     "by_role_usd": {
+      "main": 0.3708,
+      "searcher": 0.0034
+     },
+     "web_search_requests": 4,
+     "web_search_usd": 0.04,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.0,
+      "claude-haiku-5-5": 0.0312
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 1,
+     "records": 38,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 1,
+    "searches_main": 0,
+    "searches_sub": 4,
+    "main_peak_context_tokens": 36025,
+    "report_chars": 4113,
+    "read_urls": [
+     "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition",
+     "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
+     "https://kubernetes.io/docs/concepts/workloads/pods/probes",
+     "https://v1-32.docs.kubernetes.io/docs/concepts/services-networking/endpoint-slices"
+    ],
+    "useful_reached": [
+     "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition",
+     "https://kubernetes.io/docs/concepts/workloads/pods/probes"
+    ]
+   },
+   "without": {
+    "skill_fired": false,
+    "error": null,
+    "turns": 8,
+    "duration_s": 57,
+    "contamination": {
+     "listed": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     },
+     "exposed": {
+      "useful": {
+       "1": 2
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 3,
+       "5": 3
+      }
+     },
+     "read": {
+      "useful": {
+       "1": 1
+      },
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {
+       "1": 2
+      }
+     },
+     "sub_read": {
+      "useful": {},
+      "marginal": {},
+      "junk": {},
+      "unlabeled": {}
+     }
+    },
+    "sources_read": {
+     "main_attempted": 4,
+     "main_ok": 3,
+     "main_by_label": {
+      "unlabeled": 2,
+      "useful": 1
+     },
+     "main_by_in_run_verdict": {
+      "unscored-in-run": 3
+     },
+     "sub_attempted": 0,
+     "sub_ok": 0,
+     "judge_support_fetched": 0
+    },
+    "fetch_failures": [],
+    "cost": {
+     "total_usd": 0.36,
+     "eval_cost_usd": 0.3599806,
+     "by_model": {
+      "claude-opus-5-5": {
+       "inputTokens": 22068,
+       "outputTokens": 4500,
+       "cacheReadInputTokens": 82769,
+       "cacheCreationInputTokens": 17171,
+       "webSearchRequests": 1,
+       "costUSD": 0.3421938
+      },
+      "claude-haiku-5-5": {
+       "inputTokens": 142188,
+       "outputTokens": 7136,
+       "cacheReadInputTokens": 0,
+       "cacheCreationInputTokens": 0,
+       "webSearchRequests": 0,
+       "costUSD": 0.017786800000000002
+      }
+     },
+     "by_role_usd": {
+      "main": 0.2138
+     },
+     "web_search_requests": 1,
+     "web_search_usd": 0.01,
+     "judge_support_usd": 0.0,
+     "judge_support_calls": 0,
+     "tool_internal_usd": {
+      "claude-opus-5-5": 0.1184,
+      "claude-haiku-5-5": 0.0178
+     }
+    },
+    "judge_vs_blind": {},
+    "searcher_contract": {
+     "returns": 0,
+     "records": 0,
+     "extra_keys": [],
+     "dated": 0
+    },
+    "rounds": 0,
+    "searches_main": 1,
+    "searches_sub": 0,
+    "main_peak_context_tokens": 25208,
+    "report_chars": 4263,
+    "read_urls": [
+     "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle",
+     "https://kubernetes.io/docs/concepts/workloads/pods/probes",
+     "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes"
+    ],
+    "useful_reached": [
+     "https://kubernetes.io/blog/2025/06/03/start-sidecar-first",
+     "https://kubernetes.io/docs/concepts/workloads/pods/pod-condition",
+     "https://kubernetes.io/docs/concepts/workloads/pods/probes"
+    ]
+   }
+  },
+  "overlap": {
+   "read_jaccard": 0.4,
+   "useful_only_without": [
+    "https://kubernetes.io/blog/2025/06/03/start-sidecar-first"
+   ],
+   "useful_only_with": []
+  }
+ }
+}

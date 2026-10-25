@@ -1,0 +1,549 @@
+{
+ "id": "nw2",
+ "judged_at": "2026-10-24",
+ "question": "What happened in the most recent major cloud provider outage and what was the root cause?",
+ "mode": "news",
+ "field": "news",
+ "judged": [
+  {
+   "url": "https://cybersecuritynews.com/?p=131057",
+   "title": "AWS outage (cybersecuritynews)",
+   "rank": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Oct 2025 AWS DynamoDB DNS outage; misdated banner, not most recent"
+  },
+  {
+   "url": "https://www.thetechoutlook.com/current-affairs/now-we-know-who-was-the-main-culprit-behind-cloudflare-sundays-outrage-details-inside/",
+   "title": "Now we know who was the main culprit behind Cloudflare Sunday's outage",
+   "rank": 2,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "2020 CenturyLink/Cloudflare story with misleading 2026 date banner"
+  },
+  {
+   "url": "https://techafricanews.com/?p=64801",
+   "title": "Cloudflare outage bulletin (TechAfrica News)",
+   "rank": 3,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Nov 2025 Cloudflare outage summary; outdated, derivative"
+  },
+  {
+   "url": "https://technijian.com/cyber-security/cloudflare-discloses-technical-details-behind-massive-outage-that-broke-the-internet/",
+   "title": "Cloudflare Discloses Technical Details Behind Massive Outage That Broke the Internet",
+   "rank": 4,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Decent Nov 2025 Cloudflare root cause recap; outdated, IT-firm blog"
+  },
+  {
+   "url": "https://support.signiant.com/hc/en-us/articles/45802629144851-Oct-20-2025-Outage-Root-Cause-Analysis-RCA",
+   "title": "Oct 20 2025 Outage Root Cause Analysis (Signiant)",
+   "rank": 5,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Customer RCA of Oct 2025 AWS outage; outdated, secondhand"
+  },
+  {
+   "url": "https://opstree.com/blog/aws-and-azure-outages/",
+   "title": "Complete Case Study On The AWS and Azure Outages Of October 2025",
+   "rank": 6,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Secondary overview of 2025 outages with consultancy marketing; outdated"
+  },
+  {
+   "url": "https://www.gigazine.net/gsc_news/en/20251024-aws-incident-amazon-dynamodb-dns",
+   "title": "AWS outage cause was a design flaw in DNS management system",
+   "rank": 7,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed Oct 2025 AWS root cause; not the most recent outage"
+  },
+  {
+   "url": "https://www.thousandeyes.com/blog/internet-report-aws-outage",
+   "title": "Internet Report: AWS outage (ThousandEyes)",
+   "rank": 8,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Monitoring-vendor analysis of an older AWS outage; fetch blocked"
+  },
+  {
+   "url": "https://www.bacancytechnology.com/blog/understanding-cloud-outages",
+   "title": "Cloud Outages: Causes, Impact, and How to Mitigate Them",
+   "rank": 9,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Generic SEO explainer with old case studies and sales CTAs"
+  },
+  {
+   "url": "https://help.creativeforce.io/en/articles/16052503-july-16th-2026-incident-retrospective",
+   "title": "July 16th 2026 incident retrospective (Creative Force)",
+   "rank": 10,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Customer retrospective of July 2026 CloudFront issue; secondhand, minor"
+  },
+  {
+   "url": "https://tech-insider.org/?p=12595",
+   "title": "Tech Insider AWS outage",
+   "rank": 11,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate of July 2026 AWS us-west-2 article; not most recent"
+  },
+  {
+   "url": "https://convergedigest.com/?p=88041",
+   "title": "Converge Digest AWS outage",
+   "rank": 12,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Short trade note on an AWS outage; thin, unclear date"
+  },
+  {
+   "url": "https://isdown.app/status/aws/outage-history",
+   "title": "AWS outage history (IsDown)",
+   "rank": 13,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregator list of AWS incidents; useful only for cross-checking"
+  },
+  {
+   "url": "https://www.moroccoworldnews.com/2025/10/265212/aws-details-root-cause-of-major-dynamodb-outage-in-northern-virginia-region/",
+   "title": "AWS details root cause of major DynamoDB outage in Northern Virginia region",
+   "rank": 14,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "General news recap of Oct 2025 AWS outage; outdated"
+  },
+  {
+   "url": "https://storage.googleapis.com/notpmjgdauwpu/aws-outage-post-event-summary.html",
+   "title": "AWS Outage Post-Event Summary",
+   "rank": 15,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Spammy mirror page in random bucket; misdated old content"
+  },
+  {
+   "url": "https://convergedigest.com/aws-hit-by-outage-in-us-east-1-region/",
+   "title": "AWS hit by outage in US-East-1 region",
+   "rank": 16,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "December 2021 outage brief; irrelevant to most recent outage"
+  },
+  {
+   "url": "https://w.media/microsoft-azure-outage-cloud-services-disrupted-after-west-us-network-failure-now-resolved/",
+   "title": "Microsoft Azure outage: Cloud services disrupted after West US network failure, now resolved",
+   "rank": 17,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "July 2026 Azure West US coverage; superseded by Oct 2026 event"
+  },
+  {
+   "url": "https://blog.incidenthub.cloud/azure-west-us-outage-jul-23-2026",
+   "title": "Azure West US outage Jul 23 2026 (IncidentHub)",
+   "rank": 18,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Solid PIR-based write-up but older July 2026 incident"
+  },
+  {
+   "url": "https://daily.dev/posts/quick-thoughts-on-azure-regional-outage-from-july-23-26-9uwfpbxa9",
+   "title": "Quick thoughts on Azure regional outage from July 23 '26",
+   "rank": 19,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Short secondary analysis of July Azure PIR; not most recent"
+  },
+  {
+   "url": "https://health.atp.azure.com/en-us/status/history/",
+   "title": "Azure status history",
+   "rank": 20,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Official Azure status history mirror; fetch failed, older incidents"
+  },
+  {
+   "url": "https://pingoru.io/providers/microsoft/outage-history",
+   "title": "Microsoft Outage History (Pingoru)",
+   "rank": 21,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregator incident list; cross-check only"
+  },
+  {
+   "url": "https://www.itechguides.com/?p=588551",
+   "title": "itechguides Azure outage post",
+   "rank": 22,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "SEO aggregator content of unclear substance"
+  },
+  {
+   "url": "https://status.cloud.google.com/incidents/utF3FMFdQfwBzJcGG6vf",
+   "title": "Google Cloud Service Health incident (us-west1)",
+   "rank": 23,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official Aug 2026 us-west1 report with root cause; not most recent"
+  },
+  {
+   "url": "https://www.google.com.au/appsstatus/dashboard/incidents/sjDiph2NXGAfkYYLfK7T",
+   "title": "Google Workspace Status Dashboard (Drive)",
+   "rank": 24,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official Aug 2026 Drive regional incident; Workspace, not most recent"
+  },
+  {
+   "url": "https://uptimerobot.com/is-it-down/google-cloud/2026-10-20/",
+   "title": "Is Google Cloud down? 2026-10-20 (UptimeRobot)",
+   "rank": 25,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thin status tracker; no root cause, timing conflicts with Google"
+  },
+  {
+   "url": "https://status.cloud.google.com/security/incidents/914tnmfqkQf3BKpMxrnc",
+   "title": "Google Security Products Status Dashboard incident",
+   "rank": 26,
+   "judgment": "junk",
+   "vendor_interest": true,
+   "basis": "snippet",
+   "reason": "Security products status entry; irrelevant to major outage"
+  },
+  {
+   "url": "https://convergedigest.com/google-cloud-outage-attributed-to/",
+   "title": "Google Cloud outage attributed to...",
+   "rank": 27,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "June 2019 Google config error; long outdated"
+  },
+  {
+   "url": "https://pingoru.io/providers/google/incidents/2980968",
+   "title": "Google incident via Google Workspace (Pingoru)",
+   "rank": 28,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Aggregator mirror of a Workspace incident; derivative"
+  },
+  {
+   "url": "https://www.iraqinews.com/tech/amazons-cloud-services-hit-by-global-outage/",
+   "title": "Amazon's cloud services hit by global outage",
+   "rank": 29,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2025 AWS event presented with 2026 date; misleading"
+  },
+  {
+   "url": "https://www.abdn.ac.uk/it/news/24916/",
+   "title": "Internet service outages - Fri 5 Dec (University of Aberdeen)",
+   "rank": 30,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "University IT notice of Dec 2025 Cloudflare blip; no substance"
+  },
+  {
+   "url": "https://losclouds.com/blog/daily-cloud-availability-2026-05-12",
+   "title": "Daily cloud availability 2026-05-12 (losclouds)",
+   "rank": 31,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Auto-generated availability digest; 404 on fetch"
+  },
+  {
+   "url": "https://incibe.es/en/node?page=2",
+   "title": "INCIBE news listing",
+   "rank": 32,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Cybersecurity news index; nothing about cloud outage root cause"
+  },
+  {
+   "url": "https://who-umc.org/status/microsoft-azure-cloud-outage/",
+   "title": "Microsoft Azure cloud outage 29 October 2025 - Outage log",
+   "rank": 33,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Customer outage notice for 2025 Azure event; no analysis"
+  },
+  {
+   "url": "https://w.media/?p=44546",
+   "title": "European Google Cloud outage disrupts UK banking, delivery, and retail services",
+   "rank": 34,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Early impact coverage of Oct 20 outage; no root cause yet"
+  },
+  {
+   "url": "https://www.theregister.com/a/5304160",
+   "title": "Google Cloud London region outage (The Register)",
+   "rank": 35,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable tech press; cites Google power event in europe-west2-b, timeline, impact"
+  },
+  {
+   "url": "https://fourweekmba.com/ai-google-cloud-london-power-event-hit-38-products-and-revolut/",
+   "title": "Google Cloud London Power Event Hit 38 Products and Revolut",
+   "rank": 36,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Derivative blog recap of Oct 20 event; fetch blocked"
+  },
+  {
+   "url": "https://isdown.app/status/instaclustr/incidents/672637-suspected-gcp-outage-affecting-clusters-in-europe-west2",
+   "title": "Suspected GCP outage affecting clusters in europe-west2 (Instaclustr via IsDown)",
+   "rank": 37,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Customer status mirror confirming zone power event; thin"
+  },
+  {
+   "url": "https://insurance-edge.net/2026/10/20/google-cloud-outage-comment-from-parametrix/",
+   "title": "Google Cloud Outage: Comment From Parametrix",
+   "rank": 38,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Interested-party commentary with independent timeline; cross-check use"
+  },
+  {
+   "url": "https://www.techradar.com/pro/live/google-cloud-down-major-outage-across-europe-hits-big-brands-banking-apps-and-more",
+   "title": "Google Cloud down - major outage across Europe (TechRadar live)",
+   "rank": 39,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Live blog; fetched content truncated, little detail on cause"
+  },
+  {
+   "url": "https://bdnews24.com/tech/0vfxmppfpc",
+   "title": "Google Cloud outage (bdnews24)",
+   "rank": 40,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Early wire-style report; root cause not yet identified"
+  },
+  {
+   "url": "https://datacenterdynamics.com/en/news/google-experiences-service-disruption-in-uk-cloud-region",
+   "title": "Google experiences service disruption in UK cloud region (DCD)",
+   "rank": 41,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Specialist data center press on Oct 20 event; fetch blocked"
+  },
+  {
+   "url": "https://www.webpronews.com/how-a-single-misconfigured-rule-took-down-15-of-cloudflares-global-network-for-90-minutes/",
+   "title": "How a Single Misconfigured Rule Took Down 15% of Cloudflare's Global Network for 90 Minutes",
+   "rank": 42,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Feb 2026 Cloudflare incident recap; older, secondary"
+  },
+  {
+   "url": "https://www.datacenterdynamics.com/en/news/microsoft-azure-outage-at-west-us-region-causes-intermittent-connectivity-failures/",
+   "title": "Microsoft Azure outage at West US region causes intermittent connectivity failures",
+   "rank": 43,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Trade press on July 2026 Azure outage; not most recent"
+  },
+  {
+   "url": "https://www.cloudswitched.com/news/azure-west-us-outage-july-2026-uk-sme-cloud-resilience",
+   "title": "Azure West US outage July 2026: UK SME cloud resilience",
+   "rank": 44,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Azure reseller marketing around July incident; unsourced figures"
+  },
+  {
+   "url": "https://petri.com/microsoft-azure-outage-network-maintenance-error/",
+   "title": "Microsoft: West US Azure Outage Was Caused By Network Maintenance Error",
+   "rank": 45,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Good PIR-based root cause for July 2026; not most recent"
+  },
+  {
+   "url": "https://uptimerobot.com/knowledge-hub/reports-research/google-cloud-london-outage-revolut/",
+   "title": "Google Cloud London outage and Revolut (UptimeRobot)",
+   "rank": 46,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Detailed UTC timeline quoting Google status page power event; cites sources"
+  },
+  {
+   "url": "https://interestingengineering.com/culture/google-cloud-outage-uk",
+   "title": "Google Cloud outage UK (Interesting Engineering)",
+   "rank": 47,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Clear what/when/cause summary of Oct 20 europe-west2-b power event"
+  },
+  {
+   "url": "https://www.silicon.co.uk/cloud/cloud-management/google-cloud-outage-631933",
+   "title": "Google Cloud outage (Silicon UK)",
+   "rank": 48,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "UK trade press; power event cause, banking and courts impact"
+  },
+  {
+   "url": "https://telanganatoday.com/google-cloud-outage-in-london-disrupts-revolut-other-online-services",
+   "title": "Google Cloud outage in London disrupts Revolut, other online services",
+   "rank": 49,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Derivative wire rewrite; brief"
+  },
+  {
+   "url": "https://www.itv.com/news/2026-10-20/banks-and-courts-affected-by-disruption-as-google-apologises-for-cloud-outage",
+   "title": "Banks and courts affected by disruption as Google apologises for cloud outage",
+   "rank": 50,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mainstream broadcaster coverage of Oct 20 outage; fetch timed out"
+  },
+  {
+   "url": "https://propakistani.pk/2026/10/21/google-cloud-outage-disrupted-banks-courts-businesses-and-more/",
+   "title": "Google Cloud Outage Disrupted Banks, Courts, Businesses, and More",
+   "rank": 51,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Derivative regional rewrite; fetch blocked"
+  },
+  {
+   "url": "https://kuwaittimes.com/article/51993/business/power-outage-hits-google-cloud-services-disrupting-uk-banks/amp",
+   "title": "Power outage hits Google Cloud services, disrupting UK banks",
+   "rank": 52,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "AFP wire report with Google statement, times, bank confirmations"
+  },
+  {
+   "url": "https://www.qatar-tribune.com/article/260166/business/google-cloud-outage-in-london-disrupts-uk-banks-services/amp",
+   "title": "Google Cloud outage in London disrupts UK banks, services",
+   "rank": 53,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Syndicated wire copy; 404 on fetch"
+  },
+  {
+   "url": "https://status.cloud.google.com/incidents/ETJGhvY9Xaktw7tgi8dF",
+   "title": "Google Cloud Service Health incident (europe-west2, Aug 2024)",
+   "rank": 54,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official 2024 London power incident; useful context only, outdated"
+  },
+  {
+   "url": "https://itdaily.com/news/cloud/power-outage-at-google-cloud-affects-multiple-services/",
+   "title": "Google Cloud power incident hits multiple services (ITdaily)",
+   "rank": 55,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Concise trade report on zone power failure, scope, recovery"
+  },
+  {
+   "url": "https://aiweekly.co/alerts/google-cloud-london-region-hit-by-power-event-takes-down-revolut-and-uk-banking",
+   "title": "Google Cloud London Region Hit by Power Event, Takes Down Revolut and UK Banking Services",
+   "rank": 56,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Impact list but thin on cause; mostly promotional page"
+  },
+  {
+   "url": "https://google.co.in/appsstatus/dashboard/incidents/5AjHWPCTCP5uenZRjuwz",
+   "title": "Google Workspace Status Dashboard (London, 2024)",
+   "rank": 57,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Official 2024 Workspace London power incident; outdated"
+  },
+  {
+   "url": "https://blog.incidenthub.cloud/aws-us-west-2-outage-jul-24-2026",
+   "title": "The July 24, 2026 AWS us-west-2 Outage: Network Routing and a Long Recovery Tail",
+   "rank": 58,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Good analysis of July AWS outage; not most recent"
+  },
+  {
+   "url": "https://tech-insider.org/aws-outage-us-west-2-2026/",
+   "title": "AWS outage us-west-2 2026 (Tech Insider)",
+   "rank": 59,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Secondary coverage of July AWS outage; not most recent"
+  },
+  {
+   "url": "https://status.alkira.com/incidents/61gq70ytqx77",
+   "title": "AWS Operational Issues in US-WEST-2 (Alkira)",
+   "rank": 60,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Customer status page relaying AWS cause; secondhand"
+  }
+ ]
+}

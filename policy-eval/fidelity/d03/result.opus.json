@@ -1,0 +1,12 @@
+{"id":"d03","kind":"official docs","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":0,"D":0},
+ "worst":"A: Jepsen's serializable G2-item finding is framed as a 'disputed claim' and the summary omits that a patch was already committed for the next minor release",
+ "worst_summary_quote":"Jepsen's 12.3 tests reported that PostgreSQL's \"serializable\" isolation level isn't serializable: it allows G2-item during normal operation.",
+ "worst_page_quote":"A patch for the bug we found in serializability is scheduled for the next minor release, on August 13th",
+ "worst_page_url":"https://jepsen.io/analyses/postgresql-12.3",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader may think current PostgreSQL Serializable still allows G2-item anomalies, since the summary never says the bug was patched, though it does call it a bug rather than expected behavior.",
+ "verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":4,"links_total":9,"links_shared_with_haiku_round":8,
+ "haiku_worst_repeated":"yes",
+ "notes":"Official docs page not in Links; summary says so and points to postgresql.org/docs/current. Reused jepsen, pgdash, mkdev, hackorum; fetched arenadata (PG docs copy); chat2db also fetched for cross-check. Opus hedges better than Haiku (calls it a bug, says verify official docs) but still omits patch status and that Jepsen also found G2-item under repeatable read."}

@@ -1,0 +1,6 @@
+{"id":"d05","kind":"official docs","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":0,"C":0,"D":0},
+ "worst":"A: summary never says the extra mount/unmount/remount cycle is React 18+ behavior (earlier versions ran effects once in dev)","worst_summary_quote":"In development, Strict Mode remounts each component to test for missing cleanup.","worst_page_quote":"Prior to React 18, effects ran once in development","worst_page_url":"https://dev.to/pockit_tools/why-is-useeffect-running-twice-the-complete-guide-to-react-19-strict-mode-and-effect-cleanup-1n60",
+ "quote_verified":true,"reader_gets_wrong":"A reader would not learn the double run is a React 18+ change, though the core mechanism and cleanup guidance are stated correctly.","verbatim_source":"transcript",
+ "pages_compared":6,"pages_reused":6,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"yes","notes":"Summary flags that react.dev was not returned and sources are secondary. Second omission: StrictMode below root does not re-run effects. Ref-flag claim is slightly softened ('hide the warning') vs page 'hides the problem'. coddy.tech and moltchat pages under 2000 chars, excluded; upmostly ?p= link is a duplicate."}

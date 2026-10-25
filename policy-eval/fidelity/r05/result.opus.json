@@ -1,0 +1,12 @@
+{"id":"r05","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":3,"B":0,"C":0,"D":0},
+ "worst":"A: omits that 4 of the 9 open-label-extension deaths were deemed possibly related to study treatment, while stating only that no 18-month deaths were related",
+ "worst_summary_quote":"No deaths in the 18-month double-blind period were related to lecanemab or occurred with ARIA.",
+ "worst_page_quote":"There were 9 deaths during the OLE, with 4 deemed possibly related to study treatment.",
+ "worst_page_url":"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11084061/",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader may judge lecanemab's death safety as clean, missing that 4 of 9 extension deaths were deemed possibly treatment-related, and may not know the absolute CDR-SB difference (1.21 vs 1.66) or the separate ARIA-E (12.6%) and ARIA-H (17.3%) rates.",
+ "verbatim_source":"transcript",
+ "pages_compared":3,"pages_reused":1,"links_total":9,"links_shared_with_haiku_round":2,
+ "haiku_worst_repeated":"no",
+ "notes":"Core numbers (27%, 21.3 vs 9.3, 2.8%, 26.4 vs 7.4, 24 deaths/3 ICH, tPA=thrombolytic) match pages; 21.3/9.3 found in alzheimer-europe page (search.raw1), not a listed link. Opus scopes the no-related-deaths claim to the 18-month period and avoids sponsor-causality wording, unlike Haiku round. Only 3 listed links yielded usable pages (biogen/pharmashots too short, hospitalist/mdedge/biospace-pdf not usable)."}

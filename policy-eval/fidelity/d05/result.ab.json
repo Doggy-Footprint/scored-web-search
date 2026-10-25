@@ -1,0 +1,81 @@
+{
+ "id": "d05",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 3422,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C (minor, not counted): says page links legacy docs at reactjs.org; no such link in page text",
+   "worst_summary_quote": "It links to legacy docs at reactjs.org",
+   "worst_page_quote": "",
+   "quote_verified": true,
+   "notes": "No reactjs.org in page (grep 0), so absence verified; versions correctly reported as absent from page."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 2,
+   "chars": 3258,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C (minor, not counted): says count returns to 1 after cleanup; page only says count stops growing",
+   "worst_summary_quote": "Adding `return () => connection.disconnect()` brings the count back to 1.",
+   "worst_page_quote": "Notice how the active connection count in the console doesn’t keep growing anymore.",
+   "quote_verified": true,
+   "notes": "React 18+ statement is explicitly labelled as not from the page. Resilience caveat is unlabelled inference, minor."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 1,
+   "chars": 3437,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 1,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B: console dimming applies to the second render call, not the extra Effect cycle; summary attributes it to the Effect extra cycle",
+   "worst_summary_quote": "`console.log` calls in the extra cycle appear, and React DevTools can dim them",
+   "worst_page_quote": "any console.log calls during the second render call will appear slightly dimmed",
+   "quote_verified": true,
+   "notes": "B is a conflation of double-render and Effect re-run; low impact. React 18 intro is labelled external knowledge. Partial-tree rationale slightly paraphrased but sound."
+  },
+  {
+   "slot": "S4",
+   "arm": "T",
+   "run": 1,
+   "chars": 3127,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "None material; console note correctly scoped to second render",
+   "worst_summary_quote": "",
+   "worst_page_quote": "There is no way to opt out of Strict Mode inside a tree wrapped in <StrictMode>",
+   "quote_verified": true,
+   "notes": "Omits ref-callback detail and cleanup-on-dependency-change nuance only lightly; inferences labelled; versions correctly reported as not found."
+  }
+ ]
+}

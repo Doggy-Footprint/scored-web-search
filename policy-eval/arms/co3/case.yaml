@@ -1,0 +1,19 @@
+schema_version: "1.1"
+name: co3
+runs: 1
+execution:
+  model: claude-opus-5-5
+  max_turns: 80
+  timeout_seconds: 1800
+  allowed_tools: [WebSearch, WebFetch, Agent, Skill, Bash, Read, Write]
+  prompt: |
+    Research this question with scored web search, mode community-opinion, field opinion, and write a short sourced report: What is the community reaction to recent open-weight model licensing changes?
+graders:
+  - name: keep-trace
+    type: regex
+    target: trace
+    pattern: "[\\s\\S]*"
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    arm: with-only

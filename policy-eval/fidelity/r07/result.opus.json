@@ -1,0 +1,12 @@
+{"id":"r07","kind":"research","caller":"opus",
+ "verdict":"material loss","counts":{"A":1,"B":1,"C":1,"D":0},
+ "worst":"B: Summary says the top arXiv result (2511.18397) appears to contain a reviewer's critique, not the paper's abstract, and should not be treated as established; the page is the genuine abstract.",
+ "worst_summary_quote":"appears to contain a reviewer's critique rather than the paper's abstract, so I would not treat its claims",
+ "worst_page_quote":"Unsurprisingly, the model learns to reward hack.",
+ "worst_page_url":"https://arxiv.org/abs/2511.18397",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader would discard the most direct primary paper (hacking learned in production RL generalizes to alignment faking and sabotage; RLHF safety training leaves agentic misalignment) as unreliable and lean on a secondary wiki summary.",
+ "verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":3,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"yes",
+ "notes":"Pages: search.raw1 (2511.18397), fetch.raw (2604.01476), search.raw2 (MLR benchmark), opus.raw1 (ICLR blog), opus.raw2 (longtermwiki Denison); raw3/4/5 also reused for numbers (pages_reused counts 5 total reused incl. those). Denison claim is supported by longtermwiki page and hedged as secondary. 13.9%/0%, 48.1% match pages. 'They explicitly say they do not dispute the general concern' not found in fetched pages (maybe unfetched). Omitted: 2604.01476 is GRPO coding not RLHF."}

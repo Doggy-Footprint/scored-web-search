@@ -1,0 +1,381 @@
+{
+ "websearch_haiku": {
+  "n": 30,
+  "verdicts": {
+   "faithful": 2,
+   "minor loss": 23,
+   "material loss": 5,
+   "not assessable": 0
+  },
+  "counts": {
+   "A": 41,
+   "B": 10,
+   "C": 29,
+   "D": 15
+  }
+ },
+ "websearch_opus": {
+  "n": 30,
+  "verdicts": {
+   "faithful": 3,
+   "minor loss": 24,
+   "material loss": 3,
+   "not assessable": 0
+  },
+  "counts": {
+   "A": 37,
+   "B": 7,
+   "C": 25,
+   "D": 7
+  }
+ },
+ "webfetch_haiku": {
+  "n": 30,
+  "verdicts": {
+   "faithful": 16,
+   "minor loss": 13,
+   "material loss": 1,
+   "not assessable": 0
+  },
+  "counts": {
+   "A": 12,
+   "B": 5,
+   "C": 7,
+   "D": 4
+  }
+ },
+ "haiku_worst_repeated_in_opus": {
+  "yes": 18,
+  "no": 10,
+  "na": 2
+ },
+ "webfetch_ab": {
+  "B": {
+   "n": 60,
+   "verdicts": {
+    "faithful": 43,
+    "minor loss": 16,
+    "material loss": 1,
+    "not assessable": 0
+   },
+   "counts": {
+    "A": 4,
+    "B": 2,
+    "C": 5,
+    "D": 0
+   },
+   "false_absence": 1,
+   "mean_chars": 2089
+  },
+  "T": {
+   "n": 60,
+   "verdicts": {
+    "faithful": 44,
+    "minor loss": 16,
+    "material loss": 0,
+    "not assessable": 0
+   },
+   "counts": {
+    "A": 3,
+    "B": 1,
+    "C": 3,
+    "D": 0
+   },
+   "false_absence": 0,
+   "mean_chars": 2616
+  },
+  "paired_T_vs_B": {
+   "pos": 7,
+   "neg": 6,
+   "ties": 17,
+   "p": 1.0
+  },
+  "noise_run1_vs_run2": {
+   "B": {
+    "pos": 5,
+    "neg": 1,
+    "ties": 24,
+    "p": 0.2188
+   },
+   "T": {
+    "pos": 4,
+    "neg": 4,
+    "ties": 22,
+    "p": 1.0
+   }
+  },
+  "n_topics": 30
+ },
+ "per_topic": [
+  {
+   "id": "d01",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "d02",
+   "kind": "official docs",
+   "websearch_haiku": "material loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "material loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "5/10"
+  },
+  {
+   "id": "d03",
+   "kind": "official docs",
+   "websearch_haiku": "material loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "8/9"
+  },
+  {
+   "id": "d04",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "d05",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "d06",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "4/9"
+  },
+  {
+   "id": "d07",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "d08",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "1/10"
+  },
+  {
+   "id": "d09",
+   "kind": "official docs",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "faithful",
+   "haiku_worst_repeated": "na",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "d10",
+   "kind": "official docs",
+   "websearch_haiku": "faithful",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "faithful",
+   "haiku_worst_repeated": "na",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r01",
+   "kind": "research",
+   "websearch_haiku": "material loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/10"
+  },
+  {
+   "id": "r02",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r03",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "material loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r04",
+   "kind": "research",
+   "websearch_haiku": "material loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "4/9"
+  },
+  {
+   "id": "r05",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "2/9"
+  },
+  {
+   "id": "r06",
+   "kind": "research",
+   "websearch_haiku": "faithful",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "faithful",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r07",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "material loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r08",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r09",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "4/10"
+  },
+  {
+   "id": "r10",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r11",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r12",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r13",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "9/9"
+  },
+  {
+   "id": "r14",
+   "kind": "research",
+   "websearch_haiku": "material loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "material loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "7/10"
+  },
+  {
+   "id": "r15",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r16",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "faithful",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r17",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "no",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r18",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r19",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "10/10"
+  },
+  {
+   "id": "r20",
+   "kind": "research",
+   "websearch_haiku": "minor loss",
+   "webfetch_haiku": "minor loss",
+   "websearch_opus": "minor loss",
+   "haiku_worst_repeated": "yes",
+   "links_shared": "9/9"
+  }
+ ]
+}

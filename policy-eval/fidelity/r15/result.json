@@ -1,0 +1,10 @@
+{"id":"r15","kind":"research",
+ "websearch":{"verdict":"minor loss","counts":{"A":1,"B":1,"C":1,"D":0},
+  "worst":"B: says the 'ninth consecutive year' sentence is cut off in the source, but pages state it in full",
+  "worst_summary_quote":"2025 marked the ninth consecutive year that ocean heat content hit a record, though that sentence is cut off in the source.",
+  "worst_page_quote":"2025 marked the ninth consecutive year that ocean heat content hit a new all-time high.",
+  "worst_page_url":"https://lssf.cas.cn/en/news/rh/202601/t20260120_5096712.html",
+  "quote_verified":true,"reader_gets_wrong":"A reader would doubt or hedge the ninth-straight-record claim although the page states it plainly.","verbatim_source":"transcript",
+  "pages_compared":4,"notes":"Primary source is the CAS news highlight, not the paper (no paper link in results). climatechange.ie returned 403; the >65% top-700 m claim is C: maybe from an unfetched page. carboncopy page was unrelated listing. A: 2020 study's 1986-2020 trend 9.1 vs 1.2 ZJ/yr omitted (minor)."},
+ "webfetch":{"verdict":"faithful","counts":{"A":0,"B":0,"C":0,"D":0},"url":"https://lssf.cas.cn/en/news/rh/202601/t20260120_5096712.html","fetch_prompt":"What do recent studies report about record ocean heat content? Summarize the key findings, figures, years, and the study or source attribution stated on this page.",
+  "worst":"","worst_summary_quote":"","worst_page_quote":"","quote_verified":true,"reader_gets_wrong":"","verbatim_source":"transcript","notes":"Page is short (about 4k chars), no truncation. Minor omissions only (90% heat absorption context, 620 EJ detail kept)."}}

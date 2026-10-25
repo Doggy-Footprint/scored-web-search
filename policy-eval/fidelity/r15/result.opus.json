@@ -1,0 +1,7 @@
+{"id":"r15","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":1,"D":0},
+ "worst":"C: the 'about 40% more warming than AR5 records, agree with models' claim is in no fetched page (climatechange.ie returned 403); maybe from an unfetched page",
+ "worst_summary_quote":"newer ocean heat records show about 40% more warming than the records used in the IPCC's AR5 report","worst_page_quote":"almost eight times larger than the trend from 1958 to 1985","worst_page_url":"https://essic.umd.edu/upper-ocean-temperatures-hit-record-high-in-2020/",
+ "quote_verified":true,"reader_gets_wrong":"A reader would accept the 40%-more-than-AR5 figure as sourced although no retrievable page supports it; the summary also omits the 2020 study's 9.1 vs 1.2 ZJ/yr trend contrast.","verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"no","notes":"Opus states the ninth straight record correctly (Haiku claimed it was cut off). All 2025 figures (23 ZJ, 37 years, 16%, datasets, regions) match lssf/ecomagazine/weathernetwork. 5.7 ZJ/yr 1958-2020 matches essic. worst_page_quote supports the omission (A), not the C claim. Links_shared assumed identical set to Haiku round per reused raw files; not diffed against websearch.txt."}

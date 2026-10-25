@@ -1,0 +1,81 @@
+{
+ "id": "d02",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 3444,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 1,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: omits the worked example where the drain blocks and a further eviction is refused because it would drop availability below the PDB.",
+   "worst_summary_quote": "The exact behavior when a PDB would be violated, beyond the drain retry description above.",
+   "worst_page_quote": "it will be refused because that would leave only",
+   "quote_verified": true,
+   "notes": "Wrongly says the page is truncated before the example (the example is in the page), but hedges every absence with 'not found in the text read'. minAvailable/maxUnavailable are not on the page. Strong on non-protections."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 1,
+   "chars": 3180,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 1,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: omits the worked example showing the refused eviction and the blocked drain; says the eviction-rejection response is not found.",
+   "worst_summary_quote": "The explicit response or error returned when an eviction would violate a PDB.",
+   "worst_page_quote": "the drain command will block, because there are only 2 available",
+   "quote_verified": true,
+   "notes": "Hedged absences, so no false-absence count. Claims truncation before the example, which is wrong. Otherwise accurate and well quoted."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 1,
+   "chars": 3448,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 1,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A: does not use the page's worked example; infers the violation behavior instead of quoting the page's refused eviction.",
+   "worst_summary_quote": "So if an eviction would violate the budget, the Eviction API rejects it, and the drain waits and retries.",
+   "worst_page_quote": "it will be refused because that would leave only",
+   "quote_verified": true,
+   "notes": "The inference is consistent with the page. minAvailable/maxUnavailable semantics and the YAML come from outside the page but are labelled as standard Kubernetes semantics, so the C is not material. Wrongly says the excerpt is truncated before the example."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 2,
+   "chars": 3719,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 1,
+    "B": 0,
+    "C": 1,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: adds that a PDB only works if the Pods have a controller with an ownership chain, which the page does not say.",
+   "worst_summary_quote": "so a PDB only works if the Pods have a controller with that ownership chain",
+   "worst_page_quote": "computed from the .spec.replicas of the workload resource",
+   "quote_verified": true,
+   "notes": "Also omits the worked example. Violation behavior is stated and supported. minAvailable/maxUnavailable text and YAML come from outside the page but are labelled as general knowledge. Wrongly says the content is truncated before the example."
+  }
+ ]
+}

@@ -1,0 +1,81 @@
+{
+ "id": "r01",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 1331,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (minor): says DAPA-HF is only tied to reduced EF; page also says Farxiga works regardless of EF",
+   "worst_summary_quote": "DAPA-HF is mentioned only in connection with heart failure with reduced EF.",
+   "worst_page_quote": "effective in treating heart failure regardless of ejection fraction",
+   "quote_verified": true,
+   "notes": "Correctly reports no HR/p-value and hedges. Minor only."
+  },
+  {
+   "slot": "S2",
+   "arm": "B",
+   "run": 2,
+   "chars": 985,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor): omits that approval for EMPEROR-Preserved is described only as FDA basis; EF>40% attributed fine; no material issue",
+   "worst_summary_quote": "It says the trial found empagliflozin effective in patients with EF up to 65%",
+   "worst_page_quote": "effective in patients with EF up to 65%",
+   "quote_verified": true,
+   "notes": "Accurate; absence claims are correct (page has no HR/p-values)."
+  },
+  {
+   "slot": "S3",
+   "arm": "T",
+   "run": 1,
+   "chars": 1289,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (minor): DAPA-HF framed as only HFrEF; page says effective regardless of EF",
+   "worst_summary_quote": "DAPA-HF is mentioned only in the context of heart failure with reduced EF, not HFpEF.",
+   "worst_page_quote": "effective in treating heart failure regardless of ejection fraction",
+   "quote_verified": true,
+   "notes": "Accurate, well hedged. Minor only."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 1044,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "D (minor): 'implies a positive result' is inference, flagged as such; no material issue",
+   "worst_summary_quote": "met its primary endpoint",
+   "worst_page_quote": "met its primary endpoint",
+   "quote_verified": true,
+   "notes": "Accurate; correctly notes significance not confirmable."
+  }
+ ]
+}

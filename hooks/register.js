@@ -37,6 +37,8 @@ export function register(on, options) {
           round: { type: 'string', description: 'Short label for this search round, shown in the side view' },
           queries: { type: 'array', items: { type: 'string' }, description: 'Search keywords given to Step 1 for this round, shown in the side view' },
           parentRound: { type: 'string', description: 'For a re-search or follow-up: the round label it came from' },
+          docVersions: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs version the question is about, per domain, e.g. {"nextjs.org": "14"}. Other versions of that domain are penalised' },
+          docVariants: { type: 'object', additionalProperties: { type: 'string' }, description: 'Docs variant the question is about, per domain, e.g. {"nextjs.org": "app"}. Pages under another variant are penalised' },
         },
         required: ['records'],
       },
@@ -75,6 +77,8 @@ export function register(on, options) {
     await $.fs.write(infile, JSON.stringify(e.records || []))
     const argv = ['python3', $.plugin.root + SKILL_DIR + '/scripts/srcscore.py', '--in', infile, '--mode', mode]
     if (e.field) argv.push('--field', e.field)
+    for (const [dom, v] of Object.entries(e.docVersions || {})) argv.push('--doc-version', dom + '=' + v)
+    for (const [dom, v] of Object.entries(e.docVariants || {})) argv.push('--doc-variant', dom + '=' + v)
     try {
       const r = await $.process.run(argv, { timeoutMs: 120000 })
       if (r.exitCode !== 0) return { result: 'srcscore.py failed (exit ' + r.exitCode + '): ' + r.stderr.trim() + '\nStop: do not fall back to unscored reading.' }
@@ -88,18 +92,29 @@ export function register(on, options) {
 
   on('tool.call', { tool: 'mcp__scored-web-search__judge_support' }, async ($, e, next) => {
     const sources = e.sources || []
+    const model = options.judgeModel || 'haiku'
     const lines = new Array(sources.length)
+    const verdicts = new Array(sources.length)
+    const usages = new Array(sources.length)
     let cursor = 0
     const worker = async () => {
       while (cursor < sources.length && !next.signal.aborted) {
         const i = cursor++
-        lines[i] = sources[i].url + ' | ' + (await judgeOne($, sources[i], e.question, options.judgeModel || 'haiku'))
+        verdicts[i] = await judgeOne($, sources[i], e.question, model, (u) => { usages[i] = u })
+        lines[i] = sources[i].url + ' | ' + verdicts[i]
       }
     }
     const workers = []
     for (let k = 0; k < Math.min(JUDGE_CONCURRENCY, sources.length); k++) workers.push(worker())
     await Promise.all(workers)
     const result = lines.filter(Boolean).join('\n')
+    // Judge calls go through $.model.complete and never reach a transcript, so this file is their only cost record.
+    try {
+      await $.fs.write($.plugin.root + '/.tmp/judge-usage-' + Date.now() + '.json', JSON.stringify({
+        question: e.question, model,
+        calls: sources.map((s, i) => ({ url: s.url, line: verdicts[i] || null, usage: usages[i] || null })),
+      }))
+    } catch (err) {}
     const judged = parseJudgeLines(result)
     await edit($, (run) => Object.assign(run.judged, judged))
     return { result }
@@ -155,7 +170,7 @@ async function showPane($) {
   if (r && r.isPlaced === false) $.ui.toast('Scored search: run /search-view to open the side view')
 }
 
-export async function judgeOne($, source, question, model) {
+export async function judgeOne($, source, question, model, onUsage) {
   let page
   try {
     const res = await $.http.fetch(source.url, { headers: { Accept: 'text/html,text/plain' } })
@@ -176,6 +191,7 @@ export async function judgeOne($, source, question, model) {
     maxTokens: 100,
     timeoutMs: 60000,
   })
+  if (r.usage && onUsage) onUsage(r.usage)
   if (!r.isAnswered) return 'UNJUDGED | judge unavailable'
   return parseVerdict(r.text)
 }

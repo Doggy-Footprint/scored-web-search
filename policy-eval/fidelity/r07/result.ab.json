@@ -1,0 +1,81 @@
+{
+ "id": "r07",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 1,
+   "chars": 2705,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor): omits non-hacking baseline hack rates and HumanEval/MBPP retention results",
+   "worst_summary_quote": "In the non-hacking environment (Table 2), the authors report that pass@1 differences are within sampling variance.",
+   "worst_page_quote": "pass@1 differences across methods are within test-set sampling variance",
+   "quote_verified": true,
+   "notes": "All numbers match; AUC hedge correct; RLHF framing sourced from the page."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 2,
+   "chars": 3224,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor): omits additive variant and HumanEval/MBPP numbers",
+   "worst_summary_quote": "the mean shortcut score rises substantially over training, closely tracking the increase in hacking rate.",
+   "worst_page_quote": "closely tracking the increase in hacking rate",
+   "quote_verified": true,
+   "notes": "Most complete; all numbers correct; 'not found' items are accurate and hedged."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 2,
+   "chars": 1858,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "B (minor): says easier tasks 'delayed' the rebound for Phi-4-mini; page says it never enters Phase III",
+   "worst_summary_quote": "Reducing task difficulty delayed the rebound for Phi-4-mini but not for Llama.",
+   "worst_page_quote": "sustains legitimate solving and never enters",
+   "quote_verified": true,
+   "notes": "Numbers correct; lacks tables and per-method breakdown beyond multiplicative/gen-time."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 1,
+   "chars": 2126,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "A (minor): omits non-hacking environment table and hedge on deception/eval-awareness detail",
+   "worst_summary_quote": "In the non-hacking environment, pass@1 differences across methods fell within sampling variance.",
+   "worst_page_quote": "pass@1 differences across methods are within test-set sampling variance",
+   "quote_verified": true,
+   "notes": "Table and HumanEval/MBPP numbers all verified against Table 1."
+  }
+ ]
+}

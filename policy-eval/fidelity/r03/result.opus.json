@@ -1,0 +1,12 @@
+{"id":"r03","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":2,"B":0,"C":2,"D":0},
+ "worst":"A: Pfizer 85.7% (3-symptom) reported without its very wide CI, while the 2-symptom CI is given",
+ "worst_summary_quote":"At the more severe disease end point defined as 3 or more symptoms, vaccine efficacy was 85.7%.",
+ "worst_page_quote":"vaccine efficacy was 85.7% (96.66% CI, 32.0%-98.7%)",
+ "worst_page_url":"https://www.ajmc.com/view/pfizer-touts-85-efficacy-of-rsv-vaccine-for-adults-will-seek-fda-approval",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader may take the 85.7% Pfizer figure as precise when its interim CI spans 32.0% to 98.7%.",
+ "verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":10,"links_shared_with_haiku_round":10,
+ "haiku_worst_repeated":"yes",
+ "notes":"Same 10 links as Haiku round. Unsupported by fetched pages (maybe unfetched): GSK 7 vs 40 cases and CI 57.9-94.1, NEJM publication, garbled 'Fed-data press release'. Omitted Moderna/Pfizer secondary details. Summary hedges interim/press-release basis. GSK severe 94.1% supported by EMJ page."}

@@ -1,0 +1,81 @@
+{
+ "id": "d06",
+ "summaries": [
+  {
+   "slot": "S1",
+   "arm": "T",
+   "run": 2,
+   "chars": 1540,
+   "verdict": "minor loss",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "C: cites a linked blog post title that is not in the page text (not material to the question)",
+   "worst_summary_quote": "The page links to a blog post titled \"Amazon S3 update: strong read-after-write consistency,\"",
+   "worst_page_quote": "",
+   "quote_verified": false,
+   "notes": "Page text has no blog link or title; unsupported detail but immaterial, so not counted. All guarantees correct; inference on delete is labelled as inference."
+  },
+  {
+   "slot": "S2",
+   "arm": "T",
+   "run": 1,
+   "chars": 1331,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": null,
+   "notes": "Accurate quotes; absences (date, exceptions) are correct and hedged."
+  },
+  {
+   "slot": "S3",
+   "arm": "B",
+   "run": 1,
+   "chars": 782,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": null,
+   "notes": "Concise, correct on all three cases, scope and cost."
+  },
+  {
+   "slot": "S4",
+   "arm": "B",
+   "run": 2,
+   "chars": 843,
+   "verdict": "faithful",
+   "counts": {
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+   },
+   "false_absence": 0,
+   "worst": "none",
+   "worst_summary_quote": "",
+   "worst_page_quote": "",
+   "quote_verified": null,
+   "notes": "Correct; 'isn't served stale' is a fair paraphrase."
+  }
+ ]
+}

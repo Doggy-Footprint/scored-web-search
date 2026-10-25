@@ -1,0 +1,6 @@
+{"id":"r20","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":1,"D":1},
+ "worst":"C: attributes the 35% revenue rise to UK post-pandemic reopening, citing Schor, a claim in none of the usable pages (maybe from the unfetched BNN page)","worst_summary_quote":"the report links to the post-pandemic reopening","worst_page_quote":"which potentially indicates healthy growth during this period of working time reduction","worst_page_url":"https://leglobal.law/?p=27670",
+ "quote_verified":true,"reader_gets_wrong":"A reader would think the report itself ties the 35% revenue rise to the pandemic reopening, when the compared pages call it a sign of healthy growth.","verbatim_source":"transcript",
+ "pages_compared":6,"pages_reused":6,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"yes","notes":"Same reopening attribution as Haiku round; here it is hedged by 'coverage' and a closing advice to check the original report, so minor. 2021 baseline wording not in pages (they say previous years). Omits Iceland, Sweden and other mixed-results notes. BNN page returned only homepage text."}

@@ -1,0 +1,12 @@
+{"id":"r13","kind":"research","caller":"opus",
+ "verdict":"minor loss","counts":{"A":1,"B":0,"C":1,"D":1},
+ "worst":"D: a 2025 IEEE PVSC conference abstract on one lab device architecture is presented as a general 'study on three-year aging' finding without scope",
+ "worst_summary_quote":"A 2025 study on three-year aging describes how environmental exposure drove efficiency down from about 17% to 5%",
+ "worst_page_quote":"Devices with a glass/FTO/compact-TiO2/mesoporous-TiO2/perovskite/Spiro-OMeTAD/Au architecture were fabricated and subjected to stability tests.",
+ "worst_page_url":"https://elmi.hbku.edu.qa/en/publications/analyzing-the-degradation-mechanisms-in-perovskite-solar-cells-ov/",
+ "quote_verified":true,
+ "reader_gets_wrong":"A reader may take the 17% to 5% drop and lead diffusion as a general perovskite finding rather than one short conference abstract on a single n-i-p architecture under stability tests.",
+ "verbatim_source":"transcript",
+ "pages_compared":5,"pages_reused":5,"links_total":9,"links_shared_with_haiku_round":9,
+ "haiku_worst_repeated":"no",
+ "notes":"Opus drops the Haiku round's 'field-style' mislabel but still omits device scope. Joule/HZB 20-month outdoor item comes from unfetched EurekAlert (C, maybe from an unfetched page) and is hedged ('press release doesn't name them'). Extrinsic/intrinsic split, 2023 Advanced Science, ion migration/trapped charges, light soaking/electrical bias, 500 h/1000 h/25 yr checked against PMC5979782, PMC10811515, elmi page. Omits reversibility of extrinsic losses. The 'Li et al. RSC 2016' attribution was not checked (RSC page not fetched). Identical 9 links to Haiku round."}

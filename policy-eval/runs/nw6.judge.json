@@ -1,0 +1,621 @@
+{
+ "id": "nw6",
+ "judged_at": "2026-10-24",
+ "question": "What is the status of the EU proposal to require messaging services to scan private messages?",
+ "mode": "news",
+ "field": "news",
+ "expansion_keywords": [
+  {
+   "keyword": "Regulation (EU) 2026/1881",
+   "source_url": "https://en.wikipedia.org/wiki/Chat_Control"
+  },
+  {
+   "keyword": "EU Centre on Child Sexual Abuse",
+   "source_url": "https://en.wikipedia.org/wiki/Chat_Control"
+  },
+  {
+   "keyword": "detection orders Irish presidency trilogue",
+   "source_url": "https://reclaimthenet.org/bill/eu-csa-regulation-chat-control"
+  },
+  {
+   "keyword": "2022/0155(COD)",
+   "source_url": "https://reclaimthenet.org/bill/eu-csa-regulation-chat-control"
+  },
+  {
+   "keyword": "Council Legal Service Article 7 Charter voluntary detection",
+   "source_url": "https://reclaimthenet.org/bill/eu-csa-regulation-chat-control"
+  }
+ ],
+ "judged": [
+  {
+   "url": "https://en.wikipedia.org/wiki/Chat_Control",
+   "title": "Chat Control",
+   "rank": 1,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Comprehensive, current through Oct 2026: trilogue state, 2026/1881 interim regulation, open detection dispute."
+  },
+  {
+   "url": "https://www.drweb.de/chatkontrolle-das-eu-parlament-ebnet-per-eilverfahren-den-weg-zur-neuabstimmung/",
+   "title": "Chatkontrolle: Das EU-Parlament ebnet per Eilverfahren den Weg zur Neuabstimmung",
+   "rank": 2,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Accurate July 7 urgency-vote report, but preview before final vote; business-blog framing."
+  },
+  {
+   "url": "https://www.galaxus.at/en/page/chat-control-on-the-brink-of-collapse-eu-gets-in-its-own-way-42127",
+   "title": "Chat control on the brink of collapse: EU gets in its own way",
+   "rank": 3,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Retailer editorial about April 2026 lapse; outdated, fetch timed out."
+  },
+  {
+   "url": "https://www.galaxus.ch/en/page/chat-control-on-the-brink-of-collapse-eu-gets-in-its-own-way-42127",
+   "title": "Chat control on the brink of collapse: EU gets in its own way",
+   "rank": 4,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Duplicate mirror of galaxus.at article."
+  },
+  {
+   "url": "https://www.netzwoche.ch/news/2025-11-27/update-eu-staaten-streichen-verpflichtende-chatkontrolle-aus-gesetzesentwurf",
+   "title": "Update: EU lässt freiwillige Chatkontrollen auslaufen",
+   "rank": 5,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Running updated news timeline through July 2026 vote, Council Nov 2025 position."
+  },
+  {
+   "url": "https://www.netzwoche.ch/news/2025-10-09/deutschland-erteilt-anlassloser-chatkontrolle-eine-absage",
+   "title": "Update: EU-Parlament bringt Chatkontrolle zurück",
+   "rank": 6,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Same outlet's overlapping running update; largely duplicates other netzwoche page."
+  },
+  {
+   "url": "https://extraetf.com/de/news/dpa-afx/eu-debatte-zu-chatkontrolle-geht-in-die-nachste-runde--1783012130-07176-1783012127147",
+   "title": "EU-Debatte zu Chatkontrolle geht in die nächste Runde",
+   "rank": 7,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "dpa wire syndicated on ETF site; short July 2 Council re-approval report."
+  },
+  {
+   "url": "https://reclaimthenet.org/bill/eu-csa-regulation-chat-control",
+   "title": "EU CSA Regulation (Chat Control 2.0)",
+   "rank": 8,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Advocacy tracker with useful trilogue timeline but opinionated, unverified Legal Service claim."
+  },
+  {
+   "url": "https://www.techradar.com/vpn/vpn-privacy-security/the-eu-has-never-been-closer-to-agreeing-on-the-scanning-of-your-private-chats-but-how-did-we-get-here",
+   "title": "The EU has never been closer to agreeing on the scanning of your private chats",
+   "rank": 9,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tech-press explainer; body not retrievable, date unknown."
+  },
+  {
+   "url": "https://thecybersecguru.com/news/eu-chat-control-2026-guide/",
+   "title": "EU Chat Control Is Back – And This Time It Might Actually Pass",
+   "rank": 10,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Internally inconsistent, misleading 'Has Passed' banner, derivative aggregation."
+  },
+  {
+   "url": "https://www.techradar.com/vpn/vpn-privacy-security/chat-control-eu-lawmakers-finally-agree-on-the-voluntary-scanning-of-your-private-chats",
+   "title": "Chat Control: EU lawmakers finally agree on the voluntary scanning of your private chats",
+   "rank": 11,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Headline only retrievable; likely Nov 2025 Council position news."
+  },
+  {
+   "url": "https://news.internetsociety.org/?p=35468",
+   "title": "GEC Steering Committee Statement on Council of the EU Position on the European CSA Regulation",
+   "rank": 12,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Coalition statement on Nov 2025 Council position; advocacy, now dated."
+  },
+  {
+   "url": "https://www.techradar.com/vpn/vpn-privacy-security/chat-control-eu-commissioner-backs-parliament-line-on-targeted-monitoring",
+   "title": "Chat Control: EU Commissioner backs Parliament line on targeted monitoring",
+   "rank": 13,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Relevant headline, body not retrievable; partial angle."
+  },
+  {
+   "url": "https://agenceurope.eu/en/bulletin/article/13850/1",
+   "title": "agenceurope.eu",
+   "rank": 14,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Paywalled EU news bulletin; content unknown."
+  },
+  {
+   "url": "https://reclaimthenet.org/upload-moderation-the-eus-latest-name-for-messaging-surveillance",
+   "title": "“Upload Moderation” – The EU’s Latest Name For Messaging Surveillance",
+   "rank": 15,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "May 2024 Belgian proposal; outdated advocacy coverage."
+  },
+  {
+   "url": "https://captaincompliance.com/education/eus-renewed-csam-scanning-rules-reopen-the-debate-over-private-message-surveillance/",
+   "title": "EU’s Renewed CSAM Scanning Rules Reopen the Debate Over Private-Message Surveillance",
+   "rank": 16,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": true,
+   "basis": "fetched",
+   "reason": "Privacy-software vendor content marketing; accurate-ish but derivative, promotional."
+  },
+  {
+   "url": "https://discuss.privacyguides.net/t/eu-presidency-led-initiative-to-revive-chat-control-1-0-reinstated-again-until-2028-peoples-efforts-still-showed-noticeable-effect/38982",
+   "title": "EU presidency-led initiative to revive Chat Control 1.0 reinstated again until 2028",
+   "rank": 17,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Forum thread by self-declared non-expert; vote figures unverified."
+  },
+  {
+   "url": "https://heise.de/-11356680",
+   "title": "Showdown in Strasbourg: The unexpected return of Chat Control 1.0",
+   "rank": 18,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Reputable tech news; detailed July 7 urgency vote and procedure explanation."
+  },
+  {
+   "url": "https://feddit.it/post/30988803",
+   "title": "cross-posted from: https://feddit.uk/post/52022350",
+   "rank": 19,
+   "round": 1,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Lemmy cross-post with no original content."
+  },
+  {
+   "url": "https://www.gigazine.net/gsc_news/en/20240621-chat-control-cancel",
+   "title": "Chat control vote cancelled (June 2024)",
+   "rank": 20,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2024 Council vote cancellation; outdated history."
+  },
+  {
+   "url": "https://netzpolitik.org/2024/victory-for-now-no-majority-on-chat-control-for-belgium/",
+   "title": "Victory for now: No majority on chat control for Belgium",
+   "rank": 21,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Reputable but 2024 history, outdated for status."
+  },
+  {
+   "url": "https://www.europarl.europa.eu/news/en/press-room/20260325IPR39207",
+   "title": "Child sexual abuse online: voluntary detection measures will not be extended",
+   "rank": 22,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Official EP press release on March 2026 rejection, vote counts, permanent law status."
+  },
+  {
+   "url": "https://oeil.europarl.europa.eu/oeil/en/document-summary?id=1896266",
+   "title": "Extension of the temporary derogation from the ePrivacy Directive to combat online child sexual abuse",
+   "rank": 23,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Official Legislative Observatory summary of March 2026 vote."
+  },
+  {
+   "url": "https://cyberinsider.com/eu-votes-to-block-extension-of-rules-allowing-private-message-scanning/",
+   "title": "EU votes to block extension of rules allowing private message scanning",
+   "rank": 24,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Solid but superseded by July reinstatement; partial picture."
+  },
+  {
+   "url": "https://www.lovguiden.dk/en/det-offentlige/raadet-for-den-europaeiske-union/2026-07-23-eu-genindfoerer-midlertidig-forordning-mod-online-overgrebsmateriale-med-boern",
+   "title": "EU reintroduces temporary regulation against online child sexual abuse material",
+   "rank": 25,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Danish legal-info relay of Council release; fetch failed (429)."
+  },
+  {
+   "url": "https://digitalpolicyalert.org/change/17548",
+   "title": "Regulation extending the ePrivacy derogation for child sexual abuse detection (2026/1881)",
+   "rank": 26,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Policy tracker with dated full timeline of 2026/1881 adoption."
+  },
+  {
+   "url": "https://www.europarl.europa.eu/news/en/press-room/20260306IPR37531/child-sexual-abuse-online-support-for-extending-rules-until-august-2027",
+   "title": "Child sexual abuse online: support for extending voluntary rules until August 2027",
+   "rank": 27,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Official but March 11 position later superseded; good for history."
+  },
+  {
+   "url": "https://euperspectives.eu/2026/03/eu-parliament-committee-votes-down-extension-of-csam-detection-rules/",
+   "title": "EU parliament committee votes down extension of CSAM detection rules",
+   "rank": 28,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "LIBE committee vote March 2026; intermediate step, some date confusion."
+  },
+  {
+   "url": "https://eur-lex.europa.eu/eli/C/2026/3747/oj/eng/pdf",
+   "title": "eur-lex.europa.eu C/2026/3747",
+   "rank": 29,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Official Journal notice; content not extractable, likely Council position on extension."
+  },
+  {
+   "url": "https://www.eff.org/deeplinks/2025/12/after-years-controversy-eus-chat-control-nears-its-final-hurdle-what-know",
+   "title": "After Years of Controversy, the EU’s Chat Control Nears Its Final Hurdle: What to Know",
+   "rank": 30,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Authoritative analysis of Council Nov 2025 position entering trilogue."
+  },
+  {
+   "url": "https://www.techradar.com/vpn/vpn-privacy-security/this-is-a-political-deception-new-chat-control-convinces-lawmakers-but-not-privacy-experts-yet",
+   "title": "\"This is a political deception\" − New Chat Control convinces lawmakers, but not privacy experts yet",
+   "rank": 31,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Reaction piece to Danish compromise; opinion-heavy, dated."
+  },
+  {
+   "url": "https://www.euronews.com/2026/07/27/should-the-eu-scan-your-private-messages-with-chat-control-take-our-poll",
+   "title": "Should the EU scan your private messages with Chat Control? Take our poll",
+   "rank": 32,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Thin poll piece; says stalled, no dates or votes."
+  },
+  {
+   "url": "https://www.csoonline.com/article/4195680/eu-extends-mass-scanning-of-messages-without-a-warrant.html",
+   "title": "EU extends mass scanning of messages without a warrant",
+   "rank": 33,
+   "round": 1,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Clear July 9 vote report and Chat Control 2.0 context."
+  },
+  {
+   "url": "https://www.computerweekly.com/news/366640781/EU-Parliament-rejects-Chat-Control-message-scanning",
+   "title": "EU Parliament rejects Chat Control message scanning",
+   "rank": 34,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Reputable but March rejection superseded; fetch blocked."
+  },
+  {
+   "url": "https://pasqualepillitteri.it/en/news/7755/chat-control-what-is-eu-message-scanning-explained",
+   "title": "Chat Control: What It Is and How the EU Wants to Scan Your Messages",
+   "rank": 35,
+   "round": 1,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Personal-blog derivative explainer; accurate July vote but secondary."
+  },
+  {
+   "url": "https://www.parlament.gv.at/dokument/XXVIII/EU/94189/imfname_11677953.pdf",
+   "title": "imfname 11677953 (Austrian Parliament EU document)",
+   "rank": 1,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Mirrored Council document; content unverified."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-13051-2026-INIT/en/pdf",
+   "title": "Council 13051/26: Overview of current legislative proposals under the Irish Presidency",
+   "rank": 2,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary Council note, 29 Sep 2026: trilogue on detection obligations, current status."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-9139-2026-INIT/en/pdf",
+   "title": "Council 9139/26: CSA Regulation trilogue preparation",
+   "rank": 3,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Primary May 2026 trilogue prep doc; superseded by later notes."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-11501-2026-INIT/en/pdf",
+   "title": "Council 11501/26: Outcome of the trilogue on 29 June 2026 and next steps",
+   "rank": 4,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Primary Presidency note on fifth trilogue outcome and remaining detection dispute."
+  },
+  {
+   "url": "https://cdn.netzpolitik.org/wp-upload/2026/06/2026-05-13_Council_Presidency_CSA-R_Trilogue_9139.pdf",
+   "title": "2026-05-13 Council Presidency CSA-R Trilogue 9139",
+   "rank": 5,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Leaked copy of Council doc 9139; duplicate of primary."
+  },
+  {
+   "url": "https://netzpolitik.org/wp-upload/2026/06/2026-06-22_Council_Presidency_CSAR_State-of-play_10499.pdf",
+   "title": "2026-06-22 Council Presidency CSAR State of play 10499",
+   "rank": 6,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Leaked copy of Council state-of-play 10499; duplicate."
+  },
+  {
+   "url": "https://edri.org/our-work/irish-and-french-parliamentarians-sound-the-alarm-about-eus-csa-regulation/",
+   "title": "Irish and French parliamentarians sound the alarm about EU’s CSA Regulation",
+   "rank": 7,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "2023 advocacy piece; outdated for current status."
+  },
+  {
+   "url": "https://connectfolx.europarl.europa.eu/connefof/app/exp/COM(2022)0209",
+   "title": "COM(2022)0209 national parliaments exchange",
+   "rank": 8,
+   "round": 2,
+   "judgment": "junk",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Database portal entry with no substantive status content."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-10499-2026-INIT/en/pdf",
+   "title": "Council 10499/26: CSAR state of play",
+   "rank": 9,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Primary Council state-of-play June 2026; agreement on almost all except detection."
+  },
+  {
+   "url": "https://eur-lex.europa.eu/procedure/EN/2022_155",
+   "title": "Procedure 2022/0155/COD COM (2022) 209",
+   "rank": 10,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Official procedure page; ongoing status only, fetch empty."
+  },
+  {
+   "url": "https://digitalpolicyalert.org/event/42705-regulation-extending-the-eprivacy-derogation-for-child-sexual-abuse-detection-ceases-to-apply-regulation-no-20261881",
+   "title": "Regulation 2026/1881 ceases to apply (event)",
+   "rank": 11,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Tracker stub event duplicating main entry."
+  },
+  {
+   "url": "https://digitalpolicyalert.org/event/42703-regulation-extending-the-eprivacy-derogation-for-child-sexual-abuse-detection-entered-into-force-regulation-no-20261881",
+   "title": "Regulation 2026/1881 entered into force (event)",
+   "rank": 12,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Tracker stub; duplicates 17548 timeline."
+  },
+  {
+   "url": "https://eur-lex.europa.eu/eli/reg/2026/1881/oj",
+   "title": "Regulation (EU) 2026/1881",
+   "rank": 13,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Official text of reinstated interim regulation until April 2028."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-11703-2026-INIT/en/pdf",
+   "title": "Council 11703/26",
+   "rank": 14,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Procedural Council document on extension adoption."
+  },
+  {
+   "url": "https://data.europarl.europa.eu/distribution/doc/TA-10-2026-0266_en.pdf",
+   "title": "TA-10-2026-0266 (EP adopted text)",
+   "rank": 15,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Official EP text adopted 9 July 2026 on the extension."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-9835-2026-INIT/en/pdf",
+   "title": "Council 9835/26: Presidency compromise texts",
+   "rank": 16,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Primary but technical compromise text; partial."
+  },
+  {
+   "url": "https://euroculturer.eu/2026/08/17/the-trojan-horse-of-chat-control-when-does-voluntary-surveillance-become-a-mandate/",
+   "title": "The Trojan Horse of Chat Control: When Does Voluntary Surveillance Become a Mandate?",
+   "rank": 17,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Student-magazine opinion column; some accurate status details."
+  },
+  {
+   "url": "https://edri.org/our-work/voluntary-detection-measures-still-on-the-table-for-the-csa-regulation/",
+   "title": "Voluntary detection measures still on the table for the CSA Regulation",
+   "rank": 18,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "2023 advocacy analysis; outdated."
+  },
+  {
+   "url": "https://data.consilium.europa.eu/doc/document/ST-8787-2023-INIT/en/pdf",
+   "title": "Council 8787/23: Legal Service opinion on detection orders",
+   "rank": 19,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "2023 Legal Service opinion; background only."
+  },
+  {
+   "url": "https://table.media/en/europe/feature/chat-monitoring-the-european-parliament-faces-another-vote-with-an-uncertain-outcome",
+   "title": "Chat monitoring: The European Parliament faces another vote with an uncertain outcome",
+   "rank": 20,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Preview of March 2026 vote; superseded, paywalled."
+  },
+  {
+   "url": "https://netzpolitik.org/2026/verlaengerung-der-ausnahmeregelung-rat-liess-chatkontrolle-verhandlungen-sehenden-auges-scheitern/",
+   "title": "Verlängerung der Ausnahmeregelung: Rat ließ Chatkontrolle-Verhandlungen sehenden Auges scheitern",
+   "rank": 21,
+   "round": 2,
+   "judgment": "useful",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Investigative report with leaked Council minutes on interim talks collapse."
+  },
+  {
+   "url": "https://www.greens-efa.eu/en/article/press/negotiations-collapsed-in-best-possible-outcome-quote-from-markéta-gregorová-mep",
+   "title": "Negotiations collapsed in best possible outcome: quote from Markéta Gregorová MEP",
+   "rank": 22,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Partisan press quote; thin, March 2026."
+  },
+  {
+   "url": "https://www.patrick-breyer.de/en/eu-chat-control-twist-commissioner-sides-with-parliament-over-governments-boost-for-european-parlaments-strong-mandate/embed/",
+   "title": "EU Chat Control Twist: Commissioner Sides with Parliament Over Governments",
+   "rank": 23,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "fetched",
+   "reason": "Embed stub of activist post; little content."
+  },
+  {
+   "url": "https://www.drweb.de/eu-verhandelt-chat-control-hinter-verschlossenen-tueren/",
+   "title": "EU verhandelt Chat Control hinter verschlossenen Türen",
+   "rank": 24,
+   "round": 2,
+   "judgment": "marginal",
+   "vendor_interest": false,
+   "basis": "snippet",
+   "reason": "Preview of June trilogue; superseded."
+  }
+ ]
+}
