@@ -6,7 +6,7 @@ import argparse
 import json
 import sys
 
-from .fetchers import CACHE_DIR, STATS, Cache
+from .fetchers import CACHE_DIR, LOOKUP_HOSTS, STATS, Cache
 from .io_format import parse_input, render_compact, render_md, render_table
 from .policy import PolicyError, apply_mode, load_policy, validate_policy
 from .scoring import score_many
@@ -34,7 +34,8 @@ def main(argv=None):
     ap.add_argument("--field", default=None,
                     help="research field, sets the citation half-life (see policy.json)")
     ap.add_argument("--no-net", action="store_true",
-                    help="no external lookups; URL signals and supplied dates still apply")
+                    help="offline testing only: no citation, star or HN lookups, so the scores "
+                         "are not what a research run should act on")
     ap.add_argument("--workers", type=int, default=None)
     ap.add_argument("--policy", default=None, help="path to policy.json")
     ap.add_argument("--mode", choices=MODES, default="academic",
@@ -146,9 +147,8 @@ def main(argv=None):
         msg = ("srcscore: %d of %d external lookups could not be reached"
                % (STATS["failed"], STATS["lookups"]))
         if STATS["failed"] * 2 >= STATS["lookups"]:
-            print("%s.\nScores would be domain-tier only and misleading. Check network "
-                  "access to api.openalex.org / api.semanticscholar.org, or re-run with "
-                  "--no-net to score with URL signals and supplied dates only." % msg, file=sys.stderr)
+            print("%s.\nScores would rest on the domain tier alone and mislead. Allow network "
+                  "access to %s, then run again." % (msg, ", ".join(LOOKUP_HOSTS)), file=sys.stderr)
             return 4
         print("%s; those rows are flagged `lookup-failed`." % msg, file=sys.stderr)
 

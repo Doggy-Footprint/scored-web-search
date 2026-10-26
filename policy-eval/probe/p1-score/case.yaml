@@ -1,0 +1,38 @@
+schema_version: "1.1"
+name: p1-score
+runs: 1
+execution:
+  model: claude-opus-5-5
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Skill, Bash, Read, Write]
+  prompt: |
+    This is an environment probe, not research. Do exactly the steps below, report what happened, and do nothing else. Never work around a failure: record it and move on.
+
+    1. Invoke the Skill tool with skill "scored-web-search". Do not follow its pipeline; only note the "Base directory for this skill" it prints. Call it BASE.
+    2. With Write, create `probe-urls.json` in the current working directory containing exactly:
+       [{"url": "https://arxiv.org/abs/1706.03762", "title": "Attention Is All You Need"},
+        {"url": "https://doi.org/10.1038/s41586-021-03819-2", "title": "Highly accurate protein structure prediction with AlphaFold"},
+        {"url": "https://github.com/pytorch/pytorch", "title": "pytorch/pytorch"},
+        {"url": "https://news.ycombinator.com/item?id=8863", "title": "My YC app: Dropbox"}]
+    3. Run each of these as its own Bash call and keep the full output, stderr included:
+       a. `pwd; echo TMPDIR=$TMPDIR; ls -la "BASE/scripts" 2>&1 | head -5`
+       b. `python3 "BASE/scripts/srcscore.py" --in probe-urls.json --format compact --no-net 2>&1; echo EXIT=$?`
+       c. `python3 "BASE/scripts/srcscore.py" --in probe-urls.json --format compact 2>&1; echo EXIT=$?`
+       d. `python3 -c "import urllib.request as u; print(u.urlopen('https://api.openalex.org/works?per-page=1', timeout=10).status)" 2>&1 | tail -2`
+       e. `python3 -c "import urllib.request as u; print(u.urlopen('https://hn.algolia.com/api/v1/items/8863', timeout=10).status)" 2>&1 | tail -2`
+       (substitute BASE with the real path, quoted).
+    4. End your reply with these lines, each value one line of plain text:
+       PROBE base=<BASE>
+       PROBE cwd=<output of pwd>
+       PROBE ls_base=<ok | the error>
+       PROBE nonet_exit=<exit code of b>
+       PROBE net_exit=<exit code of c>
+       PROBE net_stderr=<srcscore's "external lookups" line from c, or none>
+       PROBE openalex=<200 | the error from d>
+       PROBE hn=<200 | the error from e>
+graders:
+  - name: keep-trace
+    type: regex
+    target: trace
+    pattern: "[\\s\\S]*"

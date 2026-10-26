@@ -16,12 +16,15 @@ VERSION = "2.0.0"
 UA = "srcscore/%s (research triage)" % VERSION
 MAILTO = os.environ.get("SRCSCORE_MAILTO", "").strip()
 
+# Every host http_json is pointed at. A sandbox has to allow all of them for scores to mean anything.
+LOOKUP_HOSTS = ("api.openalex.org", "api.semanticscholar.org", "api.github.com", "hn.algolia.com")
+
 CACHE_DIR = os.environ.get(
     "SRCSCORE_CACHE", os.path.join(os.path.expanduser("~"), ".cache", "srcscore")
 )
 
 __all__ = [
-    "VERSION", "UA", "MAILTO", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
+    "VERSION", "UA", "MAILTO", "LOOKUP_HOSTS", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
     "http_json", "openalex_by_doi", "openalex_by_pmid", "s2_by_arxiv", "arxiv_lookup",
     "github_repo", "hn_item", "hn_points",
 ]

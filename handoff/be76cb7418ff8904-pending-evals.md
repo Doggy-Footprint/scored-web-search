@@ -4,12 +4,12 @@
 항목을 끝내면 결과를 `policy-eval/METHODOLOGY.md` Run log에 남기고 여기서 지운다. 관련 이슈에도 결과를 남긴다.
 
 ## 선행: skill만으로 arms를 돌릴 준비
-eval은 skill의 core 로직이 효과가 있는지만 잰다. repo 루트 plugin은 이제 skill만 담는다. arms를 다시 돌리기 전에 아래를 푼다.
-- **Step 2 scoring의 네트워크(미결정):** eval 문서(code.claude.com/docs/en/plugin-evals, "Grant tools"와 "How runs are isolated")에 따르면 eval의 Bash는 OS sandbox 안에서 돌고, `--allow-tools "WebFetch(domain:…)"`로 허용한 도메인에만 닿는다. 직접 확인하지는 않았다. 인용 수·star·HN 조회 API 도메인을 허용할지, network 신호 없이 잴지 정한다. 허용하지 않으면 verdict가 실사용과 달라진다.
-- **sandbox 파일 제약(미확인):** Step 1이 쓰는 URL 파일은 workspace 안에 있어야 한다. Bash가 plugin 폴더의 `srcscore.py`를 읽을 수 있는지 probe로 확인한다.
-- **WebFetch 도메인 safety check의 rate limit:** pilot에서도 "rate-limited" 실패가 있었다. Step 2.5 judge subagent도 WebFetch로 읽으므로, 병렬 실행이면 UNJUDGED가 늘 수 있다. `-j`를 낮추거나 실패 사유를 따로 센다.
+eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plugin은 이제 skill만 담는다. eval 안에서 각 단계가 무엇을 할 수 있는지는 2026-10-26 probe(`policy-eval/probe/`, METHODOLOGY "Environment probes")로 확인했다.
+- **Step 2 scoring의 네트워크(결정):** eval의 Bash는 `WebFetch(domain:…)`으로 이름을 준 host에만 닿는다. 도메인 없는 `WebFetch` grant로는 열리지 않는다. scorer host 4개가 막히면 `srcscore.py`는 exit 4로 멈춘다. arms는 이 4개를 항상 허용해서 돌린다(명령은 METHODOLOGY Runs 2). 막힌 환경에서 skill이 멈추고 허용할 host를 안내하는지는 probe로 따로 본다.
+- **sandbox 파일(해결):** plugin을 로드한 run에서는 Bash가 skill 폴더를 읽는다. pilot without-arm의 `Operation not permitted`는 plugin을 로드하지 않은 run에서 난 것이다. `/tmp`는 Write도 Bash 읽기도 막혀서, Step 1 URL 파일을 `$TMPDIR` 아래에 쓰도록 SKILL.md를 고쳤다.
+- **WebFetch 도메인 safety check의 rate limit(미확인):** pilot에서 "rate-limited" 실패가 있었다. probe의 judge(4 URL, `-j 1`)에서는 나지 않았다. Step 2.5 judge subagent도 WebFetch로 읽으므로, 문항 20개를 병렬로 돌리면 UNJUDGED가 늘 수 있다. `-j`를 낮추거나 실패 사유를 따로 센다.
 - **`arms.py` 파싱:** skill의 각 단계가 trace에 남기는 것을 읽어야 한다. 대상은 main context의 `srcscore.py` 표(Bash 출력), search subagent가 쓴 URL 파일, judge subagent의 `url | USE/SKIP/UNJUDGED | reason` 줄이다. 이게 없으면 B, 표 행의 `listed`, in-run verdict를 잴 수 없다.
-- **기준선:** pilot(2026-10-24)은 이전 구성으로 돌렸다. 그때의 Step 2.5 judge는 plugin 코드가 직접 페이지를 받았고, eval이 이 요청을 막아 한 번도 판정하지 못했다. 지금 judge는 WebFetch subagent이고, 메인의 WebFetch는 같은 pilot에서 정상 동작했으므로 이 차단은 받지 않을 것으로 본다(미확인). 메인 에이전트는 실행마다 SUPPORT를 다 읽거나 다 버렸다. 그래서 pilot 수치는 새 실행과 직접 비교하지 않고 참고만 한다.
+- **기준선:** pilot(2026-10-24)은 이전 구성으로 돌렸다. 그때의 Step 2.5 judge는 plugin 코드가 직접 페이지를 받았고, eval이 이 요청을 막아 한 번도 판정하지 못했다. 메인 에이전트는 실행마다 SUPPORT를 다 읽거나 다 버렸다. 지금 judge는 WebFetch subagent이고 probe에서 eval 안에서도 판정했다. 그래서 pilot 수치는 새 실행과 직접 비교하지 않고 참고만 한다.
 
 ## 실행 묶음
 | 묶음 | 도구 | 포함 항목 |

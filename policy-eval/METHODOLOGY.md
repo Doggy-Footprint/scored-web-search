@@ -28,6 +28,14 @@ policy's output reaches the judge, the policy grades its own exam.
    The same prompt runs twice: with the plugin from this repo, and with no plugin (temp HOME/config, no
    CLAUDE.md in either arm). The prompt names "scored web search" only as words, so the baseline is an
    ordinary research agent. `tool_used: Skill` records whether the skill fired in the with-arm.
+   Arms measure the skill working as intended, so the run grants what a real session needs. Eval Bash runs in
+   a sandbox whose network opens only to hosts named in a `WebFetch(domain:…)` grant (a bare `WebFetch` grant
+   does not open it), and without the scorer's hosts `srcscore.py` exits 4. `--keep-temp` keeps the traces
+   `arms.py ingest` copies:
+
+       claude plugin eval . --eval-dir policy-eval/arms --keep-temp --allow-tools Bash Write WebSearch WebFetch \
+         "WebFetch(domain:api.openalex.org)" "WebFetch(domain:api.semanticscholar.org)" \
+         "WebFetch(domain:api.github.com)" "WebFetch(domain:hn.algolia.com)"
 3. **Ingest** (`arms.py ingest <result.json>`). Copies each run's stream trace and session transcripts into
    `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists the arm URLs the blind judge has not
    labelled in `runs/<id>.union.todo.json`.
@@ -125,6 +133,14 @@ of every summary is grep-verified against the page (step 7).
     an Opus main agent writes different ones. The judge's truncation calls depend on the page text, which can be
     longer than what WebFetch read.
 
+## Environment probes
+
+`policy-eval/probe/` holds short cases that check what the skill's steps can do inside an eval run, apart from any
+research: the scorer's file and network access (`p1-score`), where a subagent can write the URL file that sandboxed
+Bash then reads (`p2-urlfile`), and the Step 2.5 judge subagent's WebFetch and reply format (`p3-judge`). Each ends
+its reply with `PROBE key=value` lines. Run them with `--ablation none --keep-temp` and the grants under test, and
+read the replies from the kept traces. Re-run them when the skill's steps or the eval build change.
+
 ## Run log
 
 Dates are when each round ran. Labels age: pages change and "current version" questions go stale, so read a
@@ -138,6 +154,7 @@ result against its date.
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
 | 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
+| 2026-10-26 | Environment probes (`policy-eval/probe/`). Plugin folder readable from Bash; scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent fetched and answered in the Step 2.5 format | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes

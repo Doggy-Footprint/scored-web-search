@@ -23,7 +23,7 @@ Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegate
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** that can both search the web and write a file — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name in a temporary directory (one file per subagent, e.g. `urls-1.json`). It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** that can both search the web and write a file — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name under `$TMPDIR` (`/tmp` only when it is unset; `echo $TMPDIR` tells you), one file per subagent, e.g. `$TMPDIR/ssw/urls-1.json`. Sandboxes let files be written and read there but often not in `/tmp`. It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 If the subagent could not write the file, it returns the records themselves. Write them to the path you named and go on, and say in the report that the records came back inline. They cost main context but carry no page text.
 
@@ -31,7 +31,7 @@ Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parall
 
 In `official-docs` mode, name the official docs host of the product the question is about (one or two, e.g. `docs.python.org`) and add `site:<host> <keywords>` queries next to the plain ones. Plain searches often miss the official page entirely.
 
-No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json`. The caution for sub agents works same for main agent too.
+No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json` under `$TMPDIR`, as above. The caution for sub agents works same for main agent too.
 
 ### Step 2 — Score: hand it to the script
 
@@ -136,7 +136,7 @@ The same domain sits at different tiers in different modes, because a mode asks 
 A mode's overlay is also where a domain gets registered when it only matters to that mode's question.
 
 ## Error handling
-If script fails, report it and stop; do not fall back to unscored reading.
+If `scripts/srcscore.py` fails, report it and stop; do not fall back to unscored reading. Exit 4 means most citation, star and HN lookups could not reach their APIs, so every score would rest on the domain tier alone. Tell the user the hosts to allow — the script names them — and stop. Do not re-run with `--no-net`: it drops those signals, and its verdicts are not this skill's.
 
 ## Don't Do This
 

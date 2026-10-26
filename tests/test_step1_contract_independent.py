@@ -113,7 +113,7 @@ class SkillStep1Contract(unittest.TestCase):
 
     def test_main_agent_names_temp_file_one_per_subagent(self):
         self.assertRegex(self.s, r"(file path|path)[^.]*(you|main agent) name|(you|main agent) name[^.]*(file|path)")
-        self.assertRegex(self.s, r"temp(orary)? (directory|dir)")
+        self.assertIn("$tmpdir", self.s)
         self.assertRegex(self.s, r"one file per sub-?agent")
 
     def test_records_url_title_optional_iso_date(self):
