@@ -11,10 +11,10 @@
 ```
 1. Search  경량 subagent가 URL/title/date만 수집 (요약·snippet 없음)
 2. Score   srcscore.py가 0-100점 + verdict 부여
-2.5 Judge  경량 subagent가 SUPPORT만 열어보고 USE / SKIP 판정
+2.5 Judge  경량 subagent가 SUPPORT만 열어보고 USE / SKIP / UNJUDGED 판정
 3. Read    main agent는 PRIMARY + USE 판정 SUPPORT만 읽음
 4. 재검색 (최대 2라운드)
-5. 주장-근거 대조 → 6. 출처·점수 태그를 단 보고서
+5. 주장-근거 대조 → 6. 출처·점수 태그를 단 보고서, 끝에 단계별 실패를 적는 `Degraded:` 줄
 ```
 
 - **점수** = 도메인 tier 기본점(88 / 74 / 60 / 46 / 32 / 14, 미등록은 32) ± 인용수, 게재 여부, GitHub star·HN 점수, 최신성, URL 경로 감점(SEO 경로, 구버전 문서 등).

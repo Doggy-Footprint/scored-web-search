@@ -11,14 +11,12 @@ execution:
 
     1. Invoke the Skill tool with skill "scored-web-search". Do not follow its pipeline; only note the "Base directory for this skill" it prints. Call it BASE.
     2. Read `BASE/references/judge-rubric.md` with the Read tool.
-    3. Launch one subagent with the Agent tool: subagent_type "general-purpose", model "haiku", no fork. Give it the research question "How do LLM-based autonomous agents plan and use memory?", the rubric verbatim, these four URLs in this order, and the instruction quoted below verbatim.
-       URLs:
+    3. Launch one subagent with the Agent tool: subagent_type "general-purpose", model "haiku", no fork. Give it the rubric verbatim as its only instructions, the research question "How do LLM-based autonomous agents plan and use memory?", and these five URLs in this order:
        https://lilianweng.github.io/posts/2023-06-23-agent/
        https://arxiv.org/pdf/2308.11432
        https://www.ibm.com/think/topics/ai-agents
        https://httpbin.org/status/404
-       Instruction:
-       > For each URL: `WebFetch` the page and apply the rubric to it. If the page cannot be fetched, is empty, or is a PDF, answer UNJUDGED with the reason. Return only one line per URL, in input order: `url | USE/SKIP/UNJUDGED | reason`. No page text, quotes, or summaries.
+       https://ssw-probe-unresolvable.invalid/page
     4. End your reply with the subagent's reply exactly as returned, between the lines `PROBE judge_reply_begin` and `PROBE judge_reply_end`.
 graders:
   - name: keep-trace

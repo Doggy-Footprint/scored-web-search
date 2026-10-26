@@ -82,8 +82,9 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
   peak tokens; report length; fetch failures with reasons; skill fired.
 
 `arms.py` does not yet read what the skill's own steps leave in a trace: the score table `srcscore.py` prints
-into the main context, the URL files the search subagent writes, and the judge subagent's verdict lines. Until
-it does, B, `listed` for score-table rows, and in-run verdicts are not measured.
+into the main context, the URL files the search subagent writes, the judge subagent's verdict lines, and the report's closing
+`Degraded:` line. Until it does, B, `listed` for score-table rows, and in-run verdicts are not measured, and a
+run that fell short of the pipeline cannot be told from a clean one.
 
 ## Limits
 
@@ -154,7 +155,7 @@ result against its date.
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
 | 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
-| 2026-10-26 | Environment probes (`policy-eval/probe/`). Plugin folder readable from Bash; scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent fetched and answered in the Step 2.5 format | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
+| 2026-10-26 | Environment probes (`policy-eval/probe/`). Plugin folder readable from Bash; scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes
