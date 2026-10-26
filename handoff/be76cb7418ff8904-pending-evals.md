@@ -3,6 +3,14 @@
 변경은 반영했지만 아직 평가하지 않은 항목을 한곳에 모은다. 비싼 실행(arms, blind judge)은 한 번에 묶어 돌린다.
 항목을 끝내면 결과를 `policy-eval/METHODOLOGY.md` Run log에 남기고 여기서 지운다. 관련 이슈에도 결과를 남긴다.
 
+## 선행: skill만으로 arms를 돌릴 준비
+eval은 skill의 core 로직이 효과가 있는지만 잰다. repo 루트 plugin은 이제 skill만 담는다. arms를 다시 돌리기 전에 아래를 푼다.
+- **Step 2 scoring의 네트워크(미결정):** eval 문서(code.claude.com/docs/en/plugin-evals, "Grant tools"와 "How runs are isolated")에 따르면 eval의 Bash는 OS sandbox 안에서 돌고, `--allow-tools "WebFetch(domain:…)"`로 허용한 도메인에만 닿는다. 직접 확인하지는 않았다. 인용 수·star·HN 조회 API 도메인을 허용할지, network 신호 없이 잴지 정한다. 허용하지 않으면 verdict가 실사용과 달라진다.
+- **sandbox 파일 제약(미확인):** Step 1이 쓰는 URL 파일은 workspace 안에 있어야 한다. Bash가 plugin 폴더의 `srcscore.py`를 읽을 수 있는지 probe로 확인한다.
+- **WebFetch 도메인 safety check의 rate limit:** pilot에서도 "rate-limited" 실패가 있었다. Step 2.5 judge subagent도 WebFetch로 읽으므로, 병렬 실행이면 UNJUDGED가 늘 수 있다. `-j`를 낮추거나 실패 사유를 따로 센다.
+- **`arms.py` 파싱:** skill의 각 단계가 trace에 남기는 것을 읽어야 한다. 대상은 main context의 `srcscore.py` 표(Bash 출력), search subagent가 쓴 URL 파일, judge subagent의 `url | USE/SKIP/UNJUDGED | reason` 줄이다. 이게 없으면 B, 표 행의 `listed`, in-run verdict를 잴 수 없다.
+- **기준선:** pilot(2026-10-24)은 이전 구성으로 돌렸다. 그때의 Step 2.5 judge는 plugin 코드가 직접 페이지를 받았고, eval이 이 요청을 막아 한 번도 판정하지 못했다. 지금 judge는 WebFetch subagent이고, 메인의 WebFetch는 같은 pilot에서 정상 동작했으므로 이 차단은 받지 않을 것으로 본다(미확인). 메인 에이전트는 실행마다 SUPPORT를 다 읽거나 다 버렸다. 그래서 pilot 수치는 새 실행과 직접 비교하지 않고 참고만 한다.
+
 ## 실행 묶음
 | 묶음 | 도구 | 포함 항목 |
 |---|---|---|
@@ -12,8 +20,8 @@
 ## 항목
 
 ### E1. official-docs: 공식 페이지가 읽기 대상에 들어갔나 (issue #5 완료 조건 2)
-- 변경: Step 1 `site:<공식 host>` 질의, Step 2 `--official-domain`(mod: `officialDomains`). 미등록 host만 tier 2와 `official-claimed`를 받는다.
-- 측정: od 문항 with-arm에서 공식 페이지가 PRIMARY 또는 USE 판정 SUPPORT로 읽힌 주제 수. 기준은 `results/pilot.summary.json`. od9(Biome, 미등록 공식 docs)를 추가한다.
+- 변경: Step 1 `site:<공식 host>` 질의, Step 2 `--official-domain`. 미등록 host만 tier 2와 `official-claimed`를 받는다.
+- 측정: od 문항 with-arm에서 공식 페이지가 PRIMARY 또는 USE 판정 SUPPORT로 읽힌 주제 수. od9(Biome, 미등록 공식 docs)를 추가한다.
 - 기존 `runs/*.urls.json`에는 `site:` 결과가 없어 재채점으로는 잴 수 없다.
 
 ### E2. na/co 도메인 등록의 out-of-sample 효과 (issue #5 완료 조건 1)
@@ -23,23 +31,21 @@
 - 알려진 한계: useful인데 떨어지는 URL은 도메인당 1건인 long tail이다. 도메인 등록으로는 recall이 크게 줄지 않는다. 후속 설계 후보는 na/co에서 미등록 tier 5 일부를 Step 2.5 judge로 내용 판정하는 방안이다(별도 이슈).
 
 ### E3. tier 2 승격의 judge 안전장치 (issue #5)
-- 근거: tier 2(SUPPORT)는 Step 2.5 judge가 페이지마다 거른다.
-- 측정: `official-claimed`와 신규·재배치 tier 2 도메인의 `judge_support` USE/SKIP 비율. blind label 대비 SKIP이 junk를 잡는지도 본다.
+- 근거: tier 2(SUPPORT)는 Step 2.5 judge가 페이지마다 거른다. pilot의 judge는 위 기준선의 이유로 동작하지 않아, 이 근거가 아직 확인되지 않았다.
+- 측정: `official-claimed`와 신규·재배치 tier 2 도메인에서 judge의 USE/SKIP 비율. blind label 대비 SKIP이 junk를 잡는지도 본다. 선행의 `arms.py` 파싱이 필요하다.
 
 ### E4. academic 원 출처 추적 (issue #5)
 - 변경: academic에서 Step 5 Verify를 항상 수행한다. 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
 - 측정: trace 라운드 발생률, 원 출처를 찾아 읽은 비율, 추가 비용(arms cost breakdown).
 
 ### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건)
-- 변경: `score_sources`와 `srcscore.py --format compact`는 PRIMARY/SUPPORT 행과 verdict별 개수만 돌려준다. 전체 표는 side view와 `.tmp/score-*.txt`에 남는다. searcher 반환은 mod가 `.tmp/batch-<id>.json`에 저장하고 메인에는 batch id만 넘긴다(skill-only는 subagent가 파일을 쓰고 경로만 반환). 표의 URL은 fetch 주소다(PMC 구 주소 → `pmc.ncbi.nlm.nih.gov`, 2312 이후 arXiv abs/pdf → html). Step 3은 WebFetch 잘림 note가 있으면 필요할 때만 `offset`으로 이어 읽게 한다.
-- 기준: `results/pilot.summary.json`(with $0.78/문항, 메인 $0.60, 16.9턴, 메인이 읽은 페이지 7.5, 메인 오버헤드 약 20k자: 표 8.9k + searcher 10.9k).
-- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, `searcher_contract.chars_in_main`(`arms.py`). fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E1, E4와 같은 실행에서 잰다.
-- 주의: batch 파일은 `.tmp`에 있으므로 arms 실행 직후, `.tmp`를 지우기 전에 `arms.py ingest`를 돌린다.
+- 변경: `srcscore.py --format compact`는 PRIMARY/SUPPORT 행과 verdict별 개수만 돌려주고, 전체 표는 `--full-out` 파일에 남긴다. Step 1 subagent는 URL 파일을 쓰고 경로와 개수만 돌려준다. 표의 URL은 fetch 주소다(PMC 구 주소 → `pmc.ncbi.nlm.nih.gov`, 2312 이후 arXiv abs/pdf → html). Step 3은 WebFetch 잘림 note가 있으면 필요할 때만 `offset`으로 이어 읽게 한다.
+- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, main context에 들어온 표와 subagent 반환의 글자 수. fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E1, E4와 같은 실행에서 잰다.
 
 ### E6. blind judge의 snippet 라벨을 개별 페이지 판정으로 교체 (방법론 변경, 미반영)
 - 문제: blind judge(Runs 1)와 union labeller(Runs 4)는 fetch하지 않은 URL에 `basis: snippet` 라벨을 매긴다. WebSearch는 결과마다 snippet을 주지 않고 묶음 요약 하나를 돌려준다. 그래서 이 라벨은 제목과 묶음 요약만 보고 매긴 것이고, URL 하나하나를 평가한 게 아니다.
 - 현황(2026-10-24, 1148 URL): snippet 457건(40%). 이 중 fetch 실패가 131건, 미시도가 약 326건이다. 라벨 분포는 fetched가 useful 28%·junk 15%, snippet이 useful 9%·junk 35%다. A의 recall/precision loss와 arms contamination이 이 라벨에 기대고 있다.
 - 제안: 수집과 판정을 나눈다. 수집은 지금처럼 Opus WebSearch로 하고 라벨을 매기지 않는다. 판정은 URL마다 독립 labeller가 본문을 읽고 한다. 본문을 못 얻은 URL은 `unreachable`로 표시하고 측정에서 뺀다.
-- 주의: WebFetch에는 이미 Haiku 요약기가 들어 있다. Haiku agent가 WebFetch로 판정하면 Haiku 요약을 보고 Haiku가 판정하게 된다. plugin arm도 WebFetch로 읽으므로 judge와 오류가 서로 상관될 수 있다. `fidelity/pagetext.py`(curl, 모델 없음)는 PDF를 추출하지 못한다.
+- 주의: WebFetch에는 이미 Haiku 요약기가 들어 있다. Haiku agent가 WebFetch로 판정하면 Haiku 요약을 보고 Haiku가 판정하게 된다. skill의 Step 2.5 judge와 with-arm도 WebFetch로 읽으므로, labeller와 오류가 서로 상관될 수 있다. `fidelity/pagetext.py`(curl, 모델 없음)는 PDF를 추출하지 못한다.
 - 미결정: (1) 본문 출처: pagetext raw, WebFetch, raw를 먼저 쓰고 실패하면 WebFetch 중 무엇 (2) labeller 모델: Haiku, Sonnet, Opus, Haiku + Opus 표본 일치도 확인 중 무엇 (3) 다시 판정할 범위: snippet 457건만, 또는 1148건 전부(전부면 regression 기준선의 날짜가 바뀐다) (4) Runs 4에도 적용할지
-- 완료 조건: METHODOLOGY Runs 1·4를 갱신한다. 정한 범위로 다시 판정하고 Run log에 기록한다. `contrast.py`와 `arms.py analyze`를 다시 실행해 이전 수치와 비교한다. E2·E3 측정 전에 반영한다.
+- 완료 조건: METHODOLOGY Runs 1·4를 갱신한다. 정한 범위로 다시 판정하고 Run log에 기록한다. `contrast.py`와 `arms.py analyze`를 이전 라벨과 새 라벨로 각각, 같은 코드로 돌려 비교한다. `arms.py`는 2026-10-26에 산출 항목이 바뀌었으므로(`listed`는 main 검색 결과만, 비용 역할은 `main`/`subagent`) tracked `results/pilot.summary.json`과 직접 비교하지 않는다. E2·E3 측정 전에 반영한다.

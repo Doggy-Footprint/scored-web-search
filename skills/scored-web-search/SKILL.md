@@ -19,7 +19,7 @@ This skill filters sub-standard sources before the main agent reads them when hi
 6.   Write    → every claim tagged with source + score
 ```
 
-Paths below are relative to this skill's folder. **If the `score_sources` tool is available, read `references/mod.md` first** — the plugin's mod replaces Steps 1, 2 and 2.5 with its own agent and tools. When sub-agents are not available, the main agent does Steps 1 and 5 as fallback and skips Step 2.5.
+Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegated to lightweight subagents; when sub-agents are not available, the main agent does Steps 1 and 5 itself and skips Step 2.5.
 
 ### Step 1 — Search: collect URLs only
 

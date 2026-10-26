@@ -3,7 +3,7 @@
 Two questions, measured on the same questions:
 
 - **A — policy.** Do `scripts/policy.json` + `scripts/modes/*.json` verdicts agree with an independent judge?
-- **B — Step 2.5 judge.** Do `judge_support` USE/SKIP decisions agree with the same judge?
+- **B — Step 2.5 judge.** Do the judge subagent's USE/SKIP decisions agree with the same judge?
 - **Arms — with vs. without the plugin.** How much low-quality material reaches the main agent's context,
   how many sources it reads, and what the whole run costs, with the plugin loaded and with no plugin at all.
 
@@ -43,8 +43,8 @@ Each URL an arm touched is counted once, at the highest level it reached:
 |---|---|
 | `read` | the main agent fetched the page (WebFetch succeeded) |
 | `exposed` | the URL came back from a WebSearch the main agent ran — that tool returns a text summary of its results, so their content is in the main context |
-| `listed` | only the URL/title is in the main context: searcher hand-back, score table, or a search result with no summary |
-| `sub_read` | a subagent or the `judge_support` tool fetched it; nothing of it is in the main context |
+| `listed` | only the URL/title is in the main context: a search result with no summary |
+| `sub_read` | a subagent fetched it; nothing of it is in the main context |
 | `sub_seen` | only a subagent's search returned it |
 
 **Contamination** = `marginal` + `junk` URLs at a main-context level (`read`, `exposed`, `listed`), reported
@@ -57,26 +57,25 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
 
 - `result.modelUsage` (per model, every API call of the run, including tools' internal calls and web-search fees).
 - Session transcripts (`config/projects/<cwd>/<session>.jsonl` and `subagents/agent-*.jsonl` in the kept
-  sandbox): final per-message `usage` → cost per agent role (`main`, `searcher`, other subagents). The stream
-  trace's per-message usage is interim and is not used for cost.
-- `judge_support` calls go through `$.model.complete` and appear in no transcript; the mod writes
-  `.tmp/judge-usage-<ms>.json` (`question`, `model`, `calls[{url, line, usage}]`) and ingest matches each file
-  to the run whose `judge_support` output has the same URLs.
+  sandbox): final per-message `usage` → cost per agent role (`main`, `subagent`). The stream trace's
+  per-message usage is interim and is not used for cost.
 - `tool_internal_usd` per model = `modelUsage.costUSD` − transcript cost − web searches × $0.01. It is the
   model calls the WebSearch/WebFetch tools make on their own (WebSearch runs on the caller's model,
-  WebFetch's summariser on Haiku), plus `judge_support` if the host bills it into `modelUsage`.
+  WebFetch's summariser on Haiku).
 
 ## Measures
 
 - **A**: recall loss (`useful` scored below SUPPORT), precision loss (`junk` scored PRIMARY/SUPPORT), vendor
   pass-through, per-round split for expansion questions (`contrast.py`).
-- **B**: confusion of `judge_support` USE/SKIP/UNJUDGED against blind labels.
-- **Arms**: contamination (above); sources read (main attempted/ok, by label, by in-run verdict; subagent and
-  `judge_support` fetches apart); cost breakdown (above).
-- **Extra raw data**: in-run score/verdict/tier/signals; searcher contract (record keys beyond
-  `url`/`title`/`date`, dated records); read-URL overlap between arms; `useful` URLs reached only by the
-  baseline; main-context peak tokens; report length; fetch failures with reasons; rounds (score_sources calls);
-  skill fired.
+- **B**: confusion of the judge's USE/SKIP/UNJUDGED against blind labels.
+- **Arms**: contamination (above); sources read (main attempted/ok, by label; subagent fetches apart); cost
+  breakdown (above).
+- **Extra raw data**: read-URL overlap between arms; `useful` URLs reached only by the baseline; main-context
+  peak tokens; report length; fetch failures with reasons; skill fired.
+
+`arms.py` does not yet read what the skill's own steps leave in a trace: the score table `srcscore.py` prints
+into the main context, the URL files the search subagent writes, and the judge subagent's verdict lines. Until
+it does, B, `listed` for score-table rows, and in-run verdicts are not measured.
 
 ## Limits
 
@@ -134,7 +133,7 @@ result against its date.
 | Date | Round | Output |
 |---|---|---|
 | 2026-10-24 | Blind judge, 20 pilot questions | `runs/*.judge.json`, `runs/*.urls.json`, `results/a_summary.json` |
-| 2026-10-24 | Arms, with vs without | `results/pilot.summary.json` |
+| 2026-10-24 | Arms, with vs without. The Step 2.5 judge of that version fetched pages from plugin code, which `claude plugin eval` refuses, so it never judged; the current judge is a subagent that reads with WebFetch | `results/pilot.summary.json` |
 | 2026-10-25 | Fidelity round 1 (Haiku caller) and round 2 (Opus caller WebSearch) | `fidelity/*/result.json`, `result.opus.json` |
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |

@@ -59,26 +59,14 @@ class SkillFolderSelfContained(unittest.TestCase):
 
 class SingleOriginPrompts(unittest.TestCase):
     def test_reference_files_exist_nonempty(self):
-        for n in ("searcher-prompt.md", "judge-rubric.md", "mod.md"):
-            self.assertTrue(read(os.path.join(REFS, n)).strip(), n)
-
-    def test_register_js_has_no_inline_copy(self):
-        src = read(os.path.join(ROOT, "hooks", "register.js"))
         for n in ("searcher-prompt.md", "judge-rubric.md"):
-            for line in read(os.path.join(REFS, n)).splitlines():
-                line = line.strip()
-                if len(line) > 25:
-                    self.assertNotIn(line, src, f"{n} line copied into register.js")
-            self.assertIn(n, src)
-        self.assertIn("/skills/scored-web-search", src)
-        self.assertIn("/references/", src)
-        self.assertIn("/scripts/srcscore.py", src)
+            self.assertTrue(read(os.path.join(REFS, n)).strip(), n)
 
     def test_no_other_copies_in_repo_code(self):
         rubric_line = next(l.strip() for l in read(os.path.join(REFS, "judge-rubric.md")).splitlines() if len(l.strip()) > 40)
         hits = []
         for d, dirs, files in os.walk(ROOT):
-            dirs[:] = [x for x in dirs if x not in (".git", "node_modules", "__pycache__", "tests", "tests_mod")]
+            dirs[:] = [x for x in dirs if x not in (".git", "node_modules", "__pycache__", "tests")]
             for fn in files:
                 p = os.path.join(d, fn)
                 if os.path.abspath(p) == os.path.join(REFS, "judge-rubric.md") or not fn.endswith((".js", ".ts", ".py", ".md", ".json")):
@@ -94,31 +82,18 @@ class SingleOriginPrompts(unittest.TestCase):
 class SkillDocs(unittest.TestCase):
     def setUp(self):
         self.skill = read(os.path.join(SKILL, "SKILL.md"))
-        self.mod = read(os.path.join(REFS, "mod.md"))
 
-    def test_skill_md_mentions_mod_only_via_pointer(self):
-        self.assertIn("references/mod.md", self.skill)
-        for word in ("judge_support", "searcher agent", "scored-web-search:searcher"):
+    def test_skill_md_names_no_mod_tools(self):
+        for word in ("references/mod.md", "score_sources", "judge_support", "scored-web-search:searcher"):
             self.assertNotIn(word, self.skill)
-        lines = [l for l in self.skill.splitlines() if "score_sources" in l]
-        for l in lines:
-            self.assertIn("references/mod.md", l)
 
     def test_skill_md_script_pipeline(self):
         for ref in ("references/searcher-prompt.md", "references/judge-rubric.md", "scripts/srcscore.py"):
             self.assertIn(ref, self.skill)
 
     def test_referenced_paths_exist(self):
-        for text in (self.skill, self.mod):
-            for rel in set(re.findall(r"(?:references|scripts)/[\w./-]+\.(?:md|py|json)", text)):
-                self.assertTrue(os.path.exists(os.path.join(SKILL, rel)), rel)
-        for n in set(re.findall(r"[\w-]+\.md", self.mod)):
-            if n != "SKILL.md":
-                self.assertTrue(os.path.exists(os.path.join(REFS, n)) or os.path.exists(os.path.join(SKILL, n)), n)
-
-    def test_mod_md_maps_steps(self):
-        for s in ("scored-web-search:searcher", "score_sources", "judge_support", "round", "parentRound", "2.5"):
-            self.assertIn(s, self.mod)
+        for rel in set(re.findall(r"(?:references|scripts)/[\w./-]+\.(?:md|py|json)", self.skill)):
+            self.assertTrue(os.path.exists(os.path.join(SKILL, rel)), rel)
 
 
 if __name__ == "__main__":

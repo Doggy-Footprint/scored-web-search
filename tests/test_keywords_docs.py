@@ -12,11 +12,6 @@ class KeywordsDocs(unittest.TestCase):
         self.assertGreater(i, -1)
         self.assertGreater(k, i)
 
-    def test_mod_lists_queries_argument(self):
-        md = (SKILL / "references" / "mod.md").read_text()
-        row = next(l for l in md.splitlines() if l.startswith("| 2. Score"))
-        self.assertIn("`queries`", row)
-
 
 if __name__ == "__main__":
     unittest.main()

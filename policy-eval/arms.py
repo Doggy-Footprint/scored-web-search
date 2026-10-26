@@ -7,10 +7,10 @@
                                    runs/pilot.summary.json
 
 Exposure levels, per URL and per arm, counted at the highest one reached (METHODOLOGY.md):
-    listed   URL/title in the main agent's context (searcher hand-back, score table, search result links)
+    listed   URL/title in the main agent's context (search-result links without their summary)
     exposed  search-result text in the main context (the WebSearch tool's summary of its own results)
     read     page content fetched by the main agent
-    sub_read page content fetched by a subagent or by the judge_support tool -- never in the main context
+    sub_read page content fetched by a subagent -- never in the main context
 """
 import argparse, hashlib, json, re, shutil, subprocess, sys
 from collections import Counter, defaultdict
@@ -26,17 +26,9 @@ ROOT = Path(__file__).resolve().parent
 RUNS = ROOT / "runs"
 REPO = ROOT.parent
 SCORER = REPO / "skills" / "scored-web-search" / "scripts" / "srcscore.py"
-JUDGE_USAGE_DIR = REPO / ".tmp"
-BATCH_DIR = REPO / ".tmp"
-BATCH_STUB = re.compile(r"^searcher batch ([A-Za-z0-9_-]+): ")
 LEVELS = ("listed", "exposed", "read")
 LABELS = ("useful", "marginal", "junk", "unlabeled")
 URL_RE = re.compile(r"https?://[^\s\"'<>\]\)|`]+")
-SCORE_ROW = re.compile(r"^\s*([\d.]+)\s+(PRIMARY|SUPPORT|SKIM|WEAK|DROP|BLOCKED)\s+(\S+)\s+(.*?)\s*(https?://\S+)\s*$")
-JUDGE_ROW = re.compile(r"^(https?://\S+)\s*\|\s*(USE|SKIP|UNJUDGED)\s*\|\s*(.*)$")
-SEARCHER = "scored-web-search:searcher"
-JUDGE_TOOL = "mcp__scored-web-search__judge_support"
-SCORE_TOOL = "mcp__scored-web-search__score_sources"
 
 
 def norm(url):
@@ -74,22 +66,6 @@ def search_links(text):
     return [l for l in links if isinstance(l, dict) and l.get("url")], text[end:].strip()
 
 
-def searcher_records(text):
-    """JSON records in a searcher hand-back and whether they keep to url/title/date."""
-    recs, extra_keys = [], set()
-    for m in re.finditer(r"\[\s*\{", text):
-        try:
-            arr, _ = json.JSONDecoder().raw_decode(text, m.start())
-        except ValueError:
-            continue
-        for r in arr:
-            if isinstance(r, dict) and r.get("url"):
-                recs.append(r)
-                extra_keys |= set(r) - {"url", "title", "date"}
-    if not recs:
-        recs = [{"url": u} for u in URL_RE.findall(text)]
-    return recs, sorted(extra_keys)
-
 
 # ---------------------------------------------------------------- ingest
 
@@ -100,8 +76,7 @@ def extract(trace_path):
     role_of = {}                      # Agent tool_use id -> subagent type
     tool_use = {}                     # tool_use id -> (role, name, input)
     agent_type = {}                   # subagent agentId -> type, from the Agent tool results
-    ev = {"searches": [], "searcher_returns": [], "score_tables": [], "judge_lines": [], "fetches": [],
-          "agents": [], "skill_fired": False, "report_chars": 0, "result": None}
+    ev = {"searches": [], "fetches": [], "agents": [], "skill_fired": False, "report_chars": 0, "result": None}
 
     for d in lines:
         if d.get("type") == "system" and d.get("subtype") == "task_started":
@@ -137,33 +112,6 @@ def extract(trace_path):
                     ev["searches"].append({"role": trole, "query": inp.get("query"),
                                            "links": [{"url": l["url"], "title": l.get("title")} for l in links],
                                            "summary_chars": len(rest)})
-                elif name in ("Agent", "Task") and role_of.get(b["tool_use_id"]) == SEARCHER:
-                    stub = BATCH_STUB.match(text.strip())
-                    if stub:
-                        # The mod kept the records out of the main context; read them back from its batch file.
-                        bf = BATCH_DIR / f"batch-{stub[1]}.json"
-                        recs = json.loads(bf.read_text()) if bf.exists() else []
-                        ev["searcher_returns"].append({"records": recs, "extra_keys": [], "chars": len(text),
-                                                       "batch": stub[1], "in_main": False})
-                    else:
-                        recs, extra = searcher_records(text)
-                        ev["searcher_returns"].append({"records": recs, "extra_keys": extra, "chars": len(text),
-                                                       "in_main": True})
-                elif name == SCORE_TOOL:
-                    rows = []
-                    for line in text.splitlines():
-                        m = SCORE_ROW.match(line)
-                        if m:
-                            rows.append({"url": m[5], "score": float(m[1]), "verdict": m[2], "tier": m[3],
-                                         "signals": m[4].strip()})
-                    ev["score_tables"].append({"round": inp.get("round"), "queries": inp.get("queries"),
-                                               "n_records": len(inp.get("records") or []),
-                                               "batches": inp.get("batches") or [], "rows": rows})
-                elif name == JUDGE_TOOL:
-                    for line in text.splitlines():
-                        m = JUDGE_ROW.match(line.strip())
-                        if m:
-                            ev["judge_lines"].append({"url": m[1], "decision": m[2], "reason": m[3]})
                 elif name == "WebFetch":
                     code = tur.get("code") if isinstance(tur, dict) else None
                     ok = not b.get("is_error") and (code is None or 200 <= int(code) < 400) and bool(text.strip())
@@ -216,26 +164,9 @@ def session_usage(trace_path, session, agent_type):
     return rows, peak
 
 
-def judge_usage_for(ev, started, used_files):
-    """The judge-usage files whose URL set matches a judge_support call of this run."""
-    want = {norm(j["url"]) for j in ev["judge_lines"]}
-    if not want:
-        return []
-    found = []
-    for f in sorted(JUDGE_USAGE_DIR.glob("judge-usage-*.json")):
-        if f.name in used_files:
-            continue
-        doc = json.loads(f.read_text())
-        urls = {norm(c["url"]) for c in doc.get("calls", [])}
-        if urls and urls <= want:
-            found.append({"file": f.name, **doc})
-            used_files.add(f.name)
-    return found
-
 
 def cmd_ingest(result_path):
     res = json.loads(Path(result_path).read_text())
-    used = set()
     for case in res.get("cases", []):
         cid = case["name"]
         pool = set()
@@ -258,7 +189,6 @@ def cmd_ingest(result_path):
                 ev.update({"id": cid, "arm": arm, "eval_cost_usd": run.get("costUsd"), "turns": run.get("turns"),
                            "duration_s": run.get("durationSeconds"), "error": run.get("error"),
                            "started_at": run.get("startedAt")})
-                ev["judge_usage"] = judge_usage_for(ev, run.get("startedAt"), used)
                 (RUNS / f"{cid}.{arm}.report.md").write_text(ev.pop("report", ""))
                 (RUNS / f"{cid}.{arm}.events.json").write_text(json.dumps(ev, indent=1))
                 pool |= set(arm_urls(ev))
@@ -295,18 +225,9 @@ def arm_urls(ev):
                 bump(l["url"], "exposed" if s["summary_chars"] else "listed")
             else:
                 bump(l["url"], "sub_seen")
-    for r in ev["searcher_returns"]:
-        for rec in r["records"]:
-            bump(rec["url"], "listed" if r.get("in_main", True) else "sub_seen")
-    for t in ev["score_tables"]:
-        for row in t["rows"]:
-            bump(row["url"], "listed")
     for f in ev["fetches"]:
         if f["url"] and f["ok"]:
             bump(f["url"], "read" if f["role"] == "main" else "sub_read")
-    for j in ev["judge_lines"]:
-        if j["decision"] != "UNJUDGED":
-            bump(j["url"], "sub_read")
     return lvl
 
 
@@ -315,9 +236,6 @@ def arm_titles(ev):
     for s in ev["searches"]:
         for l in s["links"]:
             t.setdefault(norm(l["url"]), l.get("title"))
-    for r in ev["searcher_returns"]:
-        for rec in r["records"]:
-            t.setdefault(norm(rec["url"]), rec.get("title"))
     return t
 
 
@@ -347,25 +265,19 @@ def cost_breakdown(ev):
     total = sum((v.get("costUSD") or 0) for v in mu.values())
     by_role = defaultdict(float)
     for r in ev["usage_by_role"]:
-        by_role["main" if r["role"] == "main" else ("searcher" if r["role"] == SEARCHER else "other_subagent")] += r["usd"]
+        by_role["main" if r["role"] == "main" else "subagent"] += r["usd"]
     searches = sum((v.get("webSearchRequests") or 0) for v in mu.values())
-    judge_usd = 0.0
-    for doc in ev.get("judge_usage", []):
-        for c in doc.get("calls", []):
-            if c.get("usage"):
-                judge_usd += pricing.usage_usd(doc.get("model") or "haiku", c["usage"])
     traced_by_model = defaultdict(float)
     for r in ev["usage_by_role"]:
         traced_by_model[pricing.canonical(r["model"]) or r["model"]] += r["usd"]
     # modelUsage covers every API call of the run; what no transcript attributes is the tools' own model
-    # calls (WebSearch/WebFetch run a request on the caller's model) and, if billed there, judge_support.
+    # calls (WebSearch/WebFetch run a request on the caller's model).
     tool_internal = {m: round((v.get("costUSD") or 0) - traced_by_model.get(pricing.canonical(m) or m, 0)
                               - (v.get("webSearchRequests") or 0) * pricing.WEB_SEARCH_USD, 4)
                      for m, v in mu.items()}
     return {"total_usd": round(total, 4), "eval_cost_usd": ev.get("eval_cost_usd"), "by_model": by_model,
             "by_role_usd": {k: round(v, 4) for k, v in by_role.items()},
             "web_search_requests": searches, "web_search_usd": round(searches * pricing.WEB_SEARCH_USD, 4),
-            "judge_support_usd": round(judge_usd, 4), "judge_support_calls": sum(len(d.get("calls", [])) for d in ev.get("judge_usage", [])),
             "tool_internal_usd": tool_internal}
 
 
@@ -381,30 +293,16 @@ def analyze_arm(ev, labels, scores, q):
     fetch_main = [f for f in ev["fetches"] if f["role"] == "main"]
     fetch_sub = [f for f in ev["fetches"] if f["role"] != "main"]
     read_urls = {norm(f["url"]) for f in fetch_main if f["ok"]}
-    in_run = {norm(r["url"]): r for t in ev["score_tables"] for r in t["rows"]}
-    judge_cm = Counter()
-    for j in ev["judge_lines"]:
-        judge_cm[(j["decision"], labels.get(norm(j["url"]), {}).get("judgment", "unlabeled"))] += 1
-    read_by_verdict = Counter(in_run.get(u, {}).get("verdict", "unscored-in-run") for u in read_urls)
-    sr = ev["searcher_returns"]
     return {
         "skill_fired": ev["skill_fired"], "error": ev.get("error"), "turns": ev.get("turns"),
         "duration_s": ev.get("duration_s"),
         "contamination": {L: {lab: dict(c) for lab, c in d.items()} for L, d in contamination.items()},
         "sources_read": {"main_attempted": len(fetch_main), "main_ok": len(read_urls),
                          "main_by_label": dict(Counter(labels.get(u, {}).get("judgment", "unlabeled") for u in read_urls)),
-                         "main_by_in_run_verdict": dict(read_by_verdict),
-                         "sub_attempted": len(fetch_sub), "sub_ok": sum(f["ok"] for f in fetch_sub),
-                         "judge_support_fetched": sum(1 for j in ev["judge_lines"] if j["decision"] != "UNJUDGED")},
+                         "sub_attempted": len(fetch_sub), "sub_ok": sum(f["ok"] for f in fetch_sub)},
         "fetch_failures": [{"url": f["url"], "code": f["code"], "error": f["error"]} for f in ev["fetches"] if not f["ok"]],
         "cost": cost_breakdown(ev),
-        "judge_vs_blind": {f"{a}|{b}": n for (a, b), n in judge_cm.items()},
-        "searcher_contract": {"returns": len(sr), "records": sum(len(r["records"]) for r in sr),
-                              "batched": sum(1 for r in sr if not r.get("in_main", True)),
-                              "chars_in_main": sum(r["chars"] for r in sr),
-                              "extra_keys": sorted({k for r in sr for k in r["extra_keys"]}),
-                              "dated": sum(1 for r in sr for rec in r["records"] if rec.get("date"))},
-        "rounds": len(ev["score_tables"]), "searches_main": sum(1 for s in ev["searches"] if s["role"] == "main"),
+        "searches_main": sum(1 for s in ev["searches"] if s["role"] == "main"),
         "searches_sub": sum(1 for s in ev["searches"] if s["role"] != "main"),
         "main_peak_context_tokens": ev["main_peak_context"], "report_chars": ev["report_chars"],
         "read_urls": sorted(read_urls), "useful_reached": sorted(u for u, L in lvl.items()

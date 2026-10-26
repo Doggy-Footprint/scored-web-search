@@ -5,15 +5,15 @@
 master push 시 GitHub Action이 `skills/scored-web-search/`를 zip으로 만들어 배포 → 사용자가 claude.ai에 업로드.
 
 ## 완료된 것
-- `feat/mod` → master merge (PR #1). mod + self-contained skill 폴더.
+- PR #1로 self-contained skill 폴더를 master에 merge. 같이 들어간 plugin 코드(도구·side view)는 이후 제거했다.
 - 마켓플레이스 저장소 `Doggy-Footprint/claude-plugins` (public, 로컬 `~/tools/claude-plugins`, branch `main`).
   - marketplace `doggy-footprint`, entry `scored-web-search` → github `Doggy-Footprint/scored-web-search` ref `master`.
 - README에 마켓플레이스 설치 줄 추가.
-- 검증: 마켓플레이스로 설치 후 플래그 없는 `claude`에서 `score_sources`, `judge_support`, `scored-web-search:searcher` 로드 확인 (사용자 직접).
+- 검증: 마켓플레이스로 설치 후 플래그 없는 `claude`에서 plugin 로드 확인 (사용자 직접).
   plugin은 세션 시작 시 로드되므로 설치 전 시작한 세션에선 안 보임.
 
 ## 문서로 확인한 사실 (code.claude.com, 2026-10-10)
-- 클라우드 세션은 plugin을 설치하지 않음 (repo `.claude/settings.json`의 `enabledPlugins`/`extraKnownMarketplaces` 포함, user scope도 불가) → mod는 클라우드/모바일 단독 사용 불가.
+- 클라우드 세션은 plugin을 설치하지 않음 (repo `.claude/settings.json`의 `enabledPlugins`/`extraKnownMarketplaces` 포함, user scope도 불가) → 클라우드/모바일에서는 plugin 대신 claude.ai에 올린 skill을 쓴다.
 - claude.ai 계정에서 켠 skill은 클라우드 세션 시작 시 자동 로드. repo `.claude/skills/`도 로드.
 - claude.ai skill은 업로드 방식. GitHub/마켓플레이스 자동 동기화, 업데이트 API/CLI는 문서에 없음 → 업데이트마다 재업로드.
 - 업로드 frontmatter 허용 키: name, description, license, compatibility, metadata, allowed-tools. 현재 SKILL.md는 name/description만 → OK.
@@ -25,11 +25,10 @@ master push 시 GitHub Action이 `skills/scored-web-search/`를 zip으로 만들
 - 재업로드 시 기존 skill 교체인지 별도 생성인지.
 - Skills API로 claude.ai 계정 skill을 갱신할 수 있는지.
 - Remote Control 상시 대기 모드(`claude remote-control`) 동작.
-- 모바일에서 사이드 뷰 렌더링.
 
 ## 진행 (2026-10-11)
 - CI/CD 완료: `.github/workflows/skill-zip.yml` + `scripts/build_skill_zip.sh`. skill 폴더 변경 시 테스트·check_policy 통과 후 `latest` Release에 zip 갱신.
-- 모바일 앱 업로드 완료, `scored-web-search` skill 동작 확인. mod 도구(`judge_support`, `scored-web-search:searcher`)는 모바일에서 불가 (mod 전용, 예상된 동작).
+- 모바일 앱 업로드 완료, `scored-web-search` skill 동작 확인.
 - 이슈 등록: 업데이트 자동 반영 여부 확인 필요.
 
 ## 결정 필요 (CI/CD) — 해결됨: latest Release / skill 폴더 변경 트리거 / 테스트+check_policy 게이트 / README 안내
