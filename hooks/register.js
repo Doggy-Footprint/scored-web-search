@@ -5,6 +5,8 @@ const PANE = 'search-view'
 const SEARCHER = 'scored-web-search:searcher'
 const PAGE_CHARS = 20000
 const JUDGE_CONCURRENCY = 4
+const FETCH_FAILED = 'UNJUDGED | fetch failed'
+const JUDGE_UNAVAILABLE = 'Judge unavailable: read SUPPORT sources as before and note it.'
 const MODES = ['academic', 'non-academic', 'community-opinion', 'news', 'official-docs']
 const BATCH_ID = /^[A-Za-z0-9_-]+$/
 
@@ -122,7 +124,9 @@ export function register(on, options) {
     const workers = []
     for (let k = 0; k < Math.min(JUDGE_CONCURRENCY, sources.length); k++) workers.push(worker())
     await Promise.all(workers)
-    const result = lines.filter(Boolean).join('\n')
+    let result = lines.filter(Boolean).join('\n')
+    // A fetch error on every source says the judge could not reach the network (e.g. `claude plugin eval` refuses $.http.fetch), not that every page is bad.
+    if (sources.length && sources.every((_, i) => verdicts[i] && verdicts[i].startsWith(FETCH_FAILED))) result += '\n' + JUDGE_UNAVAILABLE
     // Judge calls go through $.model.complete and never reach a transcript, so this file is their only cost record.
     try {
       await $.fs.write($.plugin.root + '/.tmp/judge-usage-' + Date.now() + '.json', JSON.stringify({
@@ -133,7 +137,7 @@ export function register(on, options) {
     const judged = parseJudgeLines(result)
     await edit($, (run) => Object.assign(run.judged, judged))
     return { result }
-  }).catch(($, e, next) => ({ result: 'judge_support failed: ' + next.error.message + '\nJudge unavailable: read SUPPORT sources as before and note it.' }))
+  }).catch(($, e, next) => ({ result: 'judge_support failed: ' + next.error.message + '\n' + JUDGE_UNAVAILABLE }))
 
   // In the foreground, so its records arrive as the Agent tool's result, where the hook below can take them.
   on('agent.spawn', { subagentType: SEARCHER }, async ($, e, next) => {
@@ -212,7 +216,7 @@ export async function judgeOne($, source, question, model, onUsage) {
     if (/pdf/i.test(type) || /^%PDF/.test(res.text)) return 'UNJUDGED | pdf not supported'
     page = htmlToText(res.text).slice(0, PAGE_CHARS)
   } catch (err) {
-    return 'UNJUDGED | fetch failed'
+    return FETCH_FAILED + ': ' + String(err && err.message || err).replace(/\s+/g, ' ').trim().slice(0, 200).trimEnd()
   }
   if (!page) return 'UNJUDGED | empty page'
   const r = await $.model.complete({

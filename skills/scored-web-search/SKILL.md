@@ -68,8 +68,8 @@ Hand every SUPPORT source (with the research question) to a **lightweight subage
 Page text never reaches you. No sub agent fallback: skip this step and read SUPPORT sources as before.
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
-- SKIP and UNJUDGED are final for this run: exclude the source from Step 3 and do not open it to second-guess the judge.
-- If the judge itself fails, read SUPPORT sources as before and say the judge step was unavailable.
+- A verdict on a source is final for this run: SKIP and UNJUDGED sources stay out of Step 3, and you do not open them to second-guess the judge. Some sources failing to fetch is still a set of verdicts.
+- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED because the fetch itself failed — an error, not an HTTP status, a PDF or an empty page; the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and say the judge step was unavailable.
 
 ### Step 3 — Read: open only what passed
 `WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.**

@@ -93,7 +93,7 @@ test('judge_support UNJUDGED cases and ordering', async ($, on) => {
     'https://404.x | UNJUDGED | fetch status 503',
     'https://pdfct.x | UNJUDGED | pdf not supported',
     'https://pdfbody.x | UNJUDGED | pdf not supported',
-    'https://throw.x | UNJUDGED | fetch failed',
+    'https://throw.x | UNJUDGED | fetch failed: scored-web-search: $.http.fetch: net',
     'https://empty.x | UNJUDGED | empty page',
     'https://good.x | USE | ok',
   ].join('\n'))
