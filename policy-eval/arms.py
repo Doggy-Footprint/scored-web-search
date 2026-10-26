@@ -66,6 +66,86 @@ def search_links(text):
     return [l for l in links if isinstance(l, dict) and l.get("url")], text[end:].strip()
 
 
+# What the skill's own steps print. Formats are SKILL.md's and srcscore's `--format compact`.
+TABLE_ROW_RE = re.compile(r"^\s*(\d+\.\d)\s+(PRIMARY|SUPPORT|SKIM|WEAK|DROP|BLOCKED)\s+(\S+)\s+(?:(\S+)\s+)?(https?://\S+)\s*$", re.M)
+TABLE_COUNTS_RE = re.compile(r"^-- (\d+) sources \| (.+)$", re.M)
+LOOKUPS_RE = re.compile(r"srcscore: (\d+) of (\d+) external lookups could not be reached")
+EXIT_RE = re.compile(r"^Exit code (\d+)", re.M)
+JUDGE_LINE_RE = re.compile(r"^\W*(https?://\S+?)\W*\s*\|\s*(USE|SKIP|UNJUDGED)\s*\|\s*(.*?)\s*$", re.M)
+FILE_REPLY_RE = re.compile(r"^\s*`?(/\S+\.json)`?\s+(\d+)\s*$", re.M)
+SUMMARY_RE = re.compile(r"(\d+) sources collected → (\d+) passed → (\d+) judged-out → (\d+) read")
+DEGRADED_RE = re.compile(r"^[\s`*>_-]*Degraded:[\s`*_]*(.*?)[\s`*_]*$", re.M)
+
+
+def score_output(text, is_error):
+    """A `srcscore.py --format compact` Bash result: listed rows, verdict counts, unreachable lookups, exit."""
+    m = EXIT_RE.search(text)
+    rows = [{"url": u, "score": float(s), "verdict": v, "tier": t, "signals": sig or ""}
+            for s, v, t, sig, u in TABLE_ROW_RE.findall(text)]
+    c = TABLE_COUNTS_RE.search(text)
+    counts = {}
+    if c:
+        counts = {"sources": int(c.group(1))}
+        for part in c.group(2).split("|"):
+            k, _, n = part.strip().partition(" ")
+            if n.strip().isdigit():
+                counts[k] = int(n)
+    lk = LOOKUPS_RE.search(text)
+    return {"exit": int(m.group(1)) if m else (1 if is_error else 0), "rows": rows, "counts": counts,
+            "lookups_failed": [int(lk.group(1)), int(lk.group(2))] if lk else None, "chars": len(text)}
+
+
+def url_records(text):
+    """A JSON array of {url, ...} records anywhere in the text, or None."""
+    i = text.find("[")
+    while i >= 0:
+        try:
+            v, _ = json.JSONDecoder().raw_decode(text, i)
+        except ValueError:
+            v = None
+        if isinstance(v, list) and v and all(isinstance(r, dict) and r.get("url") for r in v):
+            return v
+        i = text.find("[", i + 1)
+    return None
+
+
+def agent_return(text):
+    """What a subagent handed back to the main agent: judge verdict lines, inline URL records, a URL-file
+    path and count (Step 1), or something else."""
+    verdicts = [{"url": u, "verdict": v, "reason": r,
+                 "kind": ("fetch-error" if r.startswith("fetch-error") else "page" if r.startswith("page")
+                          else None) if v == "UNJUDGED" else None}
+                for u, v, r in JUDGE_LINE_RE.findall(text)]
+    if verdicts:
+        return {"kind": "judge", "verdicts": verdicts}
+    recs = url_records(text)
+    if recs is not None:
+        return {"kind": "inline", "urls": [r["url"] for r in recs]}
+    f = FILE_REPLY_RE.search(text)
+    if f:
+        return {"kind": "file", "path": f.group(1), "n": int(f.group(2))}
+    return {"kind": "other"}
+
+
+def closing_lines(report):
+    """The report's closing summary and `Degraded:` line (SKILL.md Step 6), parsed; None where absent."""
+    s = SUMMARY_RE.search(report)
+    d = DEGRADED_RE.findall(report)
+    out = {"summary": dict(zip(("collected", "passed", "judged_out", "read"), map(int, s.groups()))) if s else None,
+           "degraded": None}
+    if d:
+        raw = d[-1]
+        items = {}
+        for k, pat in (("step1_inline", r"step1-inline (\d+)/(\d+)"), ("lookups_failed", r"lookups-failed (\d+)/(\d+)"),
+                       ("unjudged", r"unjudged (\d+) \(fetch-error (\d+), page (\d+)\)")):
+            m = re.search(pat, raw)
+            if m:
+                items[k] = [int(g) for g in m.groups()]
+        items["judge_unavailable"] = "judge-unavailable" in raw
+        out["degraded"] = {"raw": raw, "none": raw.strip().lower() == "none", **items}
+    return out
+
+
 
 # ---------------------------------------------------------------- ingest
 
@@ -76,7 +156,10 @@ def extract(trace_path):
     role_of = {}                      # Agent tool_use id -> subagent type
     tool_use = {}                     # tool_use id -> (role, name, input)
     agent_type = {}                   # subagent agentId -> type, from the Agent tool results
-    ev = {"searches": [], "fetches": [], "agents": [], "skill_fired": False, "report_chars": 0, "result": None}
+    agent_calls = []                  # main's Agent tool_use ids, in order
+    final_text = {}                   # Agent tool_use id -> the subagent's last text, its reply to main
+    ev = {"searches": [], "fetches": [], "agents": [], "score_runs": [], "url_files": [], "agent_returns": [],
+          "skill_fired": False, "report_chars": 0, "result": None}
 
     for d in lines:
         if d.get("type") == "system" and d.get("subtype") == "task_started":
@@ -93,9 +176,14 @@ def extract(trace_path):
         role = role_of.get(d.get("parent_tool_use_id"), "main") if d.get("parent_tool_use_id") else "main"
         if d.get("type") == "assistant":
             m = d["message"]
+            said = "".join(b.get("text", "") for b in m.get("content", []) if b.get("type") == "text")
+            if d.get("parent_tool_use_id") and said.strip():
+                final_text[d["parent_tool_use_id"]] = said
             for b in m.get("content", []):
                 if b.get("type") == "tool_use":
                     tool_use[b["id"]] = (role, b["name"], b.get("input") or {})
+                    if b["name"] in ("Agent", "Task") and role == "main":
+                        agent_calls.append(b["id"])
                     if b["name"] == "Skill":
                         ev["skill_fired"] = True
         elif d.get("type") == "user" and isinstance(d.get("message", {}).get("content"), list):
@@ -119,7 +207,20 @@ def extract(trace_path):
                                           "bytes": tur.get("bytes") if isinstance(tur, dict) else None,
                                           "result_chars": len(text),
                                           "error": None if ok else text[:200]})
+                elif name == "Bash" and "srcscore.py" in (cmd := inp.get("command") or "") and "--help" not in cmd:
+                    ev["score_runs"].append({"role": trole, **score_output(text, bool(b.get("is_error")))})
+                elif name == "Write" and not b.get("is_error"):
+                    recs = url_records(inp.get("content") or "")
+                    if recs is not None:
+                        ev["url_files"].append({"role": trole, "path": inp.get("file_path"),
+                                                "urls": [r["url"] for r in recs]})
 
+    # A subagent's reply is its last text, whether the Agent call waited for it or it ran in the background
+    # and came back as a task notification.
+    for i in agent_calls:
+        text = final_text.get(i, "")
+        ev["agent_returns"].append({"tool_use_id": i, "chars": len(text), **agent_return(text)})
+    ev["closing"] = closing_lines(ev.get("report") or "")
     session = next((d.get("session_id") for d in lines if d.get("subtype") == "init"), None)
     ev["usage_by_role"], ev["main_peak_context"] = session_usage(Path(trace_path), session, agent_type)
     return ev
@@ -228,7 +329,59 @@ def arm_urls(ev):
     for f in ev["fetches"]:
         if f["url"] and f["ok"]:
             bump(f["url"], "read" if f["role"] == "main" else "sub_read")
+    # The skill's own output in the main context: score-table rows, and Step 1 records a subagent handed back
+    # inline instead of writing its file.
+    for r in ev.get("score_runs", []):
+        if r["role"] == "main":
+            for row in r["rows"]:
+                bump(row["url"], "listed")
+    for r in ev.get("agent_returns", []):
+        for u in r.get("urls", []) if r["kind"] == "inline" else []:
+            bump(u, "listed")
     return lvl
+
+
+def in_run_verdicts(ev):
+    """norm(url) -> the verdict the run itself acted on: the score table's, then the judge's for SUPPORT."""
+    v = {}
+    for r in ev.get("score_runs", []):
+        for row in r["rows"]:
+            v[norm(row["url"])] = row["verdict"]
+    for r in ev.get("agent_returns", []):
+        for j in r.get("verdicts", []) if r["kind"] == "judge" else []:
+            u = norm(j["url"])
+            if v.get(u) == "SUPPORT":
+                v[u] = "SUPPORT/" + j["verdict"] + ("/" + j["kind"] if j["kind"] else "")
+    return v
+
+
+def degraded_traced(ev):
+    """The `Degraded:` items as the trace shows them, to hold the report's own line against (SKILL.md Step 6)."""
+    rets = ev.get("agent_returns", [])
+    searchers = [r for r in rets if r["kind"] in ("file", "inline")]
+    judged = [r["verdicts"] for r in rets if r["kind"] == "judge"]
+    scored = [r for r in ev.get("score_runs", []) if r["exit"] == 0]
+    failed = [r["lookups_failed"] for r in scored if r["lookups_failed"]]
+    all_fetch_error = [v for v in judged if all(j["kind"] == "fetch-error" for j in v)]
+    usable = [v for v in judged if v not in all_fetch_error]
+    need_judge = sum(1 for r in scored if any(row["verdict"] == "SUPPORT" for row in r["rows"]))
+    un = [j for v in usable for j in v if j["verdict"] == "UNJUDGED"]
+    return {"step1_inline": [sum(r["kind"] == "inline" for r in searchers), len(searchers)],
+            "lookups_failed": [sum(f for f, _ in failed), sum(t for _, t in failed)],
+            "judge_unavailable": bool(all_fetch_error) or need_judge > len(usable),
+            "unjudged": [len(un), sum(j["kind"] == "fetch-error" for j in un), sum(j["kind"] == "page" for j in un)]}
+
+
+def degraded_check(ev):
+    reported = (ev.get("closing") or {}).get("degraded")
+    traced = degraded_traced(ev)
+    if reported is None:
+        return {"line_present": False, "traced": traced}
+    agree = {"step1_inline": (reported.get("step1_inline") or [0])[0] == traced["step1_inline"][0],
+             "lookups_failed": (reported.get("lookups_failed") or [0])[0] == traced["lookups_failed"][0],
+             "judge_unavailable": reported["judge_unavailable"] == traced["judge_unavailable"],
+             "unjudged": (reported.get("unjudged") or [0])[0] == (0 if traced["judge_unavailable"] else traced["unjudged"][0])}
+    return {"line_present": True, "reported": reported, "traced": traced, "agree": agree}
 
 
 def arm_titles(ev):
@@ -293,6 +446,12 @@ def analyze_arm(ev, labels, scores, q):
     fetch_main = [f for f in ev["fetches"] if f["role"] == "main"]
     fetch_sub = [f for f in ev["fetches"] if f["role"] != "main"]
     read_urls = {norm(f["url"]) for f in fetch_main if f["ok"]}
+    verdicts = in_run_verdicts(ev)
+    judge_vs_blind = defaultdict(Counter)
+    for u, v in verdicts.items():
+        if v.startswith("SUPPORT/"):
+            judge_vs_blind[v.removeprefix("SUPPORT/")][labels.get(u, {}).get("judgment", "unlabeled")] += 1
+    rets = ev.get("agent_returns", [])
     return {
         "skill_fired": ev["skill_fired"], "error": ev.get("error"), "turns": ev.get("turns"),
         "duration_s": ev.get("duration_s"),
@@ -305,6 +464,13 @@ def analyze_arm(ev, labels, scores, q):
         "searches_main": sum(1 for s in ev["searches"] if s["role"] == "main"),
         "searches_sub": sum(1 for s in ev["searches"] if s["role"] != "main"),
         "main_peak_context_tokens": ev["main_peak_context"], "report_chars": ev["report_chars"],
+        "judge_vs_blind": {v: dict(c) for v, c in judge_vs_blind.items()},
+        "main_reads_by_in_run_verdict": dict(Counter(verdicts.get(u, "not-in-table") for u in read_urls)),
+        "degraded": degraded_check(ev), "closing_summary": (ev.get("closing") or {}).get("summary"),
+        "score_exits": [r["exit"] for r in ev.get("score_runs", [])],
+        "main_context_chars": {"score_tables": sum(r["chars"] for r in ev.get("score_runs", []) if r["role"] == "main"),
+                               **{"agent_" + k: sum(r["chars"] for r in rets if r["kind"] == k)
+                                  for k in ("file", "inline", "judge", "other")}},
         "read_urls": sorted(read_urls), "useful_reached": sorted(u for u, L in lvl.items()
                                                                 if labels.get(u, {}).get("judgment") == "useful"),
     }

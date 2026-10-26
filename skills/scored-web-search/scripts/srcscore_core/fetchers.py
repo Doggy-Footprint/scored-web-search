@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import time
@@ -98,12 +99,20 @@ def http_json(url: str, timeout: float = 12.0):
     an unreachable API must never be scored as `no-index`."""
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            body = r.read().decode("utf-8", "replace")
-            _count(False)
-            if r.status != 200:
-                return None
-            return json.loads(body)
+        for attempt in (0, 1):
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    body = r.read().decode("utf-8", "replace")
+                    status = r.status
+                break
+            except (http.client.HTTPException, ConnectionResetError):
+                # A reply cut off mid-body. Sandbox proxies do this now and then, so ask once more.
+                if attempt:
+                    raise
+        _count(False)
+        if status != 200:
+            return None
+        return json.loads(body)
     except urllib.error.HTTPError as e:
         # 404/410 = genuinely absent. 401/403/407/429/5xx = we were refused or
         # throttled, which is a reachability problem, not evidence of absence.
@@ -112,7 +121,7 @@ def http_json(url: str, timeout: float = 12.0):
             return FETCH_FAILED
         _count(False)
         return None
-    except (urllib.error.URLError, OSError, ValueError, TimeoutError):
+    except (urllib.error.URLError, OSError, ValueError, TimeoutError, http.client.HTTPException):
         _count(True)
         return FETCH_FAILED
 

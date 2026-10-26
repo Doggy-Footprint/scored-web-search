@@ -6,9 +6,10 @@
 ## 선행: skill만으로 arms를 돌릴 준비
 eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plugin은 이제 skill만 담는다. eval 안에서 각 단계가 무엇을 할 수 있는지는 2026-10-26 probe(`policy-eval/probe/`, METHODOLOGY "Environment probes")로 확인했다.
 - **Step 2 scoring의 네트워크(결정):** eval의 Bash는 `WebFetch(domain:…)`으로 이름을 준 host에만 닿는다. 도메인 없는 `WebFetch` grant로는 열리지 않는다. scorer host 4개가 막히면 `srcscore.py`는 exit 4로 멈춘다. arms는 이 4개를 항상 허용해서 돌린다(명령은 METHODOLOGY Runs 2). 막힌 환경에서 skill이 멈추고 허용할 host를 안내하는지는 probe로 따로 본다.
-- **sandbox 파일(해결):** plugin을 로드한 run에서는 Bash가 skill 폴더를 읽는다. pilot without-arm의 `Operation not permitted`는 plugin을 로드하지 않은 run에서 난 것이다. `/tmp`는 Write도 Bash 읽기도 막혀서, Step 1 URL 파일을 `$TMPDIR` 아래에 쓰도록 SKILL.md를 고쳤다.
+- **sandbox 파일(해결):** plugin을 로드한 run에서 Bash는 skill 폴더만 읽는다. 같은 plugin 안이라도 `policy-eval/`은 막힌다. pilot without-arm의 `Operation not permitted`는 plugin을 로드하지 않은 run에서 난 것이다. `/tmp`는 Write도 Bash 읽기도 막혀서, Step 1 URL 파일을 `$TMPDIR` 아래에 쓰도록 SKILL.md를 고쳤다.
 - **WebFetch 도메인 safety check의 rate limit(미확인):** pilot에서 "rate-limited" 실패가 있었다. probe의 judge(4 URL, `-j 1`)에서는 나지 않았다. Step 2.5 judge subagent도 WebFetch로 읽으므로, 문항 20개를 병렬로 돌리면 UNJUDGED가 늘 수 있다. judge는 `fetch-error`를 한 번 다시 읽고, 사유를 `page:`/`fetch-error:`로 나눠 적는다. 재시도로 충분한지는 `fetch-error` 개수로 보고, 많으면 `-j`를 낮춘다.
-- **`arms.py` 파싱:** skill의 각 단계가 trace에 남기는 것을 읽어야 한다. 대상은 main context의 `srcscore.py` 표(Bash 출력), search subagent가 쓴 URL 파일, judge subagent의 `url | USE/SKIP/UNJUDGED | reason` 줄, 보고서 끝의 `Degraded:` 줄이다. 앞의 셋이 없으면 B, 표 행의 `listed`, in-run verdict를 잴 수 없다. `Degraded:` 줄은 run이 pipeline대로 돌았는지 가르는 기준이고, trace에서 센 값과 맞는지도 본다.
+- **`arms.py` 파싱(반영):** skill 각 단계가 trace에 남기는 것을 읽는다. 대상은 `srcscore.py` Bash 결과, subagent가 쓴 URL 파일, subagent의 답, 보고서 끝 줄이다. subagent의 답은 그 subagent의 마지막 응답에서 읽는다. background로 돈 subagent는 Agent 결과가 시작 알림뿐이기 때문이다. 새 측정은 `judge_vs_blind`(B), `main_reads_by_in_run_verdict`, `degraded`(보고서 `Degraded:` 줄과 trace에서 센 값 대조), `main_context_chars`(E5)다. 2026-10-26 ac1 with-arm 1회로 확인했다. 결과는 PRIMARY 3과 USE 4만 읽음, `Degraded:` 네 항목 모두 trace와 일치. 첫 시도는 eval proxy가 OpenAlex 응답을 중간에 끊어 `srcscore.py`가 죽었고, 끊긴 응답을 한 번 다시 받도록 고쳤다.
+- **Semantic Scholar 페이지(새로 확인):** 같은 ac1에서 `semanticscholar.org/paper/...` SUPPORT 3건이 WebFetch에 HTTP 403을 받아 `page:` UNJUDGED로 빠졌다. 실사용에서도 같으면 이 host의 SUPPORT는 늘 읽히지 않는다. arXiv 등 원문 주소로 바꿀지는 따로 정한다.
 - **기준선:** pilot(2026-10-24)은 이전 구성으로 돌렸다. 그때의 Step 2.5 judge는 plugin 코드가 직접 페이지를 받았고, eval이 이 요청을 막아 한 번도 판정하지 못했다. 메인 에이전트는 실행마다 SUPPORT를 다 읽거나 다 버렸다. 지금 judge는 WebFetch subagent이고 probe에서 eval 안에서도 판정했다. 그래서 pilot 수치는 새 실행과 직접 비교하지 않고 참고만 한다.
 
 ## 실행 묶음

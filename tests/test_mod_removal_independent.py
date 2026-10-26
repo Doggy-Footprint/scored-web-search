@@ -369,7 +369,8 @@ class TestAnalyzeArmNoMod(ModTraceFixture):
 
     def test_no_mod_outputs(self):
         out = arms.analyze_arm(self.ev, {}, {}, {"id": "zz", "mode": "academic", "field": "cs"})
-        for k in ("judge_vs_blind", "searcher_contract", "rounds"):
+        # judge_vs_blind is back, measured from the judge subagent's lines instead of the mod's tool.
+        for k in ("searcher_contract", "rounds"):
             with self.subTest(key=k):
                 self.assertNotIn(k, out)
         for k in ("judge_support_fetched", "main_by_in_run_verdict"):

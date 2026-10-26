@@ -51,7 +51,7 @@ Each URL an arm touched is counted once, at the highest level it reached:
 |---|---|
 | `read` | the main agent fetched the page (WebFetch succeeded) |
 | `exposed` | the URL came back from a WebSearch the main agent ran — that tool returns a text summary of its results, so their content is in the main context |
-| `listed` | only the URL/title is in the main context: a search result with no summary |
+| `listed` | only the URL/title is in the main context: a search result with no summary, a score-table row, or a Step 1 record a search subagent handed back inline |
 | `sub_read` | a subagent fetched it; nothing of it is in the main context |
 | `sub_seen` | only a subagent's search returned it |
 
@@ -75,16 +75,22 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
 
 - **A**: recall loss (`useful` scored below SUPPORT), precision loss (`junk` scored PRIMARY/SUPPORT), vendor
   pass-through, per-round split for expansion questions (`contrast.py`).
-- **B**: confusion of the judge's USE/SKIP/UNJUDGED against blind labels.
+- **B**: confusion of the judge's USE/SKIP/UNJUDGED (UNJUDGED split by `page`/`fetch-error`) against blind labels
+  (`judge_vs_blind`).
 - **Arms**: contamination (above); sources read (main attempted/ok, by label; subagent fetches apart); cost
   breakdown (above).
+- **Pipeline compliance** (with-arm): the main agent's reads by the verdict the run acted on
+  (`main_reads_by_in_run_verdict`: `PRIMARY`, `SUPPORT/USE`, … or `not-in-table`; anything but PRIMARY and
+  `SUPPORT/USE`, or `SUPPORT` when the judge was unavailable, is a read the skill forbids); the report's
+  `Degraded:` line held against the same items counted from the trace (`degraded`); scorer exit codes.
 - **Extra raw data**: read-URL overlap between arms; `useful` URLs reached only by the baseline; main-context
-  peak tokens; report length; fetch failures with reasons; skill fired.
+  peak tokens; characters the score tables and subagent replies put into the main context
+  (`main_context_chars`); report length; fetch failures with reasons; skill fired.
 
-`arms.py` does not yet read what the skill's own steps leave in a trace: the score table `srcscore.py` prints
-into the main context, the URL files the search subagent writes, the judge subagent's verdict lines, and the report's closing
-`Degraded:` line. Until it does, B, `listed` for score-table rows, and in-run verdicts are not measured, and a
-run that fell short of the pipeline cannot be told from a clean one.
+`arms.py` reads what the skill's own steps leave in a trace: the `srcscore.py` Bash results (rows, counts,
+unreachable lookups, exit), the URL files subagents write, each subagent's reply to the main agent (a URL-file
+path and count, inline records, or judge lines; taken from the subagent's last text, so a background subagent
+whose reply came as a task notification counts the same), and the report's closing summary and `Degraded:` line.
 
 ## Limits
 
@@ -155,7 +161,8 @@ result against its date.
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
 | 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
-| 2026-10-26 | Environment probes (`policy-eval/probe/`). Plugin folder readable from Bash; scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
+| 2026-10-26 | Environment probes (`policy-eval/probe/`). Bash reads the loaded skill's folder but not the rest of the plugin (`policy-eval/` is denied); scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
+| 2026-10-26 | Scorer under the eval proxy (`p4-score-load`) and ac1 with-arm end to end. The proxy cut 1-3 of 12 serial OpenAlex replies mid-body, which crashed `srcscore.py` (`IncompleteRead`) on a real Step 1 pool; it now retries a cut-off reply once and counts a second failure as unreachable | not tracked |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes
