@@ -68,6 +68,8 @@ def search_links(text):
 
 # What the skill's own steps print. Formats are SKILL.md's and srcscore's `--format compact`.
 TABLE_ROW_RE = re.compile(r"^\s*(\d+\.\d)\s+(PRIMARY|SUPPORT|SKIM|WEAK|DROP|BLOCKED)\s+(\S+)\s+(?:(\S+)\s+)?(https?://\S+)\s*$", re.M)
+SCORE_INPUT_RE = re.compile(r"srcscore\.py\b[^;&|\n]*\s(?:--in|-u|--url)[\s=]")
+FULL_OUT_RE = re.compile(r"""--full-out[\s=]+["']?([^\s"';&|]+)""")
 TABLE_COUNTS_RE = re.compile(r"^-- (\d+) sources \| (.+)$", re.M)
 LOOKUPS_RE = re.compile(r"srcscore: (\d+) of (\d+) external lookups could not be reached")
 EXIT_RE = re.compile(r"^Exit code (\d+)", re.M)
@@ -109,6 +111,26 @@ def url_records(text):
     return None
 
 
+HANDBACK_MARK = "The report follows:"
+
+
+def handback_body(text):
+    """The subagent's report out of an Agent tool result: the harness frames it as `[Subagent hand-back] ...
+    The report follows:` and indents every line by two spaces; its own trailer after the report is not
+    indented. A background launch notice is no reply."""
+    if text.startswith("Async agent launched"):
+        return ""
+    i = text.find(HANDBACK_MARK)
+    if not text.startswith("[Subagent hand-back]") or i < 0:
+        return ""
+    body = []
+    for l in text[i + len(HANDBACK_MARK):].lstrip("\n").split("\n"):
+        if l and not l.startswith("  "):
+            break                     # the harness's own trailer (agentId, usage) is not indented
+        body.append(l[2:])
+    return "\n".join(body).strip()
+
+
 def agent_return(text):
     """What a subagent handed back to the main agent: judge verdict lines, inline URL records, a URL-file
     path and count (Step 1), or something else."""
@@ -135,12 +157,17 @@ def closing_lines(report):
            "degraded": None}
     if d:
         raw = d[-1]
+        # Per-round items are summed, and the unjudged split is read in any order, as long as the counts are there.
         items = {}
-        for k, pat in (("step1_inline", r"step1-inline (\d+)/(\d+)"), ("lookups_failed", r"lookups-failed (\d+)/(\d+)"),
-                       ("unjudged", r"unjudged (\d+) \(fetch-error (\d+), page (\d+)\)")):
-            m = re.search(pat, raw)
-            if m:
-                items[k] = [int(g) for g in m.groups()]
+        for k, pat in (("step1_inline", r"step1-inline (\d+)/(\d+)"), ("lookups_failed", r"lookups-failed (\d+)/(\d+)")):
+            ms = re.findall(pat, raw)
+            if ms:
+                items[k] = [sum(int(a) for a, _ in ms), sum(int(b) for _, b in ms)]
+        ms = re.findall(r"unjudged (\d+)(?: \(([^)]*)\))?", raw)
+        if ms:
+            fe = [int(x) for _, par in ms for x in re.findall(r"fetch-error (\d+)", par)]
+            pg = [int(x) for _, par in ms for x in re.findall(r"page (\d+)", par)]
+            items["unjudged"] = [sum(int(u) for u, _ in ms), sum(fe), sum(pg)]
         items["judge_unavailable"] = "judge-unavailable" in raw
         out["degraded"] = {"raw": raw, "none": raw.strip().lower() == "none", **items}
     return out
@@ -157,11 +184,17 @@ def extract(trace_path):
     tool_use = {}                     # tool_use id -> (role, name, input)
     agent_type = {}                   # subagent agentId -> type, from the Agent tool results
     agent_calls = []                  # main's Agent tool_use ids, in order
-    final_text = {}                   # Agent tool_use id -> the subagent's last text, its reply to main
+    main_reads = []                   # main's other Bash/Read calls: (tool, command or path, result chars)
+    final_text = {}                   # Agent tool_use id -> the subagent's last text
+    handback = {}                     # Agent tool_use id -> the reply as the Agent tool result carried it
+    notified = {}                     # Agent tool_use id -> a background subagent's task-notification summary
     ev = {"searches": [], "fetches": [], "agents": [], "score_runs": [], "url_files": [], "agent_returns": [],
+          "peeks": [],
           "skill_fired": False, "report_chars": 0, "result": None}
 
     for d in lines:
+        if d.get("type") == "system" and d.get("subtype") == "task_notification" and d.get("summary"):
+            notified[d.get("tool_use_id")] = d["summary"]
         if d.get("type") == "system" and d.get("subtype") == "task_started":
             role_of[d.get("tool_use_id")] = d.get("subagent_type") or "subagent"
             ev["agents"].append({"tool_use_id": d.get("tool_use_id"), "type": d.get("subagent_type"),
@@ -207,19 +240,32 @@ def extract(trace_path):
                                           "bytes": tur.get("bytes") if isinstance(tur, dict) else None,
                                           "result_chars": len(text),
                                           "error": None if ok else text[:200]})
-                elif name == "Bash" and "srcscore.py" in (cmd := inp.get("command") or "") and "--help" not in cmd:
-                    ev["score_runs"].append({"role": trole, **score_output(text, bool(b.get("is_error")))})
+                elif name == "Bash" and "srcscore.py" in (cmd := inp.get("command") or "") and SCORE_INPUT_RE.search(cmd):
+                    full = FULL_OUT_RE.search(cmd)
+                    ev["score_runs"].append({"role": trole, "full_out": full.group(1) if full else None,
+                                             **score_output(text, bool(b.get("is_error")))})
+                elif name in ("Bash", "Read") and trole == "main":
+                    main_reads.append((name, inp.get("command") or inp.get("file_path") or "", len(text)))
+                elif name in ("Agent", "Task") and trole == "main":
+                    handback[b["tool_use_id"]] = handback_body(text)
                 elif name == "Write" and not b.get("is_error"):
                     recs = url_records(inp.get("content") or "")
                     if recs is not None:
                         ev["url_files"].append({"role": trole, "path": inp.get("file_path"),
                                                 "urls": [r["url"] for r in recs]})
 
-    # A subagent's reply is its last text, whether the Agent call waited for it or it ran in the background
-    # and came back as a task notification.
+    # A subagent's reply: what the Agent tool result handed back, else (a background subagent, whose result is
+    # only a launch notice) its last text, else the task notification's summary.
     for i in agent_calls:
-        text = final_text.get(i, "")
+        text = handback.get(i) or final_text.get(i) or notified.get(i, "")
         ev["agent_returns"].append({"tool_use_id": i, "chars": len(text), **agent_return(text)})
+    # Files the skill keeps out of the main context: URL files and the full score table. A main-agent Bash or Read
+    # that names one put (some of) it in the main context anyway.
+    kept_out = {f["path"] for f in ev["url_files"]} | {r["path"] for r in ev["agent_returns"] if r["kind"] == "file"}
+    kept_out |= {r["full_out"] for r in ev["score_runs"] if r.get("full_out")}
+    names = {p.rsplit("/", 1)[-1] for p in kept_out if p}
+    ev["peeks"] = [{"tool": t, "what": w[:300], "chars": n} for t, w, n in main_reads
+                   if any(p and p in w for p in kept_out) or any(nm in w for nm in names)]
     ev["closing"] = closing_lines(ev.get("report") or "")
     session = next((d.get("session_id") for d in lines if d.get("subtype") == "init"), None)
     ev["usage_by_role"], ev["main_peak_context"] = session_usage(Path(trace_path), session, agent_type)
@@ -372,11 +418,14 @@ def degraded_traced(ev):
     failed = [r["lookups_failed"] for r in scored if r["lookups_failed"]]
     all_fetch_error = [v for v in judged if all(j["kind"] == "fetch-error" for j in v)]
     usable = [v for v in judged if v not in all_fetch_error]
-    need_judge = sum(1 for r in scored if any(row["verdict"] == "SUPPORT" for row in r["rows"]))
+    # A round is a score run; its judge was unavailable when none of its SUPPORT rows got a verdict. Scoring the
+    # same URLs again is then no new round, and a round whose judge skipped one URL is not unavailable.
+    judged = {norm(j["url"]) for v in usable for j in v}
+    rounds = [{norm(row["url"]) for row in r["rows"] if row["verdict"] == "SUPPORT"} for r in scored]
     un = [j for v in usable for j in v if j["verdict"] == "UNJUDGED"]
     return {"step1_inline": [sum(r["kind"] == "inline" for r in searchers), len(searchers)],
             "lookups_failed": [sum(f for f, _ in failed), sum(t for _, t in failed)],
-            "judge_unavailable": bool(all_fetch_error) or need_judge > len(usable),
+            "judge_unavailable": bool(all_fetch_error) or any(sup and not sup & judged for sup in rounds),
             "unjudged": [len(un), sum(j["kind"] == "fetch-error" for j in un), sum(j["kind"] == "page" for j in un)]}
 
 
@@ -461,6 +510,8 @@ def analyze_arm(ev, labels, scores, q):
         if v.startswith("SUPPORT/"):
             judge_vs_blind[v.removeprefix("SUPPORT/")][labels.get(u, {}).get("judgment", "unlabeled")] += 1
     rets = ev.get("agent_returns", [])
+    judged = {u for u, v in verdicts.items() if v.startswith("SUPPORT/")}
+    support = {u for u, v in verdicts.items() if v == "SUPPORT"}
     return {
         "skill_fired": ev["skill_fired"], "error": ev.get("error"), "turns": ev.get("turns"),
         "duration_s": ev.get("duration_s"),
@@ -475,6 +526,8 @@ def analyze_arm(ev, labels, scores, q):
         "main_peak_context_tokens": ev["main_peak_context"], "report_chars": ev["report_chars"],
         "judge_vs_blind": {v: dict(c) for v, c in judge_vs_blind.items()},
         "main_reads_by_in_run_verdict": dict(Counter(verdicts.get(u, "not-in-table") for u in read_urls)),
+        "support_without_verdict": len(support), "support_judged": len(judged),
+        "peeks": ev.get("peeks", []),
         "degraded": degraded_check(ev), "closing_summary": (ev.get("closing") or {}).get("summary"),
         "score_exits": [r["exit"] for r in ev.get("score_runs", [])],
         "main_context_chars": {"score_tables": sum(r["chars"] for r in ev.get("score_runs", []) if r["role"] == "main"),

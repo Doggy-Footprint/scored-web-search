@@ -82,7 +82,9 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
 - **Pipeline compliance** (with-arm): the main agent's reads by the verdict the run acted on
   (`main_reads_by_in_run_verdict`: `PRIMARY`, `SUPPORT/USE`, … or `not-in-table`; anything but PRIMARY and
   `SUPPORT/USE`, or `SUPPORT` when the judge was unavailable, is a read the skill forbids); the report's
-  `Degraded:` line held against the same items counted from the trace (`degraded`); scorer exit codes.
+  `Degraded:` line held against the same items counted from the trace (`degraded`); SUPPORT judged and left
+  without a verdict; `peeks`, the main agent's Bash or Read of a file the skill keeps out of the main context (a
+  URL file, the `--full-out` table); scorer exit codes.
 - **Extra raw data**: read-URL overlap between arms; `useful` URLs reached only by the baseline; main-context
   peak tokens; characters the score tables and subagent replies put into the main context
   (`main_context_chars`); report length; fetch failures with reasons; skill fired.
@@ -163,6 +165,7 @@ result against its date.
 | 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
 | 2026-10-26 | Environment probes (`policy-eval/probe/`). Bash reads the loaded skill's folder but not the rest of the plugin (`policy-eval/` is denied); scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
 | 2026-10-26 | Scorer under the eval proxy (`p4-score-load`) and ac1 with-arm end to end. The proxy cut 1-3 of 12 serial OpenAlex replies mid-body, which crashed `srcscore.py` (`IncompleteRead`) on a real Step 1 pool; it now retries a cut-off reply once and counts a second failure as unreachable | not tracked |
+| 2026-10-26 | Arms, 20 pilot questions + od9, with vs without, main agent Haiku (`--model claude-haiku-5-5`, `-j 2`), so not comparable with the Opus pilot. Unlabelled URLs not yet labelled (union labeller pending), so no contamination or B. With-arm reads: PRIMARY 85, USE-judged SUPPORT 48, 2 outside the rules; `Degraded:` agreed with the trace in 20 of 21. Main opened URL files or the full table in 11 of 21. Official pages read in all 5 od questions, od9 through `official-claimed` + USE. Cost $4.49 with, $0.96 without | `runs/pilot.summary.json`, `runs/*.arms.json` (not tracked); pilot artefacts moved to `runs/pilot-2026-10-24/` |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes

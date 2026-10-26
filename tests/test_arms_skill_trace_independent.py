@@ -1,8 +1,8 @@
 """Independent tests for what policy-eval/arms.py reads out of a scored-web-search skill run.
 
 Written from the specification (the task brief and skills/scored-web-search/SKILL.md), not from the
-implementation. Under test: extract()'s score_runs / url_files / agent_returns / closing, and arm_urls,
-in_run_verdicts, degraded_traced, degraded_check and analyze_arm's skill-trace fields.
+implementation. Under test: extract()'s score_runs / url_files / agent_returns / peeks / closing, handback_body,
+and arm_urls, in_run_verdicts, degraded_traced, degraded_check and analyze_arm's skill-trace fields.
 
 Every trace is synthetic stream-json written into a temp dir (no session transcripts, so usage is empty).
 No test needs the network or writes into the repo.
@@ -30,7 +30,15 @@ VERDICTS = ("PRIMARY", "SUPPORT", "SKIM", "WEAK", "DROP", "BLOCKED")
 SCORER_CMD = "python3 /x/skills/scored-web-search/scripts/srcscore.py --in %s --mode academic --format compact"
 LAUNCH = ("Async agent launched successfully. (This tool result is internal metadata.)\n"
           "agentId: %s (use SendMessage to continue)\nThe agent is working in the background.")
-HANDBACK = "[Subagent hand-back] The text below is the final report of a subagent.\n\n%s"
+FRAME_HEAD = ("[Subagent hand-back] The text below is the final report of a subagent this session delegated to. "
+              "The harness indents every line of the report. The report follows:\n")
+
+
+def handback(reply, aid="agent0"):
+    """A foreground Agent tool result as the harness frames it: header, the report with every line indented by
+    two spaces (blank lines too), then the harness's own unindented trailer."""
+    body = "\n".join("  " + l for l in reply.split("\n"))
+    return FRAME_HEAD + body + "\nagentId: %s\n<usage>subagent_tokens: 100\ntool_uses: 2\nduration_ms: 900</usage>" % aid
 
 
 # --------------------------------------------------------------------------- trace helpers
@@ -106,14 +114,18 @@ class Trace:
         return self.call("WebFetch", {"url": url, "prompt": "p"}, text, parent,
                          tur={"code": code, "bytes": len(text)})
 
+    def read(self, path, content, parent=None):
+        return self.call("Read", {"file_path": path}, content, parent)
+
     def text(self, parent, text):
         self.L.append(a_msg(self._id("m"), parent, [{"type": "text", "text": text}]))
 
     def agent(self, subtype, replies=(), body=None, background=False, tool="Agent", parent=None,
-              is_error=False):
+              is_error=False, result=None, summary=None):
         """An Agent call: task_started, the subagent's own calls (body(tid)), its text messages, then
-        either the foreground tool_result (hand-back wrapper around the reply) or, in the background,
-        the launch notice right away and a task_notification at the end."""
+        either the foreground tool_result (hand-back frame around the last reply, or `result` verbatim) or,
+        in the background, the launch notice right away and a task_notification at the end (its summary the
+        last reply's start, or `summary`)."""
         tid = self._id("ag")
         self.L.append(a_msg(self._id("m"), parent, [tool_use(tid, tool, {
             "subagent_type": subtype, "prompt": "go", "run_in_background": background})]))
@@ -130,11 +142,12 @@ class Trace:
         last = replies[-1] if replies else ""
         if background:
             self.L.append({"type": "system", "subtype": "task_notification", "tool_use_id": tid,
-                           "status": "completed", "summary": last[:150]})
+                           "status": "completed", "summary": last[:150] if summary is None else summary})
         elif is_error:
             self.L.append(result_msg(parent, tid, "Agent failed: API error", is_error=True))
         else:
-            self.L.append(result_msg(parent, tid, [{"type": "text", "text": HANDBACK % last}],
+            self.L.append(result_msg(parent, tid, [{"type": "text", "text": handback(last, aid)
+                                                    if result is None else result}],
                                      tur={"agentId": aid, "agentType": subtype, "status": "completed"}))
         return tid
 
@@ -180,12 +193,13 @@ class TestExtractKeys(TraceCase):
         t = Trace()
         t.report("plain report")
         ev = self.extract(t)
-        for k in ("score_runs", "url_files", "agent_returns", "closing",
+        for k in ("score_runs", "url_files", "agent_returns", "peeks", "closing",
                   "searches", "fetches", "skill_fired", "report_chars"):
             self.assertIn(k, ev)
         self.assertEqual(ev["score_runs"], [])
         self.assertEqual(ev["url_files"], [])
         self.assertEqual(ev["agent_returns"], [])
+        self.assertEqual(ev["peeks"], [])
 
 
 # --------------------------------------------------------------------------- 2. score_runs
@@ -272,6 +286,47 @@ class TestScoreRuns(TraceCase):
         t.score(compact([], {"SKIM": 1}))
         runs = self.extract(t)["score_runs"]
         self.assertEqual([r["role"] for r in runs], ["main", SEARCHER, "main"])
+
+    def test_input_argument_makes_a_score_run(self):
+        out = compact([row(80.0, "PRIMARY", "1", "", "https://p.org/x")], {"PRIMARY": 1})
+        for cmd in ("python3 /x/srcscore.py --in /tmp/ssw/urls-1.json --format compact",
+                    "python3 /x/srcscore.py --mode news -u https://p.org/x",
+                    "python3 /x/srcscore.py --format compact --url https://p.org/x",
+                    "python3 /x/srcscore.py --help | head -5; python3 /x/srcscore.py --in /tmp/f.json --mode news"):
+            with self.subTest(cmd=cmd):
+                t = Trace()
+                t.bash(cmd, out)
+                runs = self.extract(t)["score_runs"]
+                self.assertEqual(len(runs), 1)
+                self.assertEqual([x["url"] for x in runs[0]["rows"]], ["https://p.org/x"])
+
+    def test_input_argument_after_a_separator_is_not_srcscores(self):
+        for cmd in ("python3 /x/srcscore.py --help",
+                    "python3 /x/srcscore.py --help; cat --in",
+                    "python3 /x/srcscore.py --help && echo --in /tmp/f.json",
+                    "python3 /x/srcscore.py --help & echo -u x",
+                    "python3 /x/srcscore.py --help | grep -e --url",
+                    "python3 /x/srcscore.py --version\necho --in /tmp/f.json"):
+            with self.subTest(cmd=cmd):
+                t = Trace()
+                t.bash(cmd, "usage: srcscore.py ...")
+                self.assertEqual(self.extract(t)["score_runs"], [])
+
+    def test_full_out(self):
+        base = "python3 /x/srcscore.py --in /tmp/ssw/urls-1.json --format compact"
+        for suffix, want in ((" --full-out /tmp/ssw/full-1.json", "/tmp/ssw/full-1.json"),
+                             (" --full-out=/tmp/ssw/full-2.json", "/tmp/ssw/full-2.json"),
+                             (" --full-out '/tmp/ssw/full-3.json'", "/tmp/ssw/full-3.json"),
+                             (' --full-out="/tmp/ssw/full-4.json"', "/tmp/ssw/full-4.json"),
+                             (' --full-out "/tmp/ssw/full-5.json" --mode news', "/tmp/ssw/full-5.json"),
+                             ("", None)):
+            with self.subTest(suffix=suffix):
+                t = Trace()
+                t.bash(base + suffix, compact([], {"SKIM": 1}))
+                runs = self.extract(t)["score_runs"]
+                self.assertEqual(len(runs), 1)
+                self.assertIn("full_out", runs[0])
+                self.assertEqual(runs[0]["full_out"], want)
 
 
 # --------------------------------------------------------------------------- 3. url_files
@@ -401,6 +456,123 @@ class TestAgentReturns(TraceCase):
         r = self.extract(t)["agent_returns"][0]
         self.assertEqual((r["kind"], r["chars"]), ("other", 0))
 
+    def test_framed_reply_wins_over_last_text(self):
+        t = Trace()
+        t.agent(SEARCHER, ["Let me write the file now."], result=handback("/tmp/ssw/urls-4.json 12"))
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["path"], r["n"], r["chars"]),
+                         ("file", "/tmp/ssw/urls-4.json", 12, len("/tmp/ssw/urls-4.json 12")))
+
+    def test_framed_reply_through_task_tool(self):
+        t = Trace()
+        t.agent(JUDGE, ["thinking"], tool="Task", result=handback(JUDGE_REPLY))
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["chars"]), ("judge", len(JUDGE_REPLY)))
+        self.assertEqual(len(r["verdicts"]), 5)
+
+    def test_framed_multiline_reply_keeps_inner_blank_and_deeper_indent(self):
+        reply = "/tmp/ssw/urls-1.json 35\n\nSub-topic 3 has 18 URLs:\n  - below target\nNo dates given."
+        t = Trace()
+        t.agent(SEARCHER, ["something else"], result=handback(reply))
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["n"], r["chars"]), ("file", 35, len(reply)))
+
+    def test_unframed_tool_result_is_not_the_reply(self):
+        reply = "/tmp/ssw/urls-1.json 3"
+        t = Trace()
+        t.agent(SEARCHER, [reply], result="Some unframed tool output /tmp/other/urls-9.json 99")
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["path"], r["n"], r["chars"]), ("file", "/tmp/ssw/urls-1.json", 3, len(reply)))
+
+    def test_unframed_result_without_text_gives_no_reply(self):
+        t = Trace()
+        t.agent(JUDGE, [], result=JUDGE_REPLY)
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["chars"]), ("other", 0))
+
+    def test_task_notification_summary_when_no_text(self):
+        summary = "/tmp/ssw/urls-3.json 4"
+        t = Trace()
+        t.agent(SEARCHER, [], background=True, summary=summary)
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["kind"], r["path"], r["n"], r["chars"]), ("file", "/tmp/ssw/urls-3.json", 4, len(summary)))
+
+    def test_last_text_wins_over_task_notification(self):
+        t = Trace()
+        t.agent(SEARCHER, ["/tmp/ssw/urls-1.json 8"], background=True, summary="/tmp/ssw/urls-7.json 1")
+        r = self.extract(t)["agent_returns"][0]
+        self.assertEqual((r["path"], r["n"]), ("/tmp/ssw/urls-1.json", 8))
+
+
+class TestHandbackBody(unittest.TestCase):
+
+    def test_body_without_indent_and_trailer(self):
+        reply = "https://s.org/a | USE | ok\n\nhttps://s.org/b | SKIP | off\n  indented in the report"
+        self.assertEqual(arms.handback_body(handback(reply, "a1b2")), reply)
+
+    def test_stops_at_first_unindented_nonempty_line(self):
+        text = FRAME_HEAD + "  line one\n  line two\nagentId: x\n  not the report\n<usage>u</usage>"
+        self.assertEqual(arms.handback_body(text), "line one\nline two")
+
+    def test_launch_notice_is_no_reply(self):
+        self.assertFalse(arms.handback_body(LAUNCH % "agentX"))
+
+    def test_unframed_text_is_no_reply(self):
+        self.assertFalse(arms.handback_body("/tmp/ssw/urls-1.json 3"))
+        # The header without the marker, and the marker without the header.
+        self.assertFalse(arms.handback_body("[Subagent hand-back] The text below is a report.\n\n  /tmp/u.json 3"))
+        self.assertFalse(arms.handback_body("Note. The report follows:\n  /tmp/u.json 3"))
+
+
+# --------------------------------------------------------------------------- 4b. peeks
+
+class TestPeeks(TraceCase):
+
+    def build(self):
+        """Kept-out files: a written URL file, a URL-file path only a reply names, and a score run's --full-out."""
+        t = Trace()
+        t.agent(SEARCHER, ["/tmp/ssw/urls-1.json 2"],
+                body=lambda tid: (t.write("/tmp/ssw/urls-1.json", records("https://a.org/1", "https://b.org/2"),
+                                          parent=tid),
+                                  t.bash("cat /tmp/ssw/urls-1.json", records("https://a.org/1"), parent=tid)))
+        t.agent(SEARCHER, ["/tmp/ssw/urls-2.json 3"])
+        t.bash("python3 /x/srcscore.py --in /tmp/ssw/urls-1.json --in /tmp/ssw/urls-2.json "
+               "--full-out /tmp/ssw/full-1.json --format compact", compact([], {"SKIM": 5}))
+        return t
+
+    def test_kept_out_files_named_by_path_or_name(self):
+        t = self.build()
+        cat = records("https://a.org/1", "https://b.org/2")
+        t.bash("cat /tmp/ssw/urls-1.json", cat)
+        t.bash("cd /tmp/ssw && head -c 100 urls-2.json", "[{\"url\"")
+        t.read("/tmp/ssw/full-1.json", "{\"rows\": []}")
+        t.bash("jq '.rows[0]' /elsewhere/full-1.json", "null")
+        t.bash("python3 /x/srcscore.py --help; wc -c /tmp/ssw/urls-2.json", "usage ...\n412 /tmp/ssw/urls-2.json")
+        self.assertCountEqual(self.extract(t)["peeks"], [
+            {"tool": "Bash", "what": "cat /tmp/ssw/urls-1.json", "chars": len(cat)},
+            {"tool": "Bash", "what": "cd /tmp/ssw && head -c 100 urls-2.json", "chars": len("[{\"url\"")},
+            {"tool": "Read", "what": "/tmp/ssw/full-1.json", "chars": len("{\"rows\": []}")},
+            {"tool": "Bash", "what": "jq '.rows[0]' /elsewhere/full-1.json", "chars": len("null")},
+            {"tool": "Bash", "what": "python3 /x/srcscore.py --help; wc -c /tmp/ssw/urls-2.json",
+             "chars": len("usage ...\n412 /tmp/ssw/urls-2.json")},
+        ])
+
+    def test_not_peeks(self):
+        t = self.build()                                   # the score run names all three files; a subagent cats one
+        t.bash("echo $TMPDIR", "/tmp")
+        t.bash("ls /tmp/ssw", "notes.txt")
+        t.read("/tmp/ssw/notes.md", "notes")
+        t.write("/tmp/ssw/urls-1.json", records("https://c.org/3"))      # a Write is not a peek
+        t.fetch("https://a.org/1")
+        t.bash("python3 /x/srcscore.py -u https://a.org/1 --full-out /tmp/ssw/full-1.json", compact([], {"SKIM": 1}))
+        self.assertEqual(self.extract(t)["peeks"], [])
+
+    def test_what_is_truncated_to_300_chars(self):
+        t = self.build()
+        cmd = "cat /tmp/ssw/urls-1.json | python3 -c '" + "x" * 400 + "'"
+        t.bash(cmd, "out")
+        self.assertEqual(self.extract(t)["peeks"], [{"tool": "Bash", "what": cmd[:300], "chars": 3}])
+
 
 # --------------------------------------------------------------------------- 5. closing
 
@@ -444,6 +616,31 @@ class TestClosing(TraceCase):
         self.assertEqual(d["lookups_failed"], [2, 30])
         self.assertIs(d["judge_unavailable"], False)
         self.assertIsNone(d.get("step1_inline"))
+        self.assertIsNone(d.get("unjudged"))
+
+    def test_unjudged_split_lenient(self):
+        for item, want in (("unjudged 4 (page 4)", [4, 0, 4]),
+                           ("unjudged 1 (page 1, fetch-error 0)", [1, 0, 1]),
+                           ("unjudged 2 (fetch-error 2)", [2, 2, 0]),
+                           ("unjudged 3 (fetch-error 2, page 1)", [3, 2, 1]),
+                           ("unjudged 2", [2, 0, 0]),
+                           ("lookups-failed 1/9 · unjudged 5", [5, 0, 0]),
+                           ("unjudged 1 (page 1) · unjudged 2 (fetch-error 1, page 1)", [3, 1, 2]),
+                           ("unjudged 2 · unjudged 1 (fetch-error 1)", [3, 1, 0])):
+            with self.subTest(item=item):
+                d = self.closing("Body.\nDegraded: " + item + "\nKeywords: r1: q")["degraded"]
+                self.assertEqual(d["raw"], item)
+                self.assertEqual(d["unjudged"], want)
+                self.assertIs(d["none"], False)
+
+    def test_repeated_counts_are_summed(self):
+        d = self.closing("Degraded: lookups-failed 2/68 (round 1) · lookups-failed 2/99 (round 2)")["degraded"]
+        self.assertEqual(d["lookups_failed"], [4, 167])
+        d = self.closing("Degraded: step1-inline 1/2 (round 1) · step1-inline 0/3 (round 2) · "
+                         "lookups-failed 1/10 · judge-unavailable")["degraded"]
+        self.assertEqual(d["step1_inline"], [1, 5])
+        self.assertEqual(d["lookups_failed"], [1, 10])
+        self.assertIs(d["judge_unavailable"], True)
         self.assertIsNone(d.get("unjudged"))
 
     def test_markdown_decoration(self):
@@ -558,21 +755,28 @@ class TestInRunVerdicts(TraceCase):
 
 # --------------------------------------------------------------------------- 8/9. degraded
 
-def sr(exit=0, verdicts=(), lf=None, role="main"):
-    return {"role": role, "exit": exit, "rows": [{"url": "https://r.org/%d" % i, "score": 50.0, "verdict": v,
+def sr(exit=0, verdicts=(), lf=None, role="main", urls=None):
+    """A score run; row i's URL is urls[i], by default https://r.org/<i>."""
+    urls = urls or ["https://r.org/%d" % i for i in range(len(verdicts))]
+    return {"role": role, "exit": exit, "rows": [{"url": urls[i], "score": 50.0, "verdict": v,
                                                   "tier": "2", "signals": ""} for i, v in enumerate(verdicts)],
-            "counts": {}, "lookups_failed": lf, "chars": 10}
+            "counts": {}, "lookups_failed": lf, "chars": 10, "full_out": None}
 
 
-def jv(*kinds):
-    """A judge return: each item is 'USE', 'SKIP', 'fetch-error' or 'page' (the last two UNJUDGED)."""
+def jv(*kinds, urls=None):
+    """A judge return: each item is 'USE', 'SKIP', 'fetch-error' or 'page' (the last two UNJUDGED). Item i's URL
+    is urls[i], by default https://j.org/<i> (a URL no sr() row has)."""
+    urls = urls or ["https://j.org/%d" % i for i in range(len(kinds))]
     vs = []
     for i, k in enumerate(kinds):
         if k in ("USE", "SKIP"):
-            vs.append({"url": "https://j.org/%d" % i, "verdict": k, "reason": "r", "kind": None})
+            vs.append({"url": urls[i], "verdict": k, "reason": "r", "kind": None})
         else:
-            vs.append({"url": "https://j.org/%d" % i, "verdict": "UNJUDGED", "reason": k + ": r", "kind": k})
+            vs.append({"url": urls[i], "verdict": "UNJUDGED", "reason": k + ": r", "kind": k})
     return {"tool_use_id": "j", "chars": 5, "kind": "judge", "verdicts": vs}
+
+
+R = ["https://r.org/%d" % i for i in range(4)]       # sr()'s default row URLs
 
 
 FILE_RET = {"tool_use_id": "f", "chars": 3, "kind": "file", "path": "/tmp/u.json", "n": 3}
@@ -596,7 +800,8 @@ class TestDegradedTraced(unittest.TestCase):
         self.assertEqual(arms.degraded_traced(ev)["lookups_failed"], [3, 30])
 
     def test_clean_run(self):
-        ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT"))], agent_returns=[FILE_RET, jv("USE", "SKIP")])
+        ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT"))],
+                   agent_returns=[FILE_RET, jv("USE", "SKIP", urls=[R[1], "https://j.org/x"])])
         self.assertEqual(arms.degraded_traced(ev), {"step1_inline": [0, 1], "lookups_failed": [0, 0],
                                                     "judge_unavailable": False, "unjudged": [0, 0, 0]})
 
@@ -606,20 +811,83 @@ class TestDegradedTraced(unittest.TestCase):
 
     def test_all_fetch_error_judge_is_unavailable_and_not_counted(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",))],
-                   agent_returns=[jv("fetch-error", "fetch-error"), jv("page", "fetch-error", "USE")])
+                   agent_returns=[jv("fetch-error", "fetch-error", urls=[R[0], R[1]]),
+                                  jv("page", "fetch-error", "USE", urls=["https://j.org/0", "https://j.org/1", R[0]])])
         d = arms.degraded_traced(ev)
         self.assertIs(d["judge_unavailable"], True)
         self.assertEqual(d["unjudged"], [2, 1, 1])
 
     def test_missing_judge_for_a_support_run(self):
-        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT", "PRIMARY"))],
-                   agent_returns=[jv("USE")])
+        # The first round's SUPPORT row was judged; the second round's (a different URL) got no verdict.
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), urls=["https://r.org/a"]),
+                               sr(verdicts=("SUPPORT", "PRIMARY"), urls=["https://r.org/b", "https://r.org/c"])],
+                   agent_returns=[jv("USE", urls=["https://r.org/a"])])
         self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], True)
 
     def test_failed_score_run_does_not_need_a_judge(self):
-        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(exit=4, verdicts=("SUPPORT",))],
-                   agent_returns=[jv("USE")])
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(exit=4, verdicts=("SUPPORT",), urls=["https://r.org/z"])],
+                   agent_returns=[jv("USE", urls=[R[0]])])
         self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], False)
+
+    def test_exact_keys(self):
+        for ev in (ev_of(), ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[1, 2])], agent_returns=[jv("page")])):
+            self.assertEqual(set(arms.degraded_traced(ev)),
+                             {"step1_inline", "lookups_failed", "judge_unavailable", "unjudged"})
+
+    def test_same_support_urls_scored_again_after_judging(self):
+        ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT", "SUPPORT")),
+                               sr(verdicts=("SUPPORT", "SUPPORT"), urls=[R[1], R[2]])],
+                   agent_returns=[jv("USE", "SKIP", urls=[R[1], R[2]])])
+        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], False)
+
+    def test_judge_that_skipped_some_support_urls_is_available(self):
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT", "SUPPORT", "SUPPORT"))],
+                   agent_returns=[jv("USE", urls=[R[1]])])
+        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], False)
+
+    def test_verdicts_matched_by_norm(self):
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), urls=["https://example.org/a"])],
+                   agent_returns=[jv("USE", urls=["https://www.example.org/a/"])])
+        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], False)
+
+    def test_judge_verdicts_on_other_urls_only(self):
+        ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT"))], agent_returns=[jv("USE", "SKIP", urls=[R[0], R[3]])])
+        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], True)
+
+    def test_verdict_only_in_an_all_fetch_error_reply_does_not_count(self):
+        # Round 1 judged by a usable reply; round 2's URL only appears in an all-fetch-error reply.
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",), urls=["https://r.org/b"])],
+                   agent_returns=[jv("USE", urls=[R[0]]), jv("fetch-error", urls=["https://r.org/b"])])
+        d = arms.degraded_traced(ev)
+        self.assertIs(d["judge_unavailable"], True)
+        self.assertEqual(d["unjudged"], [0, 0, 0])
+
+    def test_judge_unavailable_per_round_via_trace(self):
+        """Two rounds in a real trace: round 2 rescored round 1's SUPPORT URL plus a new one, and its judge
+        covered only the new one -- every round has a judged SUPPORT row, so the judge was available."""
+        t = Trace()
+        t.score(compact([row(60.0, "SUPPORT", "2", "", "https://s.org/a")], {"SUPPORT": 1}))
+        t.agent(JUDGE, ["https://s.org/a | USE | ok"])
+        t.score(compact([row(60.0, "SUPPORT", "2", "", "https://s.org/a"),
+                         row(60.0, "SUPPORT", "2", "", "https://s.org/b")], {"SUPPORT": 2}))
+        t.agent(JUDGE, ["https://s.org/b | UNJUDGED | page: login wall"])
+        t.score(compact([row(60.0, "SUPPORT", "2", "", "https://s.org/c")], {"SUPPORT": 1}))
+        tmp = tempfile.mkdtemp(prefix="arms-skill-")
+        try:
+            path = os.path.join(tmp, "trace", "trace.jsonl")
+            os.makedirs(os.path.dirname(path))
+            with open(path, "w") as fh:
+                fh.write("".join(json.dumps(d) + "\n" for d in t.L[:-2]))
+            ev_two = arms.extract(path)
+            with open(path, "w") as fh:
+                fh.write("".join(json.dumps(d) + "\n" for d in t.L))
+            ev_three = arms.extract(path)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        self.assertIs(arms.degraded_traced(ev_two)["judge_unavailable"], False)
+        self.assertEqual(arms.degraded_traced(ev_two)["unjudged"], [1, 0, 1])
+        # A third round with a new SUPPORT URL and no judge.
+        self.assertIs(arms.degraded_traced(ev_three)["judge_unavailable"], True)
 
     def test_errored_judge_via_trace(self):
         t = Trace()
@@ -652,7 +920,7 @@ class TestDegradedCheck(unittest.TestCase):
         self.assertEqual(arms.degraded_check(ev), {"line_present": False, "traced": arms.degraded_traced(ev)})
 
     def test_none_agrees_with_clean_trace(self):
-        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",))], agent_returns=[FILE_RET, jv("USE")],
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",))], agent_returns=[FILE_RET, jv("USE", urls=[R[0]])],
                    degraded=reported("none"))
         c = arms.degraded_check(ev)
         self.assertIs(c["line_present"], True)
@@ -663,20 +931,21 @@ class TestDegradedCheck(unittest.TestCase):
 
     def test_none_disagrees_with_degraded_trace(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
-                   agent_returns=[INLINE_RET, jv("page", "USE")], degraded=reported("none"))
+                   agent_returns=[INLINE_RET, jv("USE", "page", urls=[R[0], "https://j.org/p"])],
+                   degraded=reported("none"))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": False, "lookups_failed": False,
                                                             "judge_unavailable": True, "unjudged": False})
 
     def test_counts_compared_by_first_number(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
-                   agent_returns=[INLINE_RET, FILE_RET, jv("page", "fetch-error", "USE")],
+                   agent_returns=[INLINE_RET, FILE_RET, jv("USE", "page", "fetch-error", urls=R[:3])],
                    degraded=reported("x", step1_inline=[1, 5], lookups_failed=[3, 99], unjudged=[2, 0, 2]))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": True, "lookups_failed": True,
                                                             "judge_unavailable": True, "unjudged": True})
 
     def test_count_mismatch(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
-                   agent_returns=[INLINE_RET, jv("page", "USE")],
+                   agent_returns=[INLINE_RET, jv("USE", "page", urls=R[:2])],
                    degraded=reported("x", step1_inline=[2, 2], lookups_failed=[4, 30], unjudged=[3, 0, 3]))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": False, "lookups_failed": False,
                                                             "judge_unavailable": True, "unjudged": False})
@@ -687,9 +956,10 @@ class TestDegradedCheck(unittest.TestCase):
                    degraded=reported("judge-unavailable", judge_unavailable=True))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": True, "lookups_failed": True,
                                                             "judge_unavailable": True, "unjudged": True})
-        # Usable judge left 1 page UNJUDGED and a second SUPPORT run had no judge: unjudged item must still be 0.
-        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",))],
-                   agent_returns=[jv("page", "USE")],
+        # Usable judge left 1 page UNJUDGED and a second SUPPORT run (new URL) had no judge: unjudged item must
+        # still be 0.
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",), urls=["https://r.org/new"])],
+                   agent_returns=[jv("page", "USE", urls=["https://j.org/p", R[0]])],
                    degraded=reported("judge-unavailable", judge_unavailable=True))
         a = arms.degraded_check(ev)["agree"]
         self.assertIs(a["judge_unavailable"], True)
@@ -726,6 +996,9 @@ class TestAnalyzeArmSkill(TraceCase):
         t.agent(SEARCHER, [self.r_inline], background=True,
                 body=lambda tid: t.score(self.sub_fail, parent=tid, is_error=True))
         t.score(self.table)
+        self.peek_cmd = "head -c 200 /tmp/ssw/urls-1.json"
+        self.peek_out = records("https://a.org/1")
+        t.bash(self.peek_cmd, self.peek_out)
         t.agent(JUDGE, [self.r_judge], body=lambda tid: t.fetch("https://s.org/1", parent=tid))
         t.agent("general-purpose", [self.r_other])
         for u in ("https://p.org/1", "https://s.org/1", "https://s.org/5", "https://x.org/off-table"):
@@ -754,6 +1027,22 @@ class TestAnalyzeArmSkill(TraceCase):
                                        "judge_unavailable": False, "unjudged": [2, 1, 1]})
         self.assertEqual(d["agree"], {"step1_inline": True, "lookups_failed": False,
                                       "judge_unavailable": True, "unjudged": True})
+
+    def assertUrls(self, got, want):
+        """The spec names these 'SUPPORT URLs ...' without saying count or collection: accept either."""
+        if isinstance(got, int) and not isinstance(got, bool):
+            self.assertEqual(got, len(want))
+        else:
+            self.assertEqual({arms.norm(u) for u in got}, {arms.norm(u) for u in want})
+
+    def test_support_judged_and_without_verdict(self):
+        self.assertUrls(self.out["support_judged"],
+                        ["https://s.org/1", "https://s.org/2", "https://s.org/3", "https://s.org/4"])
+        self.assertUrls(self.out["support_without_verdict"], ["https://s.org/5"])
+
+    def test_peeks(self):
+        self.assertEqual(self.out["peeks"], [{"tool": "Bash", "what": self.peek_cmd, "chars": len(self.peek_out)}])
+        self.assertEqual(self.out["peeks"], self.ev["peeks"])
 
     def test_closing_summary_and_exits(self):
         self.assertEqual(self.out["closing_summary"], {"collected": 10, "passed": 6, "judged_out": 2, "read": 3})
@@ -820,7 +1109,9 @@ class TestEndToEndSkillRun(TraceCase):
 
         self.assertEqual(len(ev["score_runs"]), 1)
         r = ev["score_runs"][0]
-        self.assertEqual((r["role"], r["exit"], r["lookups_failed"], r["chars"]), ("main", 0, None, len(self.table)))
+        self.assertEqual((r["role"], r["exit"], r["lookups_failed"], r["chars"], r["full_out"]),
+                         ("main", 0, None, len(self.table), None))
+        self.assertEqual(ev["peeks"], [])
         self.assertEqual([(x["verdict"], x["url"]) for x in r["rows"]], [
             ("PRIMARY", "https://nature.com/articles/n1"), ("PRIMARY", "https://acm.org/doi/x"),
             ("SUPPORT", "https://blog.example.org/post"), ("SUPPORT", "https://s2.org/b"),

@@ -15,15 +15,10 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 ## 실행 묶음
 | 묶음 | 도구 | 포함 항목 |
 |---|---|---|
-| arms 재실행 | `claude plugin eval` + `policy-eval/arms.py` | E1, E3, E4, E5 |
+| arms 재실행 | `claude plugin eval` + `policy-eval/arms.py` | E3, E4, E5 |
 | held-out blind judge | Workflow blind judge (METHODOLOGY Runs 1) + `contrast.py` | E6(선행), E2, E3 |
 
 ## 항목
-
-### E1. official-docs: 공식 페이지가 읽기 대상에 들어갔나 (issue #5 완료 조건 2)
-- 변경: Step 1 `site:<공식 host>` 질의, Step 2 `--official-domain`. 미등록 host만 tier 2와 `official-claimed`를 받는다.
-- 측정: od 문항 with-arm에서 공식 페이지가 PRIMARY 또는 USE 판정 SUPPORT로 읽힌 주제 수. od9(Biome, 미등록 공식 docs)를 추가한다.
-- 기존 `runs/*.urls.json`에는 `site:` 결과가 없어 재채점으로는 잴 수 없다.
 
 ### E2. na/co 도메인 등록의 out-of-sample 효과 (issue #5 완료 조건 1)
 - 변경(2026-10-25): non-academic은 `severalnines.com`을 신규 등록(2)했다. 기존 tier 4 블로그는 대규모 회사와 개인을 2로, 벤더와 마케팅 혼재 블로그를 3으로 옮겼다. community-opinion은 `addyo.substack.com`, `rubyevents.org`를 2로 등록했다.
@@ -41,7 +36,8 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 
 ### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건)
 - 변경: `srcscore.py --format compact`는 PRIMARY/SUPPORT 행과 verdict별 개수만 돌려주고, 전체 표는 `--full-out` 파일에 남긴다. Step 1 subagent는 URL 파일을 쓰고 경로와 개수만 돌려준다. 표의 URL은 fetch 주소다(PMC 구 주소 → `pmc.ncbi.nlm.nih.gov`, 2312 이후 arXiv abs/pdf → html). Step 3은 WebFetch 잘림 note가 있으면 필요할 때만 `offset`으로 이어 읽게 한다.
-- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, main context에 들어온 표와 subagent 반환의 글자 수. fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E1, E4와 같은 실행에서 잰다.
+- 측정: arms 20문항의 문항당 비용, 턴 수, 메인 peak context, main context에 들어온 표와 subagent 반환의 글자 수. fetch 실패 수(`fetch_failures`)와 offset 이어읽기 횟수도 본다. E4와 같은 실행에서 잰다.
+- 2026-10-26 첫 측정(Haiku main, 21문항): 표가 main context에 넣은 글자는 합계 89k, 문항당 약 4.3k다. 그런데 main이 11문항에서 URL 파일이나 `--full-out` 전체 표를 직접 열어 100k를 더 넣었다(`peeks`). 이 동작을 SKILL.md에서 막은 뒤 다시 잰다.
 
 ### E6. blind judge의 snippet 라벨을 개별 페이지 판정으로 교체 (방법론 변경, 미반영)
 - 문제: blind judge(Runs 1)와 union labeller(Runs 4)는 fetch하지 않은 URL에 `basis: snippet` 라벨을 매긴다. WebSearch는 결과마다 snippet을 주지 않고 묶음 요약 하나를 돌려준다. 그래서 이 라벨은 제목과 묶음 요약만 보고 매긴 것이고, URL 하나하나를 평가한 게 아니다.
