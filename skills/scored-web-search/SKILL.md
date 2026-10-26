@@ -23,7 +23,9 @@ Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegate
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and have it write JSON records containing `url`, `title`, and an optional verified ISO `date` to a file you name in a temporary directory (one file per subagent, e.g. `urls-1.json`). It returns only the file path and the record count; the records themselves stay out of the main context. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** that can both search the web and write a file — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name in a temporary directory (one file per subagent, e.g. `urls-1.json`). It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+
+If the subagent could not write the file, it returns the records themselves. Write them to the path you named and go on, and say in the report that the records came back inline. They cost main context but carry no page text.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
@@ -139,6 +141,6 @@ If script fails, report it and stop; do not fall back to unscored reading.
 ## Don't Do This
 
 - Don't cite WEAK/DROP material "for reference anyway."
-- Don't pile search-result snippets into the main context — the subagent returns URLs only.
+- Don't pile search-result snippets into the main context — the subagent hands back a file of URL records, never search-result text.
 - Don't trust content just because its domain score is high. The tier is a device for choosing what to read, not a guarantee that the content is true.
 - Don't doulbe-check socre.
