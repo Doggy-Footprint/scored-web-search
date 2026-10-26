@@ -10,6 +10,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 PILOT_ORDINALS = (1, 2, 3, 6)
+# Run beside the pilot set: od9 tests an unregistered official docs host (pending evals E1).
+EXTRA_IDS = ("od9",)
 
 CASE = """schema_version: "1.1"
 name: {id}
@@ -41,11 +43,21 @@ def pilot_questions():
                 yield {**q, "mode": mode, "expansion": bool(q.get("expansion"))}
 
 
+def case_questions():
+    """The pilot questions, then the extra ones; the arms run and `analyze` cover exactly these."""
+    yield from pilot_questions()
+    doc = json.loads((ROOT / "questions.json").read_text())
+    for mode, block in doc["modes"].items():
+        for q in block["questions"]:
+            if q["id"] in EXTRA_IDS:
+                yield {**q, "mode": mode, "expansion": bool(q.get("expansion"))}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true", help="print the pilot questions as JSON instead of writing cases")
     args = ap.parse_args()
-    qs = list(pilot_questions())
+    qs = list(case_questions())
     if args.list:
         print(json.dumps([{k: q[k] for k in ("id", "mode", "field", "expansion", "q")} for q in qs]))
         return

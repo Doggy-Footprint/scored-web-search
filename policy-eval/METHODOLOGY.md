@@ -35,7 +35,7 @@ policy's output reaches the judge, the policy grades its own exam.
 
        claude plugin eval . --eval-dir policy-eval/arms --keep-temp --allow-tools Bash Write WebSearch WebFetch \
          "WebFetch(domain:api.openalex.org)" "WebFetch(domain:api.semanticscholar.org)" \
-         "WebFetch(domain:api.github.com)" "WebFetch(domain:hn.algolia.com)"
+         "WebFetch(domain:api.github.com)" "WebFetch(domain:hn.algolia.com)" "WebFetch(domain:doi.org)"
 3. **Ingest** (`arms.py ingest <result.json>`). Copies each run's stream trace and session transcripts into
    `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists the arm URLs the blind judge has not
    labelled in `runs/<id>.union.todo.json`.

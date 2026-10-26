@@ -50,7 +50,7 @@ SCORE VERDICT T  SIGNALS                     URL
 -- 47 sources | PRIMARY 1 | SUPPORT 1 | SKIM 9 | WEAK 12 | DROP 22 | BLOCKED 2
 ```
 
-The URL column is the address to fetch: links WebFetch cannot follow are rewritten (old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
+The URL column is the address to fetch: links WebFetch cannot follow are rewritten (doi.org links to the page they resolve to, old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
 
 | Verdict | Score | What to do with it |
 |---|---|---|

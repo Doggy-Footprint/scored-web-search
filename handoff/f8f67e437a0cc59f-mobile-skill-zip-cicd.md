@@ -18,7 +18,7 @@ master push 시 GitHub Action이 `skills/scored-web-search/`를 zip으로 만들
 - claude.ai skill은 업로드 방식. GitHub/마켓플레이스 자동 동기화, 업데이트 API/CLI는 문서에 없음 → 업데이트마다 재업로드.
 - 업로드 frontmatter 허용 키: name, description, license, compatibility, metadata, allowed-tools. 현재 SKILL.md는 name/description만 → OK.
 - 클라우드 VM: Ubuntu 24.04, Python 3.x 있음.
-- 네트워크 기본 Trusted. scorer가 호출하는 host는 `fetchers.LOOKUP_HOSTS`의 넷이다. 이 중 `api.openalex.org`, `api.semanticscholar.org`, `hn.algolia.com`은 기본 허용 목록에 없을 가능성 높음 (`api.github.com`은 GitHub proxy 경유 가능성). 조회 대부분이 막히면 scorer는 exit 4로 멈추므로, 환경을 Custom(도메인 추가) 또는 Full로 바꿔야 함.
+- 네트워크 기본 Trusted. scorer가 호출하는 host는 `fetchers.LOOKUP_HOSTS`의 다섯이다. 이 중 `api.openalex.org`, `api.semanticscholar.org`, `hn.algolia.com`, `doi.org`는 기본 허용 목록에 없을 가능성 높음 (`api.github.com`은 GitHub proxy 경유 가능성). 조회 대부분이 막히면 scorer는 exit 4로 멈추므로, 환경을 Custom(도메인 추가) 또는 Full로 바꿔야 함.
 
 ## 미확인
 - claude.ai 채팅 샌드박스(코드 실행)의 네트워크 정책 — scorer 외부 조회 가능 여부.

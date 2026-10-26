@@ -310,13 +310,20 @@ def cmd_ingest(result_path):
 
 # ---------------------------------------------------------------- analyze
 
-def arm_urls(ev):
+def fetch_aliases(scores):
+    """norm(fetch address) -> norm(url) for rows the scorer gave another address to read (a doi.org link's
+    target), so a score-table row or a read of that address joins the URL the search returned."""
+    return {a: k for k, row in scores.items() if (a := norm(row.get("fetch_url") or k)) != k}
+
+
+def arm_urls(ev, alias=None):
     """norm(url) -> the highest level it reached in this arm. Main-context levels outrank subagent ones."""
     order = {l: i for i, l in enumerate(("sub_seen", "sub_read") + LEVELS)}
     lvl = {}
 
     def bump(u, level):
         u = norm(u)
+        u = (alias or {}).get(u, u)
         if order[level] > order.get(lvl.get(u), -1):
             lvl[u] = level
 
@@ -341,15 +348,16 @@ def arm_urls(ev):
     return lvl
 
 
-def in_run_verdicts(ev):
+def in_run_verdicts(ev, alias=None):
     """norm(url) -> the verdict the run itself acted on: the score table's, then the judge's for SUPPORT."""
+    alias = alias or {}
     v = {}
     for r in ev.get("score_runs", []):
         for row in r["rows"]:
-            v[norm(row["url"])] = row["verdict"]
+            v[alias.get(norm(row["url"]), norm(row["url"]))] = row["verdict"]
     for r in ev.get("agent_returns", []):
         for j in r.get("verdicts", []) if r["kind"] == "judge" else []:
-            u = norm(j["url"])
+            u = alias.get(norm(j["url"]), norm(j["url"]))
             if v.get(u) == "SUPPORT":
                 v[u] = "SUPPORT/" + j["verdict"] + ("/" + j["kind"] if j["kind"] else "")
     return v
@@ -435,7 +443,8 @@ def cost_breakdown(ev):
 
 
 def analyze_arm(ev, labels, scores, q):
-    lvl = arm_urls(ev)
+    alias = fetch_aliases(scores)
+    lvl = arm_urls(ev, alias)
     contamination = {L: {lab: Counter() for lab in LABELS} for L in LEVELS + ("sub_read",)}
     for u, L in lvl.items():
         if L not in contamination:
@@ -445,8 +454,8 @@ def analyze_arm(ev, labels, scores, q):
         contamination[L][lab][tier] += 1
     fetch_main = [f for f in ev["fetches"] if f["role"] == "main"]
     fetch_sub = [f for f in ev["fetches"] if f["role"] != "main"]
-    read_urls = {norm(f["url"]) for f in fetch_main if f["ok"]}
-    verdicts = in_run_verdicts(ev)
+    read_urls = {alias.get(norm(f["url"]), norm(f["url"])) for f in fetch_main if f["ok"]}
+    verdicts = in_run_verdicts(ev, alias)
     judge_vs_blind = defaultdict(Counter)
     for u, v in verdicts.items():
         if v.startswith("SUPPORT/"):

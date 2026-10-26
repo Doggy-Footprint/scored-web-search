@@ -1,6 +1,7 @@
 """Independent tests for the lookup-failure contract: LOOKUP_HOSTS, exit 4 when most
 lookups cannot reach their APIs, `lookup-failed` rows below that threshold, the
 `--no-net` help text, and the SKILL.md / README.md wording. Written from the spec.
+doi.org counts as a lookup host: doi.org URLs are resolved through its handle API.
 
 Nothing here touches the network: in-process runs patch `urllib.request.urlopen`,
 and the subprocess runs point every request at a closed local proxy port."""
@@ -28,7 +29,8 @@ FETCHERS_PY = os.path.join(_pathsetup.SCRIPTS, "srcscore_core", "fetchers.py")
 SKILL_MD = os.path.join(ROOT, "skills", "scored-web-search", "SKILL.md")
 README_MD = os.path.join(ROOT, "README.md")
 
-EXPECTED_HOSTS = {"api.openalex.org", "api.semanticscholar.org", "api.github.com", "hn.algolia.com"}
+EXPECTED_HOSTS = {"api.openalex.org", "api.semanticscholar.org", "api.github.com", "hn.algolia.com",
+                  "doi.org"}
 DEAD_PROXY = "http://127.0.0.1:9"   # discard port; nothing listens, so connect is refused
 
 
@@ -134,13 +136,24 @@ def doi_url(suffix):
     return "https://doi.org/10.1000/" + suffix
 
 
-def oa_rule(fail_marker, failure):
+def handle_record(target):
+    return {"responseCode": 1, "handle": "10.1000/x",
+            "values": [{"index": 1, "type": "URL", "data": {"format": "string", "value": target}}]}
+
+
+def oa_rule(fail_marker, failure, handle_fails=False):
     """OpenAlex answers a record for every DOI except those containing `fail_marker`,
-    which get `failure`. Other hosts answer an empty-but-valid body."""
+    which get `failure`. The doi.org handle API resolves every DOI to a publisher page,
+    except that with `handle_fails` the `fail_marker` DOIs get `failure` there too.
+    Other hosts answer an empty-but-valid body."""
     def rule(url):
         host = urllib.parse.urlsplit(url).hostname
         if host == "api.openalex.org":
             return failure if fail_marker in url else OA_RECORD
+        if host == "doi.org":
+            if handle_fails and fail_marker in url:
+                return failure
+            return handle_record("https://publisher.example/article/1")
         if host == "hn.algolia.com":
             return {"hits": []}
         return _http_error(url, 404)
@@ -163,13 +176,22 @@ class LookupHostsMatchFetchers(unittest.TestCase):
         hosts = set(re.findall(r"""["']https?://([A-Za-z0-9.-]+)""", src))
         self.assertEqual(hosts, set(fetchers.LOOKUP_HOSTS))
 
-    def test_doi_org_only_inside_openalex_path(self):
-        src = read(FETCHERS_PY)
-        hits = [m.start() for m in re.finditer(r"doi\.org", src)]
-        self.assertTrue(hits, "expected doi.org inside the OpenAlex works path")
-        for i in hits:
-            self.assertEqual(src[i - len("/works/https://"):i], "/works/https://",
-                             "doi.org used outside the OpenAlex path: %r" % src[i - 40:i + 20])
+    def test_doi_org_contacted_through_handle_api(self):
+        # doi.org is a lookup host in its own right now: its handle API, not only
+        # text inside an OpenAlex path.
+        fake = FakeNet(lambda u: urllib.error.URLError("unreachable"))
+        saved = dict(fetchers.STATS)
+        try:
+            with mock.patch("urllib.request.urlopen", fake):
+                fetchers.doi_target("10.1000/x", fetchers.NullCache(), 1)
+        finally:
+            fetchers.STATS.clear()
+            fetchers.STATS.update(saved)
+        self.assertTrue(fake.calls)
+        for u in fake.calls:
+            p = urllib.parse.urlsplit(u)
+            self.assertEqual(p.hostname, "doi.org")
+            self.assertTrue(p.path.startswith("/api/handles/"), u)
 
     def test_dynamic_hosts_contacted(self):
         fake = FakeNet(lambda u: urllib.error.URLError("unreachable"))
@@ -184,11 +206,11 @@ class LookupHostsMatchFetchers(unittest.TestCase):
                 fetchers.github_repo("o", "r", cache, 1)
                 fetchers.hn_item("1", cache, 1)
                 fetchers.hn_points("https://example.com/a", cache, 1)
+                fetchers.doi_target("10.1000/x", cache, 1)
         finally:
             fetchers.STATS.clear()
             fetchers.STATS.update(saved)
         self.assertEqual(fake.hosts(), set(fetchers.LOOKUP_HOSTS))
-        self.assertNotIn("doi.org", fake.hosts())
 
 
 # --------------------------------------------------------------------------- 2. exit 4
@@ -220,18 +242,20 @@ class MostLookupsFailExit4(unittest.TestCase):
                 self.assertEqual(stats["failed"], stats["lookups"])
                 self.check_exit4(code, err)
 
+    # Each doi.org URL costs two lookups: OpenAlex by DOI and the doi.org handle API.
+
     def test_exactly_half_is_exit4(self):
         code, out, err, stats, _ = run_cli(
             ["-u", doi_url("ok1"), "-u", doi_url("fail1")],
-            oa_rule("fail", urllib.error.URLError("unreachable")))
-        self.assertEqual(stats, {"lookups": 2, "failed": 1})
+            oa_rule("fail", urllib.error.URLError("unreachable"), handle_fails=True))
+        self.assertEqual(stats, {"lookups": 4, "failed": 2})
         self.check_exit4(code, err)
 
     def test_majority_is_exit4(self):
         code, out, err, stats, _ = run_cli(
             ["-u", doi_url("ok1"), "-u", doi_url("fail1"), "-u", doi_url("fail2")],
-            oa_rule("fail", _http_error("x", 503)))
-        self.assertEqual(stats, {"lookups": 3, "failed": 2})
+            oa_rule("fail", _http_error("x", 503), handle_fails=True))
+        self.assertEqual(stats, {"lookups": 6, "failed": 4})
         self.check_exit4(code, err)
 
     def test_subprocess_dead_proxy(self):
@@ -248,7 +272,7 @@ class FewLookupsFailFlagged(unittest.TestCase):
         urls = [doi_url("ok1"), doi_url("ok2"), doi_url("fail1")]
         args = sum((["-u", u] for u in urls), []) + ["--format", "json"]
         code, out, err, stats, _ = run_cli(args, oa_rule("fail", urllib.error.URLError("x")))
-        self.assertEqual(stats, {"lookups": 3, "failed": 1})
+        self.assertEqual(stats, {"lookups": 6, "failed": 1})   # 3 OpenAlex + 3 handle API
         self.assertNotEqual(code, 4, err)
         self.assertEqual(code, 0, err)
         self.assertRegex(err, r"flagged\s+`?lookup-failed`?")
@@ -264,7 +288,7 @@ class FewLookupsFailFlagged(unittest.TestCase):
                 urls = [doi_url("ok1"), doi_url("ok2"), doi_url("ok3"), doi_url("fail1")]
                 args = sum((["-u", u] for u in urls), []) + ["--format", "json"]
                 code, out, err, stats, _ = run_cli(args, oa_rule("fail", _http_error("x", status)))
-                self.assertEqual(stats, {"lookups": 4, "failed": 1})
+                self.assertEqual(stats, {"lookups": 8, "failed": 1})   # 4 OpenAlex + 4 handle API
                 self.assertEqual(code, 0, err)
                 self.assertRegex(err, r"flagged\s+`?lookup-failed`?")
                 rows = {r["url"]: r for r in json.loads(out)}
@@ -396,10 +420,9 @@ class ReadmeHosts(unittest.TestCase):
             hosts |= {h for h in re.findall(self.HOST_RE, ln) if not h.endswith((".json", ".md", ".py"))}
         self.assertEqual(hosts, set(fetchers.LOOKUP_HOSTS))
 
-    def test_no_doi_org(self):
-        for ln in self.allow_lines:
-            self.assertNotIn("doi.org", ln)
-        self.assertNotRegex(self.md, r"`(https?://)?doi\.org`")
+    def test_lists_doi_org(self):
+        self.assertTrue(any(re.search(r"`doi\.org`", ln) for ln in self.allow_lines),
+                        "README's hosts-to-allow line does not name doi.org")
 
 
 if __name__ == "__main__":

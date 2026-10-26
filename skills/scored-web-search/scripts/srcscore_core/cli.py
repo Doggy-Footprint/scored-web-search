@@ -150,7 +150,8 @@ def main(argv=None):
             print("%s.\nScores would rest on the domain tier alone and mislead. Allow network "
                   "access to %s, then run again." % (msg, ", ".join(LOOKUP_HOSTS)), file=sys.stderr)
             return 4
-        print("%s; those rows are flagged `lookup-failed`." % msg, file=sys.stderr)
+        print("%s; rows scored without their signals are flagged `lookup-failed`, and a doi.org "
+              "link that could not be resolved keeps its doi.org address." % msg, file=sys.stderr)
 
     rows.sort(key=lambda r: -r["score"])
     if a.min is not None:

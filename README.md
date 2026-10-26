@@ -37,7 +37,7 @@ mkdir -p ~/.claude/skills
 ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/scored-web-search   # Codex: ~/.codex/skills/
 ```
 
-- **claude.ai / mobile**: [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip)을 Settings > Customize > Skills에 업로드합니다. cloud 환경처럼 network가 제한된 곳에서는 scorer가 조회하는 `api.openalex.org`, `api.semanticscholar.org`, `api.github.com`, `hn.algolia.com`을 허용해야 합니다. 막혀 있으면 skill은 점수를 매기지 않고 멈춥니다.
+- **claude.ai / mobile**: [scored-web-search.zip](https://github.com/Doggy-Footprint/scored-web-search/releases/latest/download/scored-web-search.zip)을 Settings > Customize > Skills에 업로드합니다. cloud 환경처럼 network가 제한된 곳에서는 scorer가 조회하는 `api.openalex.org`, `api.semanticscholar.org`, `api.github.com`, `hn.algolia.com`, `doi.org`를 허용해야 합니다. 막혀 있으면 skill은 점수를 매기지 않고 멈춥니다.
 - **호출**: "scored web search로 ~ 조사해줘"처럼 요청하고, 필요하면 mode를 함께 적습니다. 보고서의 각 주장에는 `(Nature 2025, PRIMARY 91)` 형식의 태그가 붙습니다.
 - **커스터마이징**: `policy.json`과 `modes/*.json`을 고친 뒤 `python3 scripts/check_policy.py`로 검증합니다.
 

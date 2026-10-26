@@ -785,7 +785,9 @@ class TestPilotQuestions(unittest.TestCase):
         proc = subprocess.run([sys.executable, MAKE_CASES, "--list"], capture_output=True, text=True)
         self.assertEqual(proc.returncode, 0, proc.stderr)
         items = json.loads(proc.stdout)
-        self.assertEqual(len(items), 20)
+        # the 20 pilot questions plus od9 (make_cases.EXTRA_IDS)
+        self.assertEqual(len(items), 21)
+        self.assertEqual(items[-1]["id"], "od9")
         for it in items:
             with self.subTest(id=it.get("id")):
                 self.assertEqual(sorted(it), ["expansion", "field", "id", "mode", "q"])
@@ -818,7 +820,7 @@ class TestCaseYaml(unittest.TestCase):
 
     def test_twenty_case_dirs(self):
         self.assertEqual(self.proc.returncode, 0, self.proc.stderr)
-        self.assertEqual(len(os.listdir(self.arms_dir)), 20)
+        self.assertEqual(len(os.listdir(self.arms_dir)), 21)
 
     def test_header_fields(self):
         for cid in os.listdir(self.arms_dir):
