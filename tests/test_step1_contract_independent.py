@@ -104,9 +104,6 @@ class SkillStep1Contract(unittest.TestCase):
         self.assertIn("references/searcher-prompt.md", self.raw)
         self.assertRegex(self.s, r"sub-?agent")
 
-    def test_subagent_must_search_and_write_file(self):
-        self.assertRegex(self.s, r"sub-?agent[^.]*(search|web-search)[^.]*(and|&)[^.]*write[^.]*file")
-
     def test_no_fork_and_lightest_model(self):
         self.assertRegex(self.s, r"(do not|don't|never|not) use `?fork`?")
         self.assertRegex(self.s, r"lightest model|haiku")

@@ -312,8 +312,15 @@ def session_usage(trace_path, session, agent_type):
 
 
 
+def case_list():
+    """id -> question, for exactly the cases make_cases.py writes."""
+    return {q["id"]: q for q in json.loads(subprocess.run([sys.executable, str(ROOT / "make_cases.py"), "--list"],
+                                                          capture_output=True, text=True, check=True).stdout)}
+
+
 def cmd_ingest(result_path):
     res = json.loads(Path(result_path).read_text())
+    qs = case_list()
     for case in res.get("cases", []):
         cid = case["name"]
         pool = set()
@@ -345,13 +352,19 @@ def cmd_ingest(result_path):
                     print(f"{cid} {arm}: only the first run is analysed", file=sys.stderr)
         jp = RUNS / f"{cid}.judge.json"
         labelled = {norm(j["url"]) for j in json.loads(jp.read_text())["judged"]} if jp.exists() else set()
+        # A score-table row names a doi.org link by its target; analyze joins the two, so a target whose link
+        # the blind judge already labelled needs no label of its own.
+        dois = {u: None for u in labelled if is_doi_link(u)}
+        q = qs.get(cid)
+        alias = fetch_aliases(score_all(dois, q["mode"], q["field"])) if dois and q else {}
         titles = {}
         for arm in ("with", "without"):
             p = RUNS / f"{cid}.{arm}.events.json"
             if p.exists():
                 for u, t in arm_titles(json.loads(p.read_text())).items():
                     titles.setdefault(u, t)
-        todo = sorted(pool - labelled, key=lambda u: hashlib.sha1(u.encode()).hexdigest())
+        todo = sorted((u for u in pool - labelled if alias.get(u, u) not in labelled),
+                      key=lambda u: hashlib.sha1(u.encode()).hexdigest())
         (RUNS / f"{cid}.union.todo.json").write_text(json.dumps([{"url": u, "title": titles.get(u)} for u in todo], indent=1))
         print(f"{cid}: {len(pool)} arm URLs, {len(todo)} need labels")
 
@@ -362,6 +375,20 @@ def fetch_aliases(scores):
     """norm(fetch address) -> norm(url) for rows the scorer gave another address to read (a doi.org link's
     target), so a score-table row or a read of that address joins the URL the search returned."""
     return {a: k for k, row in scores.items() if (a := norm(row.get("fetch_url") or k)) != k}
+
+
+def is_doi_link(url):
+    host = urlsplit(url).netloc.lower()
+    return host == "doi.org" or host.endswith(".doi.org")
+
+
+def aliased_labels(labels, alias):
+    """Labels keyed as `arm_urls` keys URLs: a label on a doi.org link's target counts for the link. A label on
+    the link itself, or the first one seen, wins."""
+    out = {u: j for u, j in labels.items() if u not in alias}
+    for u, j in labels.items():
+        out.setdefault(alias.get(u, u), j)
+    return out
 
 
 def arm_urls(ev, alias=None):
@@ -420,10 +447,14 @@ def degraded_traced(ev):
     failed = [r["lookups_failed"] for r in scored if r["lookups_failed"]]
     all_fetch_error = [v for v in judged if all(j["kind"] == "fetch-error" for j in v)]
     usable = [v for v in judged if v not in all_fetch_error]
-    # A round is a score run; its judge was unavailable when none of its SUPPORT rows got a verdict. Scoring the
-    # same URLs again is then no new round, and a round whose judge skipped one URL is not unavailable.
+    # A round is a score run; its judge was unavailable when none of the SUPPORT rows it added got a verdict.
+    # Scoring the same URLs again is then no new round, and a round whose judge skipped one URL is not unavailable.
     judged = {norm(j["url"]) for v in usable for j in v}
-    rounds = [{norm(row["url"]) for row in r["rows"] if row["verdict"] == "SUPPORT"} for r in scored]
+    rounds, seen = [], set()
+    for r in scored:
+        sup = {norm(row["url"]) for row in r["rows"] if row["verdict"] == "SUPPORT"}
+        rounds.append(sup - seen)
+        seen |= sup
     un = [j for v in usable for j in v if j["verdict"] == "UNJUDGED"]
     return {"step1_inline": [sum(r["kind"] == "inline" for r in searchers), len(searchers)],
             "lookups_failed": [sum(f for f, _ in failed), sum(t for _, t in failed)],
@@ -439,7 +470,8 @@ def degraded_check(ev):
     agree = {"step1_inline": (reported.get("step1_inline") or [0])[0] == traced["step1_inline"][0],
              "lookups_failed": (reported.get("lookups_failed") or [0])[0] == traced["lookups_failed"][0],
              "judge_unavailable": reported["judge_unavailable"] == traced["judge_unavailable"],
-             "unjudged": (reported.get("unjudged") or [0])[0] == (0 if traced["judge_unavailable"] else traced["unjudged"][0])}
+             # Traced UNJUDGED already leaves out rounds whose judge was unavailable, as the report must.
+             "unjudged": (reported.get("unjudged") or [0])[0] == traced["unjudged"][0]}
     return {"line_present": True, "reported": reported, "traced": traced, "agree": agree}
 
 
@@ -545,8 +577,7 @@ def analyze_arm(ev, labels, scores, q):
 
 
 def cmd_analyze():
-    qs = {q["id"]: q for q in json.loads(subprocess.run([sys.executable, str(ROOT / "make_cases.py"), "--list"],
-                                                       capture_output=True, text=True, check=True).stdout)}
+    qs = case_list()
     summary = {}
     for cid, q in qs.items():
         evs = {a: json.loads((RUNS / f"{cid}.{a}.events.json").read_text())
@@ -568,6 +599,7 @@ def cmd_analyze():
             for u in arm_urls(ev):
                 urls.setdefault(u, None)
         scores = score_all(urls, q["mode"], q["field"])
+        labels = aliased_labels(labels, fetch_aliases(scores))
         net_off = any("net:off" in (r.get("flags") or []) for r in scores.values())
         out = {"id": cid, "mode": q["mode"], "field": q["field"], "expansion": q["expansion"],
                "n_labels": len(labels), "scores_net_off": net_off, "arms": {a: analyze_arm(ev, labels, scores, q) for a, ev in evs.items()}}

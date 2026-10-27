@@ -295,7 +295,7 @@ class DocsTests(unittest.TestCase):
         self.assertTrue(s5, "no Step 5 heading")
         low = s5.lower()
         self.assertIn("academic", low)
-        self.assertIn("always", low)
+        self.assertIn("by default", low)
         self.assertTrue("trac" in low and "original" in low, s5[:500])
         self.assertIn("round", low)
 

@@ -962,14 +962,20 @@ class TestDegradedCheck(unittest.TestCase):
                    degraded=reported("judge-unavailable", judge_unavailable=True))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": True, "lookups_failed": True,
                                                             "judge_unavailable": True, "unjudged": True})
-        # Usable judge left 1 page UNJUDGED and a second SUPPORT run (new URL) had no judge: unjudged item must
-        # still be 0.
+        # Usable judge left 1 page UNJUDGED and a second SUPPORT run (new URL) had no judge: the usable round's
+        # unjudged item is still reported (SKILL.md Step 6 leaves out only the unavailable round's).
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",), urls=["https://r.org/new"])],
                    agent_returns=[jv("page", "USE", urls=["https://j.org/p", R[0]])],
-                   degraded=reported("judge-unavailable", judge_unavailable=True))
+                   degraded=reported("judge-unavailable · unjudged 1 (page 1)", judge_unavailable=True,
+                                     unjudged=[1, 0, 1]))
         a = arms.degraded_check(ev)["agree"]
         self.assertIs(a["judge_unavailable"], True)
         self.assertIs(a["unjudged"], True)
+        # Omitting the usable round's unjudged item disagrees.
+        ev["closing"]["degraded"] = reported("judge-unavailable", judge_unavailable=True)
+        a = arms.degraded_check(ev)["agree"]
+        self.assertIs(a["judge_unavailable"], True)
+        self.assertIs(a["unjudged"], False)
         # Report misses judge-unavailable.
         ev["closing"]["degraded"] = reported("none")
         self.assertIs(arms.degraded_check(ev)["agree"]["judge_unavailable"], False)

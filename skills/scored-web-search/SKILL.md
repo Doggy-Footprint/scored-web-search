@@ -19,15 +19,15 @@ This skill filters sub-standard sources before the main agent reads them when hi
 6.   Write    → every claim tagged with source + score
 ```
 
-Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegated to lightweight subagents; when sub-agents are not available, the main agent does Steps 1 and 5 itself and skips Step 2.5.
+Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegated to lightweight subagents; each step says what to do without them.
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** that can both search the web and write a file — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name under `$TMPDIR` (`/tmp` only when it is unset; `echo $TMPDIR` tells you), one file per subagent, e.g. `$TMPDIR/ssw/urls-1.json`. Sandboxes let files be written and read there but often not in `/tmp`. It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name under `$TMPDIR` (`/tmp` only when it is unset; `echo $TMPDIR` tells you), one file per subagent, e.g. `$TMPDIR/ssw/urls-1.json`. Sandboxes let files be written and read there but often not in `/tmp`. It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
 
 If the subagent could not write the file, it returns the records themselves. Write them to the path you named, go on, and count it under `step1-inline` in the report's `Degraded:` line (Step 6). They cost main context but carry no page text.
 
-Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
+Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 60-90 URLs total at most.
 
 In `official-docs` mode, name the official docs host of the product the question is about (one or two, e.g. `docs.python.org`) and add `site:<host> <keywords>` queries next to the plain ones. Plain searches often miss the official page entirely.
 
@@ -41,7 +41,7 @@ When the question names a docs version or variant, pass it: `--doc-version nextj
 
 In `official-docs` mode, pass the hosts you used for `site:` queries: `--official-domain biomejs.dev`. A host the policy does not know is then scored SUPPORT with `official-claimed` instead of the unregistered default, so Step 2.5 still vets each page. A registered host keeps its tier.
 
-Output lists only the PRIMARY and SUPPORT rows, each with its title cut to 40 characters, roughly 25 tokens per line, and a count per verdict:
+Output lists only the PRIMARY and SUPPORT rows, each with its title cut to 40 characters, and a count per verdict:
 
 ```
 SCORE VERDICT T  SIGNALS                     URL  TITLE
@@ -69,27 +69,26 @@ Hand every SUPPORT URL, with the research question, to a **lightweight subagent*
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
 - A verdict on a source is final for this run: SKIP and UNJUDGED sources stay out of Step 3, and you do not open them to second-guess the judge. An UNJUDGED reason starting `page:` means the site gave nothing to judge; `fetch-error:` means WebFetch failed on it twice. Some sources failing to fetch is still a set of verdicts.
-- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED because the fetch itself failed (`fetch-error`, not an HTTP status, a PDF or an empty page); the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line.
+- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED with `fetch-error`: the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line.
 
 ### Step 3 — Read: open only what passed
-`WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.**
+`WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Open nothing else.** The moment you open a source that did not pass to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
 
-When a WebFetch note says the page was read only up to some character, call again with the `offset` it gives only if what the question needs is likely in the unread part. Anything you did not read is "beyond what was read", never "not reported". The moment you open one to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
+When a WebFetch note says the page was read only up to some character, call again with the `offset` it gives only if what the question needs is likely in the unread part. Anything you did not read is "beyond what was read", never "not reported".
 
 Default cap: 8-12 sources. Up to 20 if the user asks for depth.
 
-Two re-search rounds max. Beyond that, **ask the user explicitly** before searching again, and if they decline, state plainly in the answer that the evidence base is thin.
-
-
 ### Step 4 — Re-search: loop back to 1 when sources are thin
 
-Do not promote sub-WEAK sources becase of low credible sources. Change the keywords and re-run from step 1.
+When too few sources pass, do not promote anything below SUPPORT. Change the keywords and re-run from Step 1.
+
+Two re-search rounds max. Beyond that, **ask the user explicitly** before searching again, and if they decline, state plainly in the answer that the evidence base is thin.
 
 ### Step 5 — Verify / follow-up: claims vs. evidence
 
 Follow-up: as with any web search, terms found in sources you read may be searched. Never run that search yourself; send it through Step 1 and Steps 2-2.5. It counts toward the two re-search rounds.
 
-Verify: in `academic` mode, always. In other modes, only when the user has stressed accuracy, or the report carries a lot of figures. Give the sources url that passed scoring filter to a **lightweight subagent** and have it do **this and nothing else**:
+Verify: in `academic` mode, by default. In other modes, only when the user has stressed accuracy, or the report carries a lot of figures. Give the URLs you read in Step 3 to a **lightweight subagent** and have it do **this and nothing else**:
 
 > For each figure or claim: (a) does this document actually state that figure, (b) is this document the original source of the figure or is it citing someone else, (c) are sample size, time period, and measurement method stated. Answer only in the format `claim | supported/secondary/contradicted | location of evidence`.
 
@@ -99,7 +98,7 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 ### Step 6 — Write
 
-Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
+Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. SKIM-or-below sources are never used. Any claim resting on SUPPORT sources alone gets a hedge — "not yet confirmed", "according to a single report".
 
 Close the report with three lines, in this order:
 
@@ -119,7 +118,7 @@ Keywords: <round>: q1, q2 / <round>: q3
 
 ## Scoring Policy
 
-The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it. Recency applies once to every source with a known date: academic API publication date/year, repository `pushed_at` or direct HN thread creation date, then supplied publication date. Invalid or future dates fall through to the next candidate. Unknown dates receive no recency adjustment and carry `date-unknown`; `official-docs` disables recency. URL lists and `URL | title` remain supported, but JSON is needed to supply dates. URL paths can also cost a source one band (-28): `non-content` for listings and build artefacts (a site's `/search` page, `.diff`, `__pycache__`, copies of installed packages), `stale-version` for superseded docs or a registry page pinned to one release, `wrong-variant` for another docs variant than the one passed.
+The domain tier sets the base score; secondary signals (citations, engagement, recency) adjust it. Recency applies once to every source with a known date: academic API publication date/year, repository `pushed_at` or direct HN thread creation date, then supplied publication date. Invalid or future dates fall through to the next candidate. Unknown dates receive no recency adjustment and carry `date-unknown`; `official-docs` disables recency. URL paths can also cost a source one band (-28): `non-content` for listings and build artefacts (a site's `/search` page, `.diff`, `__pycache__`, copies of installed packages), `stale-version` for superseded docs or a registry page pinned to one release, `wrong-variant` for another docs variant than the one passed.
 
 | Tier | Base | Trust level |
 |---|---|---|
@@ -144,15 +143,12 @@ The same domain sits at different tiers in different modes, because a mode asks 
 | `community-opinion` | Discussion threads. Peer-review off, engagement weighted highest, short half-life, discussion hosts treated as primary sources |
 | `news` | Reporting. Peer-review off, recency dominant, own tier ladder |
 | `official-docs` | Product/framework docs. Recency, peer-review and engagement all off; official docs treated as primary sources |
-
-A mode's overlay is also where a domain gets registered when it only matters to that mode's question.
-
 ## Error handling
 If `scripts/srcscore.py` fails, report it and stop; do not fall back to unscored reading. Exit 4 means most citation, star and HN lookups could not reach their APIs, so every score would rest on the domain tier alone. Tell the user the hosts to allow — the script names them — and stop. Do not re-run with `--no-net`: it drops those signals, and its verdicts are not this skill's.
 
 ## Don't Do This
 
-- Don't cite WEAK/DROP material "for reference anyway."
+- Don't cite SKIM-or-below material "for reference anyway."
 - Don't pile search-result snippets into the main context — the subagent hands back a file of URL records, never search-result text.
 - Don't trust content just because its domain score is high. The tier is a device for choosing what to read, not a guarantee that the content is true.
-- Don't doulbe-check socre.
+- Don't double-check a score by opening what it kept out.
