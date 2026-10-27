@@ -43,10 +43,10 @@ ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/
 
 # 평가
 
-자세한 방법론은 [`policy-eval/METHODOLOGY.md`](policy-eval/METHODOLOGY.md)에 있습니다. pilot은 2026-10-24에 20문항(mode당 4문항)으로 돌렸습니다.
+자세한 방법론은 [`policy-eval/METHODOLOGY.md`](policy-eval/METHODOLOGY.md)에 있습니다. pilot은 mode당 4문항, 20문항입니다. 2026-10-24에 main Opus로 처음 돌렸고, 2026-10-27에 od9를 더한 21문항을 현재 skill 구성과 main Sonnet으로 다시 돌렸습니다.
 
-- **방법**: policy를 모르는 blind judge(Opus 5.5)가 직접 검색한 URL에 `useful` / `marginal` / `junk` 라벨을 붙이고, 이를 policy의 verdict와 비교합니다. plugin을 켠 실행과 끈 실행도 같은 질문으로 비교합니다. 보고서 자체의 정확도는 측정하지 않았습니다.
-- **Policy**: 통과분의 useful 비율이 전체 풀의 20%에서 51%로 올랐습니다. 대신 useful 자료의 67%가 SUPPORT 미만으로 떨어졌습니다.
+- **방법**: policy를 모르는 blind judge가 직접 검색한 URL에 `useful` / `marginal` / `junk` 라벨을 붙이고, 이를 policy의 verdict와 비교합니다. plugin을 켠 실행과 끈 실행도 같은 질문으로 비교합니다. 보고서 자체의 정확도는 측정하지 않았습니다.
+- **Policy (2026-10-24, Opus judge 라벨)**: 통과분의 useful 비율이 전체 풀의 20%에서 51%로 올랐습니다. 대신 useful 자료의 67%가 SUPPORT 미만으로 떨어졌습니다. 이 라벨은 2026-10-27에 버렸습니다. 이후의 도메인 보강과 Sonnet 라벨 기준 재측정은 아직 하지 않았습니다.
 
   baseline은 필터를 거치기 전, blind judge가 라벨을 붙인 전체 풀의 비율입니다.
 
@@ -58,5 +58,18 @@ ln -s "$(realpath scored-web-search)/skills/scored-web-search" ~/.claude/skills/
   | `community-opinion` | 19% → 40% | 33% → 30% | 9% | 개선 필요 |
   | `non-academic` | 22% → 0% | 23% → 100% (3개) | 0% | 개선 필요 |
 
-- **plugin 켬 vs 끔**: plugin을 끄면 검색 요약 텍스트를 통해 저품질 자료 24건이 main context에 들어왔고, 켜면 0건이었습니다. 원문을 읽은 페이지는 23개에서 150개로 늘었지만, 비용도 $11.42에서 $15.53으로 36% 늘었습니다(20문항 합, list price).
-- **한계**: 질문당 judge 1명, 실행 1회라 benchmark가 아니라 case study입니다. pilot 당시 Step 2.5 judge는 plugin 코드가 직접 페이지를 받는 방식이었는데, eval 환경이 그 요청을 막아 한 번도 판정하지 못했습니다. 지금의 judge는 WebFetch로 읽는 subagent입니다. 이후의 도메인 보강, official-docs 개선, 현재 skill 구성은 아직 재측정하지 않았습니다.
+- **plugin 켬 vs 끔 (2026-10-27, main Sonnet, 21문항)**: 라벨이 아직 없어 저품질 자료 유입은 재지 못했습니다. 아래는 문항당 평균입니다.
+
+  | | plugin 켬 | plugin 끔 |
+  |---|---|---|
+  | 비용 (list price) | $0.31 | $0.20 |
+  | 턴 수 | 7.9 | 4.7 |
+  | main이 원문을 읽은 페이지 | 4.6 | 0.4 |
+  | main peak context (토큰) | 35.5k | 25.4k |
+
+  - plugin을 켜면 skill이 21문항 모두에서 실행됐습니다. main이 읽은 97페이지 중 94페이지가 PRIMARY 또는 judge가 USE로 판정한 SUPPORT였습니다.
+  - judge는 SUPPORT를 USE 38, SKIP 47, 판정 불가 21로 갈랐습니다.
+  - 점수 표와 subagent 답이 main context에 넣은 글자는 문항당 3.5k자입니다. 2026-10-24에는 약 20k자였습니다.
+  - scorer가 외부 조회 host에 닿지 못하면 skill은 점수 없이 읽지 않고 멈춥니다. 허용할 host를 안내하는 것도 확인했습니다.
+  - 지키지 않은 단계도 있습니다. 3문항에서 Step 2.5 judge를 건너뛰었고, academic 4문항 모두 Step 5 Verify를 subagent로 돌리지 않았습니다.
+- **한계**: 질문당 judge 1명, 실행 1회라 benchmark가 아니라 case study입니다. 2026-10-24와 2026-10-27은 main 모델과 skill 구성이 달라 직접 비교할 수 없습니다. 2026-10-24에는 Step 2.5 judge가 plugin 코드로 페이지를 받는 방식이었고, eval 환경이 그 요청을 막아 한 번도 판정하지 못했습니다.

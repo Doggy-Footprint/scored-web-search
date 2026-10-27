@@ -9,6 +9,6 @@ Related Files: policy-eval/METHODOLOGY.md, policy-eval/probe, policy-eval/contra
 Related Symbols: srcscore_core.scoring.official_claim, srcscore_core.cli.main, srcscore_core.fetchers.LOOKUP_HOSTS, arms.extract, srcscore_core.policy.validate_policy, srcscore_core.identifiers.fetch_url, srcscore_core.io_format.render_compact
 ---
 File: 599a859dd32c2d8b-skill-followups.md
-Summary: 2026-10-26 arms에서 드러난 skill 동작 후속(judge 누락, 같은 논문 중복, 조회 실패 원인)과 배포에 남은 일
+Summary: 2026-10-26·27 arms에서 드러난 skill 동작 후속(judge 누락·생략, academic Verify 미실행, 같은 논문 중복, 조회 실패 원인)과 배포에 남은 일
 Related Files: skills/scored-web-search/SKILL.md, skills/scored-web-search/scripts/srcscore_core/fetchers.py, skills/scored-web-search/scripts/srcscore_core/identifiers.py, policy-eval/arms.py, README.md, .claude-plugin/plugin.json
 Related Symbols: srcscore_core.fetchers.http_json, srcscore_core.identifiers.extract_ids, srcscore_core.identifiers.fetch_url, arms.norm, arms.degraded_traced
