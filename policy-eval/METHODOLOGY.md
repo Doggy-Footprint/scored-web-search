@@ -37,8 +37,9 @@ policy's output reaches the judge, the policy grades its own exam.
          "WebFetch(domain:api.openalex.org)" "WebFetch(domain:api.semanticscholar.org)" \
          "WebFetch(domain:api.github.com)" "WebFetch(domain:hn.algolia.com)" "WebFetch(domain:doi.org)"
 3. **Ingest** (`arms.py ingest <result.json>`). Copies each run's stream trace and session transcripts into
-   `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists the arm URLs the blind judge has not
-   labelled in `runs/<id>.union.todo.json`.
+   `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists in `runs/<id>.union.todo.json` the URLs
+   that reached either arm's main context (`listed`, `exposed`, `read`) and the blind judge has not labelled; a
+   URL only a subagent saw is never measured against a label.
 4. **Union labeller** (Workflow agent, same model and rules as 1). Labels the todo URLs, shuffled and without
    arm information, by the same criteria → `runs/<id>.union.judge.json`.
 5. **Analyze** (`arms.py analyze`, `contrast.py <id>`). Scores every URL with the real scorer and joins.

@@ -67,7 +67,7 @@ def search_links(text):
 
 
 # What the skill's own steps print. Formats are SKILL.md's and srcscore's `--format compact`.
-TABLE_ROW_RE = re.compile(r"^\s*(\d+\.\d)\s+(PRIMARY|SUPPORT|SKIM|WEAK|DROP|BLOCKED)\s+(\S+)\s+(?:(\S+)\s+)?(https?://\S+)\s*$", re.M)
+TABLE_ROW_RE = re.compile(r"^\s*(\d+\.\d)\s+(PRIMARY|SUPPORT|SKIM|WEAK|DROP|BLOCKED)\s+(\S+)\s+(?:(?!https?://)(\S+)\s+)?(https?://\S+)(?:[ \t]+(.*?))?[ \t]*$", re.M)
 SCORE_INPUT_RE = re.compile(r"srcscore\.py\b[^;&|\n]*\s(?:--in|-u|--url)[\s=]")
 FULL_OUT_RE = re.compile(r"""--full-out[\s=]+["']?([^\s"';&|]+)""")
 TABLE_COUNTS_RE = re.compile(r"^-- (\d+) sources \| (.+)$", re.M)
@@ -82,8 +82,8 @@ DEGRADED_RE = re.compile(r"^[\s`*>_-]*Degraded:[\s`*_]*(.*?)[\s`*_]*$", re.M)
 def score_output(text, is_error):
     """A `srcscore.py --format compact` Bash result: listed rows, verdict counts, unreachable lookups, exit."""
     m = EXIT_RE.search(text)
-    rows = [{"url": u, "score": float(s), "verdict": v, "tier": t, "signals": sig or ""}
-            for s, v, t, sig, u in TABLE_ROW_RE.findall(text)]
+    rows = [{"url": u, "score": float(s), "verdict": v, "tier": t, "signals": sig or "", "title": title or ""}
+            for s, v, t, sig, u, title in TABLE_ROW_RE.findall(text)]
     c = TABLE_COUNTS_RE.search(text)
     counts = {}
     if c:
@@ -338,7 +338,9 @@ def cmd_ingest(result_path):
                            "started_at": run.get("startedAt")})
                 (RUNS / f"{cid}.{arm}.report.md").write_text(ev.pop("report", ""))
                 (RUNS / f"{cid}.{arm}.events.json").write_text(json.dumps(ev, indent=1))
-                pool |= set(arm_urls(ev))
+                # Only what reached the main context is ever measured against a label (contamination, sources
+                # read, and the judge's SUPPORT verdicts, which are score-table rows); a subagent-only URL needs none.
+                pool |= {u for u, L in arm_urls(ev).items() if L in LEVELS}
                 if i:
                     print(f"{cid} {arm}: only the first run is analysed", file=sys.stderr)
         jp = RUNS / f"{cid}.judge.json"
@@ -446,6 +448,10 @@ def arm_titles(ev):
     for s in ev["searches"]:
         for l in s["links"]:
             t.setdefault(norm(l["url"]), l.get("title"))
+    for r in ev.get("score_runs", []):
+        for row in r["rows"]:
+            if row.get("title"):
+                t.setdefault(norm(row["url"]), row["title"])
     return t
 
 

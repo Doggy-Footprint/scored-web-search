@@ -41,14 +41,16 @@ When the question names a docs version or variant, pass it: `--doc-version nextj
 
 In `official-docs` mode, pass the hosts you used for `site:` queries: `--official-domain biomejs.dev`. A host the policy does not know is then scored SUPPORT with `official-claimed` instead of the unregistered default, so Step 2.5 still vets each page. A registered host keeps its tier.
 
-Output lists only the PRIMARY and SUPPORT rows, roughly 15 tokens per line, and a count per verdict:
+Output lists only the PRIMARY and SUPPORT rows, each with its title cut to 40 characters, roughly 25 tokens per line, and a count per verdict:
 
 ```
-SCORE VERDICT T  SIGNALS                     URL
- 98.0 PRIMARY  3  cit=132.0k,y2017,published@NeurIPS  https://arxiv.org/abs/1706.03762
- 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/html/2601.xxxxx
+SCORE VERDICT T  SIGNALS                     URL  TITLE
+ 98.0 PRIMARY  3  cit=132.0k,y2017,published@ https://arxiv.org/abs/1706.03762  Attention Is All You Need
+ 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/html/2601.xxxxx  A survey of ...
 -- 47 sources | PRIMARY 1 | SUPPORT 1 | SKIM 9 | WEAK 12 | DROP 22 | BLOCKED 2
 ```
+
+These rows are everything you choose from. The URL files and any `--full-out` table stay out of the main context: do not open, print, or grep them, not even for titles or for what scored below SUPPORT. If the rows are too thin, that is Step 4.
 
 The URL column is the address to fetch: links WebFetch cannot follow are rewritten (doi.org links to the page they resolve to, old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
 

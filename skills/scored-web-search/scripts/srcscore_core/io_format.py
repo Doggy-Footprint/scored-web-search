@@ -79,12 +79,19 @@ def render_table(rows: list) -> str:
     return "\n".join(lines)
 
 
+COMPACT_TITLE_CHARS = 40
+
+
 def render_compact(rows: list) -> str:
-    """Only the rows Step 3 may act on; the rest of the table is counts."""
+    """Only the rows Step 3 may act on, each with a cut title to choose by; the rest of the table is counts.
+    Without the title the main agent went looking for it in the URL files and the full table."""
     if not rows:
         return "(no sources)"
-    lines = ["SCORE VERDICT T  SIGNALS                     URL"]
-    lines += [_row_line(r) for r in rows if r["verdict"] in ("PRIMARY", "SUPPORT")]
+    lines = ["SCORE VERDICT T  SIGNALS                     URL  TITLE"]
+    for r in rows:
+        if r["verdict"] in ("PRIMARY", "SUPPORT"):
+            title = " ".join((r.get("title") or "").split())[:COMPACT_TITLE_CHARS]
+            lines.append(_row_line(r) + ("  " + title if title else ""))
     counts = " | ".join("%s %d" % (v, sum(1 for r in rows if r["verdict"] == v)) for v in VERDICTS)
     lines.append("-- %d sources | %s" % (len(rows), counts))
     return "\n".join(lines)

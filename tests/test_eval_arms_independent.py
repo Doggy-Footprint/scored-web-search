@@ -269,6 +269,8 @@ EXPECTED_LEVELS = {
     "M": "read", "O": "read", "P": "exposed",
 }
 ABSENT = ("K", "N", "Q")
+# The union todo lists only URLs that reached the main agent's context in some arm.
+MAIN_CONTEXT_KEYS = tuple(k for k, lvl in EXPECTED_LEVELS.items() if lvl in ("listed", "exposed", "read"))
 
 SESSION = "sess-with-0001"
 
@@ -673,9 +675,14 @@ class TestIngest(RunsDir):
             todo = json.load(fh)
         for item in todo:
             self.assertEqual(sorted(item), ["title", "url"])
-        want = ({arms.norm(U[k]) for k in EXPECTED_LEVELS} | {arms.norm(u) for u in B_URLS.values()}) \
+        # Only URLs that reached the main context (listed/exposed/read) need a label: D (sub_seen) and
+        # J (sub_read) drop out; P, seen by a subagent but also exposed in main, stays.
+        want = ({arms.norm(U[k]) for k in MAIN_CONTEXT_KEYS} | {arms.norm(u) for u in B_URLS.values()}) \
             - {arms.norm(B_URLS["Z"]), arms.norm(U["A"])}
         self.assertEqual({arms.norm(i["url"]) for i in todo}, want)
+        for k in ("D", "J"):
+            self.assertNotIn(arms.norm(U[k]), {arms.norm(i["url"]) for i in todo}, k)
+        self.assertIn(arms.norm(U["P"]), want)
         self.assertEqual(len(todo), len(want), "no duplicates")
         titles = {arms.norm(i["url"]): i["title"] for i in todo}
         self.assertEqual(titles[arms.norm(U["B"])], "T B")
@@ -690,7 +697,8 @@ class TestIngest(RunsDir):
             arms.cmd_ingest(self.result_path)
         with open(self.runs("zz1.union.todo.json")) as fh:
             todo = json.load(fh)
-        want = {arms.norm(U[k]) for k in EXPECTED_LEVELS} | {arms.norm(u) for u in B_URLS.values()}
+        # "Everything" is every main-context URL of either arm; subagent-only D and J are still left out.
+        want = {arms.norm(U[k]) for k in MAIN_CONTEXT_KEYS} | {arms.norm(u) for u in B_URLS.values()}
         self.assertEqual({arms.norm(i["url"]) for i in todo}, want)
 
 

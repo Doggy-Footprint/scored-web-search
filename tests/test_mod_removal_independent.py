@@ -435,9 +435,13 @@ class TestIngestStillWorks(unittest.TestCase):
         with open(self.r("mr1.union.todo.json")) as fh:
             todo = json.load(fh)
         got = {arms.norm(i["url"]) for i in todo}
-        want = {arms.norm(URL[k]) for k in ("main_search", "searcher_seen", "task_seen", "gp_fetch",
-                                            "main_fetch")}
+        # Stray (mod) URLs stay out, and so now do subagent-only ones: searcher_seen/task_seen (sub_seen) and
+        # gp_fetch (sub_read). Only main-context URLs need a blind label.
+        want = {arms.norm(URL[k]) for k in ("main_search", "main_fetch")}
         self.assertEqual(got, want)
+        for k in STRAY + ("searcher_seen", "task_seen", "gp_fetch"):
+            with self.subTest(url=k):
+                self.assertNotIn(arms.norm(URL[k]), got)
 
     def test_repo_runs_untouched(self):
         self.assertFalse(os.path.exists(os.path.join(POLICY_EVAL, "runs", "mr1.with.events.json")))

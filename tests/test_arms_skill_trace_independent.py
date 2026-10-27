@@ -69,9 +69,10 @@ def row(score, verdict, tier, signals, url):
 
 
 def compact(rows, counts, stderr=""):
-    """A compact table: header, PRIMARY/SUPPORT rows, counts line; optional stderr line after it."""
+    """A compact table: header, PRIMARY/SUPPORT rows, counts line; optional stderr line after it.
+    The header carries the TITLE column the scorer now prints; rows built by row() have no title."""
     n = sum(counts.get(v, 0) for v in VERDICTS)
-    lines = ["SCORE VERDICT T  SIGNALS                     URL"] + list(rows)
+    lines = ["SCORE VERDICT T  SIGNALS                     URL  TITLE"] + list(rows)
     lines.append("-- %d sources | %s" % (n, " | ".join("%s %d" % (v, counts.get(v, 0)) for v in VERDICTS)))
     if stderr:
         lines.append(stderr)
@@ -217,12 +218,17 @@ class TestScoreRuns(TraceCase):
         t.score(out)
         runs = self.extract(t)["score_runs"]
         self.assertEqual(len(runs), 1)
+        # Every row now carries `title`; these rows print none after the URL, so it is "" and the other
+        # fields parse exactly as before. Rows with a title: tests/test_compact_title_independent.py.
         self.assertEqual(runs[0]["rows"], [
             {"url": "https://p.org/one", "score": 91.0, "verdict": "PRIMARY", "tier": "1",
-             "signals": "cites:120,recent"},
-            {"url": "https://p.org/full", "score": 100.0, "verdict": "PRIMARY", "tier": "1", "signals": sig27},
-            {"url": "https://s.org/two", "score": 64.5, "verdict": "SUPPORT", "tier": "3", "signals": ""},
-            {"url": "https://s.org/low?id=3", "score": 5.0, "verdict": "SUPPORT", "tier": "0", "signals": "x"},
+             "signals": "cites:120,recent", "title": ""},
+            {"url": "https://p.org/full", "score": 100.0, "verdict": "PRIMARY", "tier": "1", "signals": sig27,
+             "title": ""},
+            {"url": "https://s.org/two", "score": 64.5, "verdict": "SUPPORT", "tier": "3", "signals": "",
+             "title": ""},
+            {"url": "https://s.org/low?id=3", "score": 5.0, "verdict": "SUPPORT", "tier": "0", "signals": "x",
+             "title": ""},
         ])
         self.assertIsInstance(runs[0]["rows"][0]["score"], float)
 
