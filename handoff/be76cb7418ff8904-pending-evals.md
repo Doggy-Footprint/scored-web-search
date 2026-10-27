@@ -1,6 +1,6 @@
 # Handoff: 대기 중인 평가 모음
 
-변경은 반영했지만 아직 평가하지 않은 항목을 한곳에 모은다. 비싼 실행(arms, blind judge, union labeller)은 한 번에 묶어 돌린다.
+변경은 반영했지만 아직 평가하지 않은 항목을 한곳에 모은다. 아직 고치지 않은 skill 동작 문제는 `handoff/599a859dd32c2d8b-skill-followups.md`에 있다. 비싼 실행(arms, blind judge, union labeller)은 한 번에 묶어 돌린다.
 항목을 끝내면 결과를 `policy-eval/METHODOLOGY.md` Run log에 남기고 여기서 지운다. 관련 이슈에도 결과를 남긴다.
 
 ## 실행 환경 (확인됨)
@@ -13,7 +13,7 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 
 ## 다음 실행 묶음
 아래를 한 번에 돌린다. 순서가 있다.
-1. **arms 재실행** (`claude plugin eval` + `arms.py ingest/analyze`): E3, E4, E5, E7. main 모델을 정한다. Opus면 실사용 조건이고, Haiku면 2026-10-26과 비교할 수 있다.
+1. **arms 재실행** (`claude plugin eval` + `arms.py ingest/analyze`): E3, E4, E5, E7, 그리고 E8은 grant 없이 한 case만. main 모델을 정한다. Opus면 실사용 조건이고, Haiku면 2026-10-26과 비교할 수 있다.
 2. **union labeller** (Workflow, METHODOLOGY Runs 4): 1의 `runs/<id>.union.todo.json`을 라벨한다. todo는 main context에 들어간 URL(`listed`/`exposed`/`read`)만 담는다. subagent만 본 URL은 측정에 쓰이지 않는다. 2026-10-26 실행 기준 914건이다. 라벨은 (질문, URL) 단위로 쌓여, 같은 질문을 다시 돌리면 새 URL만 붙이면 된다. labeller 모델과 본문 출처는 E6에서 정한다.
 3. **held-out blind judge** (Workflow, METHODOLOGY Runs 1) + `contrast.py`: E6(선행), E2.
 
@@ -43,6 +43,10 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 - 문제(2026-10-26): main이 21문항 중 11문항에서 URL 파일이나 `--full-out` 표를 `cat`·python·Read로 열었다. 명령 설명은 "List titles", "Show full scored table with titles"였다. compact 표에 제목이 없어 고르려고 연 것으로 본다.
 - 변경: compact 행에 제목을 40자로 잘라 붙였고, SKILL.md Step 2에 그 파일들을 열지 말라고 적었다.
 - 측정: `peeks`가 있는 문항 수와 글자 수. 남으면 plugin command hook(PreToolUse로 main의 `$TMPDIR/ssw/` 읽기를 막음)을 단다. hook은 Claude Code plugin 설치에서만 동작하고, eval이 skill과 hook을 함께 재게 된다는 점을 감안해 정한다.
+
+### E8. scorer host가 막힌 환경에서 skill 전체가 멈추나
+- 확인한 것: probe P1은 `srcscore.py` 단독으로, grant가 없으면 exit 4와 허용할 host 안내가 나온다는 것만 봤다.
+- 측정: arms case 하나(예: ac1)를 host grant 없이 돌린다. main이 점수 없이 읽지 않고 멈추는지, 사용자에게 host 다섯을 안내하는지, `--no-net`으로 다시 돌리지 않는지 본다.
 
 ### E6. blind judge의 snippet 라벨을 개별 페이지 판정으로 교체 (방법론 변경, 미반영)
 - 문제: blind judge(Runs 1)와 union labeller(Runs 4)는 fetch하지 않은 URL에 `basis: snippet` 라벨을 매긴다. WebSearch는 결과마다 snippet을 주지 않고 묶음 요약 하나를 돌려준다. 그래서 이 라벨은 제목과 묶음 요약만 보고 매긴 것이고, URL 하나하나를 평가한 게 아니다.
