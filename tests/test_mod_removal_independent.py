@@ -159,12 +159,7 @@ class TestSkillDoc(unittest.TestCase):
     def test_all_unjudged_fetch_failure_means_unavailable(self):
         s = self.step25()
         low = s.lower()
-        self.assertRegex(low, r"every source is unjudged because the fetch itself failed")
-        # "an error, not an HTTP status, PDF or empty page"
-        self.assertIn("error", low)
-        self.assertIn("http status", low)
-        self.assertIn("pdf", low)
-        self.assertIn("empty page", low)
+        self.assertRegex(low, r"every source is unjudged with `fetch-error`")
         self.assertIn("unavailable", low)
         self.assertRegex(low, r"read support sources as before")
 

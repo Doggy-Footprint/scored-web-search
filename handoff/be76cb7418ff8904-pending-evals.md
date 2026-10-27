@@ -31,7 +31,7 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 - 측정: `official-claimed`와 신규·재배치 tier 2 도메인에서 judge의 USE/SKIP 비율. union label 대비 SKIP이 junk를 잡는지(`judge_vs_blind`)를 본다.
 
 ### E4. academic 원 출처 추적 (issue #5)
-- 변경: academic에서 Step 5 Verify를 항상 수행한다. 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
+- 변경: academic에서 Step 5 Verify를 기본으로 수행한다(사용자가 끌 수 있다). 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
 - 측정: trace 라운드 발생률, 원 출처를 찾아 읽은 비율, 추가 비용. `arms.py`는 아직 round 종류(`trace`)를 구분하지 않는다. 보고서의 `Keywords:` 줄에서 읽는 방안을 먼저 정한다.
 
 ### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건)
