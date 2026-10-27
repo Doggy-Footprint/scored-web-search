@@ -2,7 +2,7 @@ schema_version: "1.1"
 name: p2-urlfile
 runs: 1
 execution:
-  model: claude-opus-5-5
+  model: claude-sonnet-5-5
   max_turns: 40
   timeout_seconds: 900
   allowed_tools: [Skill, Agent, Bash, Read, Write, WebSearch]

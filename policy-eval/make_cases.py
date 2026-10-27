@@ -17,7 +17,7 @@ CASE = """schema_version: "1.1"
 name: {id}
 runs: 1
 execution:
-  model: claude-opus-5-5
+  model: claude-sonnet-5-5
   max_turns: 80
   timeout_seconds: 1800
   allowed_tools: [WebSearch, WebFetch, Agent, Skill, Bash, Read, Write]
