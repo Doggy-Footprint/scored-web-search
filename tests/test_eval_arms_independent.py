@@ -4,14 +4,13 @@ Written from the specification (the task brief and policy-eval/METHODOLOGY.md), 
 implementation. Expected values are computed by hand from the stated rates and rules. Under test:
 
 A. policy-eval/pricing.py     -- list-price USD for an API `usage` dict, aliases, Haiku long prompt.
-B. policy-eval/arms.py        -- URL normalisation, WebSearch/searcher parsing, trace extraction,
+B. policy-eval/arms.py        -- URL normalisation, WebSearch parsing, trace extraction,
                                  session-transcript cost, exposure levels, cost breakdown,
-                                 judge-usage matching, ingest and per-arm analysis.
+                                 ingest and per-arm analysis.
 C. policy-eval/make_cases.py  -- the 20-question pilot and the generated case.yaml.
 D. policy-eval/contrast.py    -- prefers runs/<id>.urls.json over runs/<id>.urls.txt.
 
-Nothing is written into the repo: arms.RUNS and arms.JUDGE_USAGE_DIR are monkeypatched to temp
-dirs, make_cases.py and contrast.py run from temp mirrors. No test needs the network: the only
+Nothing is written into the repo: arms.RUNS is monkeypatched to a temp dir, make_cases.py and contrast.py run from temp mirrors. No test needs the network: the only
 scorer run (D) uses domains that resolve from the tier table alone (see test_expansion_eval.py).
 """
 
@@ -37,9 +36,7 @@ import arms  # noqa: E402
 import pricing  # noqa: E402
 
 M = 1_000_000
-SEARCHER = "scored-web-search:searcher"
-JUDGE_TOOL = "mcp__scored-web-search__judge_support"
-SCORE_TOOL = "mcp__scored-web-search__score_sources"
+SEARCH_AGENT = "Explore"
 
 
 # --------------------------------------------------------------------------- A pricing
@@ -249,37 +246,6 @@ class TestSearchLinks(unittest.TestCase):
         self.assertEqual(arms.search_links(""), ([], ""))
 
 
-class TestSearcherRecords(unittest.TestCase):
-
-    def test_json_records_and_extra_keys(self):
-        text = ('Results:\n[{"url":"https://a.org/1","title":"A","date":"2024-01-01"},'
-                '{"url":"https://b.org/2","title":"B","snippet":"s","score":3}]\nDone.')
-        recs, extra = arms.searcher_records(text)
-        self.assertEqual([r["url"] for r in recs], ["https://a.org/1", "https://b.org/2"])
-        self.assertEqual(extra, ["score", "snippet"])
-
-    def test_contract_keys_only_gives_no_extra(self):
-        recs, extra = arms.searcher_records('[{"url":"https://a.org/1","title":"A","date":"2024"}]')
-        self.assertEqual(len(recs), 1)
-        self.assertEqual(extra, [])
-
-    def test_several_arrays_are_collected(self):
-        text = ('round 1: [{"url":"https://a.org/1","title":"A"}]\n'
-                'round 2: [{"url":"https://b.org/2","title":"B","rank":1}]')
-        recs, extra = arms.searcher_records(text)
-        self.assertEqual(sorted(r["url"] for r in recs), ["https://a.org/1", "https://b.org/2"])
-        self.assertEqual(extra, ["rank"])
-
-    def test_extra_keys_sorted(self):
-        _, extra = arms.searcher_records('[{"url":"https://a.org","zeta":1,"alpha":2,"mid":3}]')
-        self.assertEqual(extra, ["alpha", "mid", "zeta"])
-
-    def test_bare_url_fallback(self):
-        recs, extra = arms.searcher_records("I found https://a.org/one and\nhttps://b.org/two \nthat is all")
-        self.assertEqual(sorted(r["url"] for r in recs), ["https://a.org/one", "https://b.org/two"])
-        self.assertEqual(extra, [])
-
-
 # --------------------------------------------------------------------------- B arms: fixtures
 
 # URLs in the "with" fixture and the level each must reach (norm form). See WithFixture.
@@ -287,28 +253,24 @@ U = {
     "A": "https://www.alpha.org/read-and-exposed/",       # main search w/ summary + main fetch ok
     "B": "https://bravo.org/exposed",                     # main search w/ summary
     "C": "https://charlie.org/listed",                    # main search, no summary
-    "D": "https://delta.org/sub-seen",                    # searcher's own search only
-    "E": "https://echo.org/sub-seen-then-listed",         # searcher search + searcher record
-    "F": "https://foxtrot.org/record-only",               # searcher record only
-    "G": "https://golf.org/scored-and-judged",            # score table row + judge USE
-    "H": "https://hotel.org/judge-skip",                  # judge SKIP only
-    "I": "https://india.org/judge-unjudged",              # judge UNJUDGED only
+    "D": "https://delta.org/sub-seen",                    # search subagent's own search only
     "J": "https://juliet.org/sub-fetch",                  # other subagent fetch ok
     "K": "https://kilo.org/fetch-error",                  # main fetch is_error
     "L": "https://lima.org/listed-then-404",              # main search no summary + main fetch 404
     "M": "https://mike.org/fetch-no-code",                # main fetch ok, no code
     "N": "https://november.org/fetch-empty",              # main fetch 200, empty text
     "O": "https://oscar.org/fetch-301",                   # main fetch 301
-    "P": "https://papa.org/sub-seen-and-exposed",         # searcher search + main search w/ summary
-    "Q": "https://quebec.org/other-agent-json",           # only in a non-searcher Agent's reply text
+    "P": "https://papa.org/sub-seen-and-exposed",         # subagent search + main search w/ summary
+    "Q": "https://quebec.org/other-agent-json",           # only in a subagent's reply text
 }
 
 EXPECTED_LEVELS = {
-    "A": "read", "B": "exposed", "C": "listed", "D": "sub_seen", "E": "listed", "F": "listed",
-    "G": "listed", "H": "sub_read", "J": "sub_read", "L": "listed", "M": "read", "O": "read",
-    "P": "exposed",
+    "A": "read", "B": "exposed", "C": "listed", "D": "sub_seen", "J": "sub_read", "L": "listed",
+    "M": "read", "O": "read", "P": "exposed",
 }
-ABSENT = ("I", "K", "N", "Q")
+ABSENT = ("K", "N", "Q")
+# The union todo lists only URLs that reached the main agent's context in some arm.
+MAIN_CONTEXT_KEYS = tuple(k for k, lvl in EXPECTED_LEVELS.items() if lvl in ("listed", "exposed", "read"))
 
 SESSION = "sess-with-0001"
 
@@ -339,20 +301,7 @@ def result_msg(parent, tid, content, tur=None, is_error=None):
     return d
 
 
-SCORE_TABLE = "\n".join([
-    "SCORE VERDICT T SIGNALS URL",
-    "  74.0  SUPPORT  2  tier2,recent  " + U["G"],
-    "  32  WEAK  5  unregistered  " + U["F"],
-])
-JUDGE_TEXT = "\n".join([
-    U["G"] + " | USE | has the data",
-    U["H"] + " | SKIP | off topic",
-    U["I"] + " | UNJUDGED | fetch failed",
-])
-SEARCHER_REPLY = ('Here are the results:\n' + json.dumps([
-    {"url": U["E"], "title": "E title", "date": "2025-03-01"},
-    {"url": U["F"], "title": "F title", "snippet": "extra"},
-]))
+SEARCH_REPLY = "Wrote 2 records to urls-1.json"
 
 # modelUsage: costUSD = transcript cost + web searches x $0.01 + an internal remainder.
 #   opus   transcript 0.0342 + 2 searches 0.02 + internal 0.0010 = 0.0552
@@ -375,16 +324,16 @@ def with_trace_lines():
     # main WebSearch, no summary -> listed
     L.append(a_msg("m2", None, [tool_use("ws2", "WebSearch", {"query": "main query two"})]))
     L.append(result_msg(None, "ws2", [{"type": "text", "text": links_text(["C", "L"])}]))
-    # searcher subagent
-    L.append(a_msg("m3", None, [tool_use("ag1", "Agent", {"subagent_type": SEARCHER, "prompt": "go"})]))
+    # search subagent
+    L.append(a_msg("m3", None, [tool_use("ag1", "Agent", {"subagent_type": SEARCH_AGENT, "prompt": "go"})]))
     L.append({"type": "system", "subtype": "task_started", "tool_use_id": "ag1",
-              "subagent_type": SEARCHER, "description": "search round 1"})
+              "subagent_type": SEARCH_AGENT, "description": "search round 1"})
     L.append(a_msg("s1", "ag1", [tool_use("ws3", "WebSearch", {"query": "sub query"})],
                    model="claude-haiku-5-5"))
-    L.append(result_msg("ag1", "ws3", links_text(["D", "E", "P"], "sub summary")))
-    L.append(result_msg(None, "ag1", [{"type": "text", "text": SEARCHER_REPLY}],
-                        tur={"agentId": "A1", "agentType": SEARCHER, "status": "completed"}))
-    # another subagent: fetches J, and replies with JSON that must not count as a searcher return
+    L.append(result_msg("ag1", "ws3", links_text(["D", "P"], "sub summary")))
+    L.append(result_msg(None, "ag1", [{"type": "text", "text": SEARCH_REPLY}],
+                        tur={"agentId": "A1", "agentType": SEARCH_AGENT, "status": "completed"}))
+    # another subagent: fetches J, and replies with JSON whose URL must not count
     L.append(a_msg("m4", None, [tool_use("ag2", "Agent", {"subagent_type": "general-purpose"})]))
     L.append({"type": "system", "subtype": "task_started", "tool_use_id": "ag2",
               "subagent_type": "general-purpose", "description": "helper"})
@@ -393,11 +342,6 @@ def with_trace_lines():
     L.append(result_msg("ag2", "wfs", "sub page text", tur={"code": 200, "bytes": 1234}))
     L.append(result_msg(None, "ag2", json.dumps([{"url": U["Q"], "title": "Q"}]),
                         tur={"agentId": "A2", "agentType": "general-purpose"}))
-    # score_sources and judge_support
-    L.append(a_msg("m5", None, [tool_use("ss1", SCORE_TOOL, {"round": "r1", "records": [{"url": U["G"]}]})]))
-    L.append(result_msg(None, "ss1", SCORE_TABLE))
-    L.append(a_msg("m6", None, [tool_use("js1", JUDGE_TOOL, {"question": "q", "sources": []})]))
-    L.append(result_msg(None, "js1", [{"type": "text", "text": JUDGE_TEXT}]))
     # main fetches, two tool_uses in one message
     L.append(a_msg("m7", None, [tool_use("wf1", "WebFetch", {"url": U["A"]}),
                                  tool_use("wf2", "WebFetch", {"url": U["K"]})]))
@@ -420,7 +364,7 @@ def with_trace_lines():
 #   main (opus)  m1 final: in 1000 out 500 cr 10000 cc 2000 -> 4000+10000+2000+10000 = 0.0260
 #                m2 final: in 50 out 100 cr 30000           -> 200+2000+6000       = 0.0082
 #                -> 0.0342, peak context = max(13000, 30050) = 30050
-#   searcher (haiku) s1 final: in 10000 out 1000 -> 1000 + 500 = 0.0015
+#   search (haiku)   s1 final: in 10000 out 1000 -> 1000 + 500 = 0.0015
 #   other (sonnet)   g1 final: in 2000 out 200   -> 4000 + 2000 = 0.0060
 MAIN_SESSION = [
     {"type": "user", "message": {"content": "hi"}},
@@ -432,7 +376,7 @@ MAIN_SESSION = [
     a_msg("m2", None, [], usage={"input_tokens": 50, "output_tokens": 100,
                                  "cache_read_input_tokens": 30000}),
 ]
-SEARCHER_SESSION = [
+SEARCH_SESSION = [
     a_msg("s1", None, [], model="claude-haiku-5-5", usage={"input_tokens": 1, "output_tokens": 0}),
     a_msg("s1", None, [], model="claude-haiku-5-5", usage={"input_tokens": 10000, "output_tokens": 1000}),
 ]
@@ -466,7 +410,7 @@ class WithFixture(unittest.TestCase):
     def setUpClass(cls):
         cls.tmp = tempfile.mkdtemp(prefix="arms-eval-")
         cls.trace = build_run(os.path.join(cls.tmp, "with"), with_trace_lines(), SESSION, MAIN_SESSION,
-                              {"A1": SEARCHER_SESSION, "A2": OTHER_SESSION})
+                              {"A1": SEARCH_SESSION, "A2": OTHER_SESSION})
         cls.ev = arms.extract(cls.trace)
 
     @classmethod
@@ -481,34 +425,12 @@ class TestExtractEvents(WithFixture):
     def test_searches(self):
         s = self.ev["searches"]
         self.assertEqual([(x["role"], x["query"]) for x in s],
-                         [("main", "main query one"), ("main", "main query two"), (SEARCHER, "sub query")])
+                         [("main", "main query one"), ("main", "main query two"), (SEARCH_AGENT, "sub query")])
         self.assertEqual([l["url"] for l in s[0]["links"]], [U["A"], U["B"], U["P"]])
         self.assertGreater(s[0]["summary_chars"], 0)
         self.assertEqual(s[1]["summary_chars"], 0)
         self.assertEqual([l["url"] for l in s[1]["links"]], [U["C"], U["L"]])
         self.assertGreater(s[2]["summary_chars"], 0)
-
-    def test_searcher_returns_only_for_searcher_agent(self):
-        r = self.ev["searcher_returns"]
-        self.assertEqual(len(r), 1)
-        self.assertEqual([x["url"] for x in r[0]["records"]], [U["E"], U["F"]])
-        all_urls = json.dumps(r)
-        self.assertNotIn(U["Q"], all_urls)
-
-    def test_score_tables(self):
-        t = self.ev["score_tables"]
-        self.assertEqual(len(t), 1)
-        rows = t[0]["rows"]
-        self.assertEqual([(r["url"], r["verdict"]) for r in rows], [(U["G"], "SUPPORT"), (U["F"], "WEAK")])
-        self.assertEqual(str(rows[0]["tier"]), "2")
-        self.assertEqual(float(rows[0]["score"]), 74.0)
-        self.assertIn("tier2", rows[0]["signals"])
-
-    def test_judge_lines(self):
-        j = self.ev["judge_lines"]
-        self.assertEqual([(x["url"], x["decision"]) for x in j],
-                         [(U["G"], "USE"), (U["H"], "SKIP"), (U["I"], "UNJUDGED")])
-        self.assertIn("has the data", j[0]["reason"])
 
     def test_fetches_ok_rule_and_roles(self):
         got = {(f["role"], f["url"]): (f["ok"], f["code"]) for f in self.ev["fetches"]}
@@ -540,13 +462,13 @@ class TestExtractSessionUsage(WithFixture):
         return {r["role"]: r for r in self.ev["usage_by_role"]}
 
     def test_roles_mapped_through_agent_id(self):
-        self.assertEqual(sorted(self.rows()), sorted(["main", SEARCHER, "general-purpose"]))
+        self.assertEqual(sorted(self.rows()), sorted(["main", SEARCH_AGENT, "general-purpose"]))
         self.assertEqual(len(self.ev["usage_by_role"]), 3)
 
     def test_models(self):
         r = self.rows()
         self.assertEqual(r["main"]["model"], "claude-opus-5-5")
-        self.assertEqual(r[SEARCHER]["model"], "claude-haiku-5-5")
+        self.assertEqual(r[SEARCH_AGENT]["model"], "claude-haiku-5-5")
         self.assertEqual(r["general-purpose"]["model"], "claude-sonnet-5-5")
 
     def test_last_line_per_message_id_is_final(self):
@@ -560,8 +482,8 @@ class TestExtractSessionUsage(WithFixture):
 
     def test_subagent_usd(self):
         r = self.rows()
-        self.assertAlmostEqual(r[SEARCHER]["usd"], 0.0015)
-        self.assertEqual(r[SEARCHER]["requests"], 1)
+        self.assertAlmostEqual(r[SEARCH_AGENT]["usd"], 0.0015)
+        self.assertEqual(r[SEARCH_AGENT]["requests"], 1)
         self.assertAlmostEqual(r["general-purpose"]["usd"], 0.0060)
 
     def test_cost_not_from_trace_usage(self):
@@ -594,7 +516,7 @@ class TestArmUrls(WithFixture):
         self.assertIn("https://alpha.org/read-and-exposed", lvl)
 
     def synth(self, **parts):
-        ev = {"searches": [], "searcher_returns": [], "score_tables": [], "judge_lines": [], "fetches": []}
+        ev = {"searches": [], "fetches": []}
         ev.update(parts)
         return arms.arm_urls(ev)
 
@@ -609,11 +531,11 @@ class TestArmUrls(WithFixture):
         order = ["sub_seen", "sub_read", "listed", "exposed", "read"]
         u = "https://www.ladder.org/a/"
         make = {
-            "sub_seen": lambda: {"searches": [{"role": SEARCHER, "query": "q", "links": [{"url": u}],
+            "sub_seen": lambda: {"searches": [{"role": SEARCH_AGENT, "query": "q", "links": [{"url": u}],
                                                "summary_chars": 9}]},
             "sub_read": lambda: {"fetches": [{"role": "general-purpose", "url": u, "ok": True, "code": 200}]},
-            "listed": lambda: {"score_tables": [{"rows": [{"url": u, "verdict": "WEAK", "tier": "5",
-                                                           "score": 30, "signals": ""}]}]},
+            "listed": lambda: {"searches": [{"role": "main", "query": "q", "links": [{"url": u}],
+                                             "summary_chars": 0}]},
             "exposed": lambda: {"searches": [{"role": "main", "query": "q", "links": [{"url": u}],
                                               "summary_chars": 9}]},
             "read": lambda: {"fetches": [{"role": "main", "url": u, "ok": True, "code": 200}]},
@@ -629,33 +551,26 @@ class TestArmUrls(WithFixture):
 
     def test_failed_fetches_add_nothing(self):
         lvl = self.synth(fetches=[{"role": "main", "url": "https://a.org", "ok": False, "code": 500},
-                                  {"role": SEARCHER, "url": "https://b.org", "ok": False, "code": None}])
+                                  {"role": SEARCH_AGENT, "url": "https://b.org", "ok": False, "code": None}])
         self.assertEqual(lvl, {})
 
-    def test_judge_unjudged_adds_nothing(self):
-        lvl = self.synth(judge_lines=[{"url": "https://a.org/x", "decision": "UNJUDGED", "reason": "r"},
-                                      {"url": "https://b.org/y", "decision": "USE", "reason": "r"}])
-        self.assertEqual(lvl, {arms.norm("https://b.org/y"): "sub_read"})
 
 
 # --------------------------------------------------------------------------- B arms: cost
 
 class TestCostBreakdown(WithFixture):
 
-    def cost(self, judge_usage=None):
-        ev = dict(self.ev)
-        ev["judge_usage"] = judge_usage or []
-        return arms.cost_breakdown(ev)
+    def cost(self):
+        return arms.cost_breakdown(self.ev)
 
     def test_total_is_sum_of_model_usage_cost(self):
         self.assertAlmostEqual(self.cost()["total_usd"], 0.0552 + 0.0120 + 0.0060, places=6)
 
     def test_by_role(self):
         r = self.cost()["by_role_usd"]
-        self.assertTrue(set(r) <= {"main", "searcher", "other_subagent"}, r)
+        self.assertEqual(set(r), {"main", "subagent"})
         self.assertAlmostEqual(r["main"], 0.0342, places=6)
-        self.assertAlmostEqual(r["searcher"], 0.0015, places=6)
-        self.assertAlmostEqual(r["other_subagent"], 0.0060, places=6)
+        self.assertAlmostEqual(r["subagent"], 0.0015 + 0.0060, places=6)
 
     def test_web_search(self):
         c = self.cost()
@@ -668,90 +583,20 @@ class TestCostBreakdown(WithFixture):
         self.assertAlmostEqual(t["claude-haiku-5-5"], 0.0005, places=6)
         self.assertAlmostEqual(t["claude-sonnet-5-5"], 0.0, places=6)
 
-    def test_judge_support_usd(self):
-        # haiku (default model): 10000 in + 1000 out = 0.001 + 0.0005 = 0.0015; null usage adds nothing
-        # sonnet: 1000 in + 100 out = 0.002 + 0.001 = 0.0030
-        ju = [{"file": "judge-usage-1.json", "question": "q",
-               "calls": [{"url": "https://a.org", "line": "USE | ok",
-                          "usage": {"input_tokens": 10000, "output_tokens": 1000}},
-                         {"url": "https://b.org", "line": "UNJUDGED | fetch failed", "usage": None}]},
-              {"file": "judge-usage-2.json", "question": "q", "model": "claude-sonnet-5-5",
-               "calls": [{"url": "https://c.org", "line": "SKIP | no",
-                          "usage": {"input_tokens": 1000, "output_tokens": 100}}]}]
-        self.assertAlmostEqual(self.cost(ju)["judge_support_usd"], 0.0045, places=6)
 
-    def test_judge_support_usd_zero_without_files(self):
-        self.assertEqual(self.cost([])["judge_support_usd"], 0)
+# --------------------------------------------------------------------------- B arms: ingest
 
-
-# --------------------------------------------------------------------------- B arms: judge usage
-
-class JudgeUsageDir(unittest.TestCase):
+class RunsDir(unittest.TestCase):
 
     def setUp(self):
-        self.tmp = tempfile.mkdtemp(prefix="arms-judge-usage-")
-        self._saved = (arms.RUNS, arms.JUDGE_USAGE_DIR)
-        arms.JUDGE_USAGE_DIR = type(arms.JUDGE_USAGE_DIR)(self.tmp)
+        self.tmp = tempfile.mkdtemp(prefix="arms-runs-")
+        self._saved = arms.RUNS
         arms.RUNS = type(arms.RUNS)(os.path.join(self.tmp, "runs"))
 
     def tearDown(self):
-        arms.RUNS, arms.JUDGE_USAGE_DIR = self._saved
+        arms.RUNS = self._saved
         shutil.rmtree(self.tmp, ignore_errors=True)
 
-    def usage_file(self, name, urls, model="haiku"):
-        doc = {"question": "q", "model": model,
-               "calls": [{"url": u, "line": "USE | ok", "usage": {"input_tokens": 1}} for u in urls]}
-        with open(os.path.join(self.tmp, name), "w") as fh:
-            json.dump(doc, fh)
-
-
-class TestJudgeUsageFor(JudgeUsageDir):
-
-    EV = {"judge_lines": [{"url": "https://www.a.org/x/", "decision": "USE", "reason": ""},
-                          {"url": "https://b.org/y", "decision": "SKIP", "reason": ""}]}
-
-    def test_picks_non_empty_subsets_only(self):
-        self.usage_file("judge-usage-1.json", ["https://a.org/x"])                    # subset (normalised)
-        self.usage_file("judge-usage-2.json", ["https://A.org/x#f", "https://b.org/y/"])  # equal set
-        self.usage_file("judge-usage-3.json", ["https://a.org/x", "https://c.org/z"])  # not a subset
-        self.usage_file("judge-usage-4.json", [])                                     # empty
-        self.usage_file("other-1.json", ["https://a.org/x"])                          # wrong name
-        used = set()
-        got = arms.judge_usage_for(self.EV, None, used)
-        self.assertEqual(used, {"judge-usage-1.json", "judge-usage-2.json"})
-        self.assertEqual(len(got), 2)
-        self.assertEqual(sorted(len(d["calls"]) for d in got), [1, 2])
-
-    def test_skips_used_files(self):
-        self.usage_file("judge-usage-1.json", ["https://a.org/x"])
-        self.usage_file("judge-usage-2.json", ["https://b.org/y"])
-        used = {"judge-usage-1.json"}
-        got = arms.judge_usage_for(self.EV, None, used)
-        self.assertEqual(used, {"judge-usage-1.json", "judge-usage-2.json"})
-        self.assertEqual([[c["url"] for c in d["calls"]] for d in got], [["https://b.org/y"]])
-
-    def test_a_file_goes_to_one_run_only(self):
-        self.usage_file("judge-usage-1.json", ["https://a.org/x"])
-        used = set()
-        first = arms.judge_usage_for(self.EV, None, used)
-        second = arms.judge_usage_for(self.EV, None, used)
-        self.assertEqual(len(first), 1)
-        self.assertEqual(second, [])
-
-    def test_no_judge_lines_returns_empty(self):
-        self.usage_file("judge-usage-1.json", ["https://a.org/x"])
-        used = set()
-        self.assertEqual(arms.judge_usage_for({"judge_lines": []}, None, used), [])
-        self.assertEqual(used, set())
-
-    def test_returned_docs_keep_model_and_calls(self):
-        self.usage_file("judge-usage-1.json", ["https://a.org/x"], model="claude-sonnet-5-5")
-        got = arms.judge_usage_for(self.EV, None, set())
-        self.assertEqual(got[0]["model"], "claude-sonnet-5-5")
-        self.assertEqual(got[0]["calls"][0]["usage"], {"input_tokens": 1})
-
-
-# --------------------------------------------------------------------------- B arms: ingest
 
 BASE_SESSION = "sess-without-0002"
 B_URLS = {"X": "https://xray.org/base-read", "Y": "https://yankee.org/base-exposed",
@@ -771,20 +616,16 @@ def without_trace_lines():
     ]
 
 
-class TestIngest(JudgeUsageDir):
+class TestIngest(RunsDir):
 
     def setUp(self):
         super().setUp()
         os.makedirs(str(arms.RUNS))
-        self.usage_dir = os.path.join(self.tmp)
         w = build_run(os.path.join(self.tmp, "sbx-with"), with_trace_lines(), SESSION, MAIN_SESSION,
-                      {"A1": SEARCHER_SESSION, "A2": OTHER_SESSION})
+                      {"A1": SEARCH_SESSION, "A2": OTHER_SESSION})
         o = build_run(os.path.join(self.tmp, "sbx-without"), without_trace_lines(), BASE_SESSION,
                       [a_msg("b1", None, [], usage={"input_tokens": 10, "output_tokens": 1})])
         self.trace_with, self.trace_without = w, o
-        # judge-usage file matching the with-arm's judge_support URLs (G, H, I), and one that matches nothing
-        self.usage_file("judge-usage-100.json", [U["G"], U["H"], U["I"]])
-        self.usage_file("judge-usage-200.json", ["https://unrelated.org/a"])
         # blind judge has labelled Z (in another spelling) and A
         with open(os.path.join(str(arms.RUNS), "zz1.judge.json"), "w") as fh:
             json.dump({"id": "zz1", "judged": [{"url": "https://zulu.org/judged-already", "judgment": "useful"},
@@ -814,13 +655,12 @@ class TestIngest(JudgeUsageDir):
             with self.subTest(arm=arm):
                 with open(self.runs("zz1.%s.events.json" % arm)) as fh:
                     ev = json.load(fh)
-                for key in ("searches", "searcher_returns", "score_tables", "judge_lines", "fetches",
-                            "skill_fired", "report_chars", "usage_by_role", "main_peak_context"):
+                for key in ("searches", "fetches", "skill_fired", "report_chars", "usage_by_role",
+                            "main_peak_context"):
                     self.assertIn(key, ev)
         with open(self.runs("zz1.with.events.json")) as fh:
             ev = json.load(fh)
         self.assertIs(ev["skill_fired"], True)
-        self.assertEqual(len(ev["judge_lines"]), 3)
 
     def test_session_copies(self):
         with_dir = self.runs("zz1.with.session")
@@ -829,24 +669,20 @@ class TestIngest(JudgeUsageDir):
                          sorted([SESSION + ".jsonl", "agent-A1.jsonl", "agent-A2.jsonl"]))
         self.assertEqual(os.listdir(self.runs("zz1.without.session")), [BASE_SESSION + ".jsonl"])
 
-    def test_judge_usage_matched_to_with_arm(self):
-        with open(self.runs("zz1.with.events.json")) as fh:
-            w = json.load(fh)
-        with open(self.runs("zz1.without.events.json")) as fh:
-            o = json.load(fh)
-        self.assertEqual(len(w["judge_usage"]), 1)
-        self.assertEqual(sorted(c["url"] for c in w["judge_usage"][0]["calls"]),
-                         sorted([U["G"], U["H"], U["I"]]))
-        self.assertEqual(o["judge_usage"], [])
 
     def test_union_todo(self):
         with open(self.runs("zz1.union.todo.json")) as fh:
             todo = json.load(fh)
         for item in todo:
             self.assertEqual(sorted(item), ["title", "url"])
-        want = ({arms.norm(U[k]) for k in EXPECTED_LEVELS} | {arms.norm(u) for u in B_URLS.values()}) \
+        # Only URLs that reached the main context (listed/exposed/read) need a label: D (sub_seen) and
+        # J (sub_read) drop out; P, seen by a subagent but also exposed in main, stays.
+        want = ({arms.norm(U[k]) for k in MAIN_CONTEXT_KEYS} | {arms.norm(u) for u in B_URLS.values()}) \
             - {arms.norm(B_URLS["Z"]), arms.norm(U["A"])}
         self.assertEqual({arms.norm(i["url"]) for i in todo}, want)
+        for k in ("D", "J"):
+            self.assertNotIn(arms.norm(U[k]), {arms.norm(i["url"]) for i in todo}, k)
+        self.assertIn(arms.norm(U["P"]), want)
         self.assertEqual(len(todo), len(want), "no duplicates")
         titles = {arms.norm(i["url"]): i["title"] for i in todo}
         self.assertEqual(titles[arms.norm(U["B"])], "T B")
@@ -861,7 +697,8 @@ class TestIngest(JudgeUsageDir):
             arms.cmd_ingest(self.result_path)
         with open(self.runs("zz1.union.todo.json")) as fh:
             todo = json.load(fh)
-        want = {arms.norm(U[k]) for k in EXPECTED_LEVELS} | {arms.norm(u) for u in B_URLS.values()}
+        # "Everything" is every main-context URL of either arm; subagent-only D and J are still left out.
+        want = {arms.norm(U[k]) for k in MAIN_CONTEXT_KEYS} | {arms.norm(u) for u in B_URLS.values()}
         self.assertEqual({arms.norm(i["url"]) for i in todo}, want)
 
 
@@ -874,14 +711,11 @@ class TestAnalyzeArm(WithFixture):
         super().setUpClass()
         n = arms.norm
         cls.labels = {n(U["A"]): {"judgment": "junk"}, n(U["M"]): {"judgment": "useful"},
-                      n(U["B"]): {"judgment": "marginal"}, n(U["G"]): {"judgment": "useful"},
-                      n(U["H"]): {"judgment": "junk"}, n(U["J"]): {"judgment": "useful"},
+                      n(U["B"]): {"judgment": "marginal"}, n(U["J"]): {"judgment": "useful"},
                       n("https://never-reached.org/u"): {"judgment": "useful"}}
-        cls.scores = {n(U["A"]): {"tier": "1"}, n(U["M"]): {"tier": "3"}, n(U["G"]): {"tier": "2"},
-                      n(U["C"]): {"tier": "5"}, n(U["H"]): {"tier": "4"}}
-        ev = dict(cls.ev)
-        ev["judge_usage"] = []
-        cls.out = arms.analyze_arm(ev, cls.labels, cls.scores, {"id": "zz1", "mode": "academic", "field": "ai"})
+        cls.scores = {n(U["A"]): {"tier": "1"}, n(U["M"]): {"tier": "3"}, n(U["C"]): {"tier": "5"},
+                      n(U["J"]): {"tier": "2"}}
+        cls.out = arms.analyze_arm(cls.ev, cls.labels, cls.scores, {"id": "zz1", "mode": "academic", "field": "ai"})
 
     def test_contamination_read(self):
         c = self.out["contamination"]["read"]
@@ -898,16 +732,14 @@ class TestAnalyzeArm(WithFixture):
 
     def test_contamination_listed(self):
         c = self.out["contamination"]["listed"]
-        self.assertEqual(c["useful"].get("2"), 1)      # G
         self.assertEqual(c["unlabeled"].get("5"), 1)   # C
-        self.assertEqual(c["unlabeled"].get("?"), 3)   # E, F, L
-        self.assertEqual(sum(sum(d.values()) for d in c.values()), 5)
+        self.assertEqual(c["unlabeled"].get("?"), 1)   # L
+        self.assertEqual(sum(sum(d.values()) for d in c.values()), 2)
 
     def test_contamination_sub_read(self):
         c = self.out["contamination"]["sub_read"]
-        self.assertEqual(c["junk"].get("4"), 1)        # H
-        self.assertEqual(c["useful"].get("?"), 1)      # J
-        self.assertEqual(sum(sum(d.values()) for d in c.values()), 2)
+        self.assertEqual(c["useful"].get("2"), 1)      # J
+        self.assertEqual(sum(sum(d.values()) for d in c.values()), 1)
 
     def test_sources_read(self):
         s = self.out["sources_read"]
@@ -916,20 +748,11 @@ class TestAnalyzeArm(WithFixture):
         self.assertEqual(s["main_by_label"], {"junk": 1, "useful": 1, "unlabeled": 1})
         self.assertEqual(s["sub_attempted"], 1)
         self.assertEqual(s["sub_ok"], 1)
-        self.assertEqual(s["judge_support_fetched"], 2)  # G USE, H SKIP
 
-    def test_judge_vs_blind(self):
-        self.assertEqual(self.out["judge_vs_blind"],
-                         {"USE|useful": 1, "SKIP|junk": 1, "UNJUDGED|unlabeled": 1})
-
-    def test_searcher_contract(self):
-        sc = self.out["searcher_contract"]
-        self.assertEqual(sc["extra_keys"], ["snippet"])
-        self.assertEqual(sc["dated"], 1)
 
     def test_useful_reached(self):
         self.assertEqual(set(self.out["useful_reached"]),
-                         {arms.norm(U["M"]), arms.norm(U["G"]), arms.norm(U["J"])})
+                         {arms.norm(U["M"]), arms.norm(U["J"])})
 
 
 # --------------------------------------------------------------------------- C make_cases
@@ -970,7 +793,9 @@ class TestPilotQuestions(unittest.TestCase):
         proc = subprocess.run([sys.executable, MAKE_CASES, "--list"], capture_output=True, text=True)
         self.assertEqual(proc.returncode, 0, proc.stderr)
         items = json.loads(proc.stdout)
-        self.assertEqual(len(items), 20)
+        # the 20 pilot questions plus od9 (make_cases.EXTRA_IDS)
+        self.assertEqual(len(items), 21)
+        self.assertEqual(items[-1]["id"], "od9")
         for it in items:
             with self.subTest(id=it.get("id")):
                 self.assertEqual(sorted(it), ["expansion", "field", "id", "mode", "q"])
@@ -1003,7 +828,7 @@ class TestCaseYaml(unittest.TestCase):
 
     def test_twenty_case_dirs(self):
         self.assertEqual(self.proc.returncode, 0, self.proc.stderr)
-        self.assertEqual(len(os.listdir(self.arms_dir)), 20)
+        self.assertEqual(len(os.listdir(self.arms_dir)), 21)
 
     def test_header_fields(self):
         for cid in os.listdir(self.arms_dir):

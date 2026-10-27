@@ -1,0 +1,37 @@
+schema_version: "1.1"
+name: p4-score-load
+runs: 1
+execution:
+  model: claude-opus-5-5
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Skill, Bash, Read]
+  prompt: |
+    This is an environment probe, not research. Do exactly the steps below, report what happened, and do nothing else. Never work around a failure: record it and move on.
+
+    1. Invoke the Skill tool with skill "scored-web-search". Do not follow its pipeline; only note the "Base directory for this skill" it prints. Call it BASE.
+    2. Run each of these as its own Bash call (substitute BASE, quoted), keeping the full output:
+       a. `python3 - <<'PY'
+          import urllib.request as u, http.client as h
+          ok = bad = 0; sizes = []
+          for i in range(12):
+              try:
+                  r = u.urlopen("https://api.openalex.org/works/https://doi.org/10.48550/arXiv.2305.04388", timeout=15)
+                  b = r.read(); ok += 1; sizes.append(len(b))
+              except h.IncompleteRead as e:
+                  bad += 1; sizes.append("cut@%d" % len(e.partial))
+              except Exception as e:
+                  bad += 1; sizes.append(type(e).__name__)
+          print("ok", ok, "bad", bad, sizes)
+          PY`
+       b. `SRCSCORE_CACHE="$TMPDIR/c1" python3 "BASE/scripts/srcscore.py" --mode academic --field ai --format compact -u "https://arxiv.org/pdf/2507.11473" -u "https://arxiv.org/pdf/2510.19476" -u "https://arxiv.org/pdf/2503.08679" -u "https://arxiv.org/pdf/2307.13702" -u "https://arxiv.org/pdf/2505.05410" -u "https://arxiv.org/pdf/2601.19928" -u "https://arxiv.org/html/2605.24286" -u "https://arxiv.org/pdf/2604.13602" -u "https://arxiv.org/pdf/2609.00383" -u "https://arxiv.org/html/2603.01437v2" -u "https://arxiv.org/pdf/2512.23032" -u "https://arxiv.org/html/2610.31639" -u "https://arxiv.org/html/2602.03994" -u "https://arxiv.org/pdf/2609.23065" -u "https://arxiv.org/pdf/2302.06975" 2>&1 | tail -3; echo "EXIT=${PIPESTATUS[0]}"`
+    3. End your reply with these lines, each value one line of plain text:
+       PROBE serial=<output of a>
+       PROBE score=<the counts line of b, or the exception's last line if it crashed>
+       PROBE score_stderr=<srcscore's "external lookups" line from b, or none>
+       PROBE score_exit=<EXIT value from b>
+graders:
+  - name: keep-trace
+    type: regex
+    target: trace
+    pattern: "[\\s\\S]*"

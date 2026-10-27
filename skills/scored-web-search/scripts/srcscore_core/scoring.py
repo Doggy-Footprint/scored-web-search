@@ -7,7 +7,7 @@ import re
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 
-from .fetchers import FETCH_FAILED, arxiv_lookup, github_repo, hn_item, hn_points, \
+from .fetchers import FETCH_FAILED, arxiv_lookup, doi_target, github_repo, hn_item, hn_points, \
     openalex_by_doi, openalex_by_pmid
 from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, fetch_url, \
     extract_person_handle
@@ -130,14 +130,20 @@ def path_penalty(url: str, patterns, cfg):
     return float(cfg["points"]), cfg.get("flag")
 
 
-def regex_path_penalty(url: str, patterns, cfg):
+def regex_path_penalty(url: str, patterns, cfg, host_patterns=None):
     """`path_penalty` for markers a substring cannot express, such as "the first
-    segment is /search". Each pattern is searched in the same normalised path.
+    segment is /search". Each pattern is searched in the same normalised path;
+    `host_patterns` ({domain: [regex]}) apply only on that domain.
     Returns (points, flag) or (0.0, None)."""
     if not cfg:
         return 0.0, None
     low = _path_of(url)
-    if not any(re.search(rx, low) for rx in (patterns or [])):
+    host = norm_host(url)
+    rxs = list(patterns or [])
+    for dom, xs in (host_patterns or {}).items():
+        if host_matches(host, str(dom).lower()):
+            rxs += xs
+    if not any(re.search(rx, low) for rx in rxs):
         return 0.0, None
     return float(cfg["points"]), cfg.get("flag")
 
@@ -287,7 +293,7 @@ def trusted_person_points(policy: dict, url: str):
 def _result(item, score, verdict, tier, pat, flags, meta, notes=None):
     return {
         "url": item["url"],
-        "fetch_url": fetch_url(item["url"]),
+        "fetch_url": fetch_url(meta.get("resolved_url") or item["url"]),
         "title": meta.get("title") or item.get("title") or "",
         "score": round(score, 1),
         "verdict": verdict,
@@ -364,7 +370,8 @@ def score_one(item: dict, policy: dict, cache, field: str,
             path_penalty(url, policy.get("version_path_patterns"),
                          policy["penalties"].get("version_path")),
             regex_path_penalty(url, policy.get("non_content_path_regex"),
-                               policy["penalties"].get("non_content_path")),
+                               policy["penalties"].get("non_content_path"),
+                               policy.get("non_content_host_path_regex")),
             version_penalty(policy, url),
             variant_penalty(policy, url)):
         if flag and flag not in flags:
@@ -405,6 +412,10 @@ def score_one(item: dict, policy: dict, cache, field: str,
             item_id = extract_hn_item_id(url)
             hn = (hn_item(item_id, cache, timeout) if item_id
                   else hn_points(url, cache, timeout))
+        if "doi" in ids and host_matches(host, "doi.org"):
+            target = doi_target(ids["doi"], cache, timeout)
+            if target and target is not FETCH_FAILED:
+                meta["resolved_url"] = target
         if FETCH_FAILED in (sch, gh, hn):
             flags.append("lookup-failed")
         sch = None if sch is FETCH_FAILED else sch

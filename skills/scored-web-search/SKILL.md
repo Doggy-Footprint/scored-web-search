@@ -19,17 +19,19 @@ This skill filters sub-standard sources before the main agent reads them when hi
 6.   Write    → every claim tagged with source + score
 ```
 
-Paths below are relative to this skill's folder. **If the `score_sources` tool is available, read `references/mod.md` first** — the plugin's mod replaces Steps 1, 2 and 2.5 with its own agent and tools. When sub-agents are not available, the main agent does Steps 1 and 5 as fallback and skips Step 2.5.
+Paths below are relative to this skill's folder. Steps 1, 2.5 and 5 are delegated to lightweight subagents; when sub-agents are not available, the main agent does Steps 1 and 5 itself and skips Step 2.5.
 
 ### Step 1 — Search: collect URLs only
 
-The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** — do NOT use `fork`, make it call web-search tools in a single turn, use luna, haiku, or the lightest model of the same generation, and give it `references/searcher-prompt.md` as its instructions — and have it write JSON records containing `url`, `title`, and an optional verified ISO `date` to a file you name in a temporary directory (one file per subagent, e.g. `urls-1.json`). It returns only the file path and the record count; the records themselves stay out of the main context. Include only publication dates supplied by search results; omit unavailable dates. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+The main agent defines the search keywords. Delegate the actual web search to a **lightweight subagent** that can both search the web and write a file — do NOT use `fork`; use luna, haiku, or the lightest model of the same generation. Give it `references/searcher-prompt.md` as its instructions, its queries, and a file path you name under `$TMPDIR` (`/tmp` only when it is unset; `echo $TMPDIR` tells you), one file per subagent, e.g. `$TMPDIR/ssw/urls-1.json`. Sandboxes let files be written and read there but often not in `/tmp`. It writes JSON records of `url`, `title`, and an optional ISO `date` taken from the search results to that file, and returns only the path and the record count, so neither the records nor any search-result text reaches the main context. NO summaries, NO snippets, DO NOT open page — the point of this step is to keep low-quality text out of the main context.
+
+If the subagent could not write the file, it returns the records themselves. Write them to the path you named, go on, and count it under `step1-inline` in the report's `Degraded:` line (Step 6). They cost main context but carry no page text.
 
 Max 2 sub-topics per subagent. For 3 or more sub-topics, run subagents in parallel. Collect 40-60 URLs total.
 
 In `official-docs` mode, name the official docs host of the product the question is about (one or two, e.g. `docs.python.org`) and add `site:<host> <keywords>` queries next to the plain ones. Plain searches often miss the official page entirely.
 
-No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json`. The caution for sub agents works same for main agent too.
+No sub agent fallback: main agent calls the web-search tool itself. Extract only URL/title and any verified publication date from the results and write these JSON records straight to `urls.json` under `$TMPDIR`, as above. The caution for sub agents works same for main agent too.
 
 ### Step 2 — Score: hand it to the script
 
@@ -39,16 +41,18 @@ When the question names a docs version or variant, pass it: `--doc-version nextj
 
 In `official-docs` mode, pass the hosts you used for `site:` queries: `--official-domain biomejs.dev`. A host the policy does not know is then scored SUPPORT with `official-claimed` instead of the unregistered default, so Step 2.5 still vets each page. A registered host keeps its tier.
 
-Output lists only the PRIMARY and SUPPORT rows, roughly 15 tokens per line, and a count per verdict:
+Output lists only the PRIMARY and SUPPORT rows, each with its title cut to 40 characters, roughly 25 tokens per line, and a count per verdict:
 
 ```
-SCORE VERDICT T  SIGNALS                     URL
- 98.0 PRIMARY  3  cit=132.0k,y2017,published@NeurIPS  https://arxiv.org/abs/1706.03762
- 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/html/2601.xxxxx
+SCORE VERDICT T  SIGNALS                     URL  TITLE
+ 98.0 PRIMARY  3  cit=132.0k,y2017,published@ https://arxiv.org/abs/1706.03762  Attention Is All You Need
+ 77.9 SUPPORT  3  cit=120,y2026,preprint      https://arxiv.org/html/2601.xxxxx  A survey of ...
 -- 47 sources | PRIMARY 1 | SUPPORT 1 | SKIM 9 | WEAK 12 | DROP 22 | BLOCKED 2
 ```
 
-The URL column is the address to fetch: links WebFetch cannot follow are rewritten (old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
+These rows are everything you choose from. The URL files and any `--full-out` table stay out of the main context: do not open, print, or grep them, not even for titles or for what scored below SUPPORT. If the rows are too thin, that is Step 4.
+
+The URL column is the address to fetch: links WebFetch cannot follow are rewritten (doi.org links to the page they resolve to, old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
 
 | Verdict | Score | What to do with it |
 |---|---|---|
@@ -61,15 +65,11 @@ The URL column is the address to fetch: links WebFetch cannot follow are rewritt
 
 ### Step 2.5 — Judge: vet SUPPORT sources
 
-Hand every SUPPORT source (with the research question) to a **lightweight subagent** (same model rule as Step 1, no `fork`). Give it `references/judge-rubric.md` verbatim and have it do **this and nothing else**:
-
-> For each URL: `WebFetch` the page and apply the rubric to it. If the page cannot be fetched, is empty, or is a PDF, answer UNJUDGED with the reason. Return only one line per URL, in input order: `url | USE/SKIP/UNJUDGED | reason`. No page text, quotes, or summaries.
-
-Page text never reaches you. No sub agent fallback: skip this step and read SUPPORT sources as before.
+Hand every SUPPORT URL, with the research question, to a **lightweight subagent** (same model rule as Step 1, no `fork`) and give it `references/judge-rubric.md` verbatim as its only instructions. It reads each page with `WebFetch` and returns only one line per URL: `url | USE/SKIP/UNJUDGED | reason`. Page text never reaches you. No sub agent fallback: skip this step, read SUPPORT sources as before, and put `judge-unavailable` in the report's `Degraded:` line. With no SUPPORT rows there is nothing to judge, which is not a shortfall.
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
-- SKIP and UNJUDGED are final for this run: exclude the source from Step 3 and do not open it to second-guess the judge.
-- If the judge itself fails, read SUPPORT sources as before and say the judge step was unavailable.
+- A verdict on a source is final for this run: SKIP and UNJUDGED sources stay out of Step 3, and you do not open them to second-guess the judge. An UNJUDGED reason starting `page:` means the site gave nothing to judge; `fetch-error:` means WebFetch failed on it twice. Some sources failing to fetch is still a set of verdicts.
+- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED because the fetch itself failed (`fetch-error`, not an HTTP status, a PDF or an empty page); the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line.
 
 ### Step 3 — Read: open only what passed
 `WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Do not open WEAK/DROP.**
@@ -101,7 +101,21 @@ No sub agent fallback: run the same claim-vs-evidence check yourself instead of 
 
 Tag every figure and claim with its source and score: `... rose 32% (Nature 2025, PRIMARY 91)`. Any sentence resting on a SKIM-or-below source gets a hedge — "not yet confirmed", "according to a single report".
 
-Close the report with one line: `n sources collected → m passed → j judged-out → l read`, followed by the keywords given to Step 1, in round order including re-search, follow-up and trace rounds: `Keywords: <round>: q1, q2 / <round>: q3`.
+Close the report with three lines, in this order:
+
+```
+n sources collected → m passed → j judged-out → l read
+Degraded: none
+Keywords: <round>: q1, q2 / <round>: q3
+```
+
+`j` counts the SUPPORT sources the judge kept out (SKIP and UNJUDGED); it is 0 when the judge was unavailable, since those sources were read. `Degraded:` is always there, so a reader can tell a clean run from a line left out. It lists, joined by ` · ` and summed over all rounds, every way this run fell short of the pipeline, and says `none` only when nothing did:
+- `step1-inline <k>/<n>`: k of n search subagents returned their records instead of writing the file.
+- `lookups-failed <f>/<t>`: srcscore's stderr reported f of t external lookups unreachable, so those rows were scored without their signals.
+- `judge-unavailable`: Step 2.5 gave no verdicts, or was skipped for lack of subagents.
+- `unjudged <u> (fetch-error <f>, page <p>)`: SUPPORT sources the judge left UNJUDGED, by reason. Not listed in a round whose judge was unavailable; `judge-unavailable` covers it.
+
+`Keywords:` lists the keywords given to Step 1, in round order including re-search, follow-up and trace rounds.
 
 ## Scoring Policy
 
@@ -134,11 +148,11 @@ The same domain sits at different tiers in different modes, because a mode asks 
 A mode's overlay is also where a domain gets registered when it only matters to that mode's question.
 
 ## Error handling
-If script fails, report it and stop; do not fall back to unscored reading.
+If `scripts/srcscore.py` fails, report it and stop; do not fall back to unscored reading. Exit 4 means most citation, star and HN lookups could not reach their APIs, so every score would rest on the domain tier alone. Tell the user the hosts to allow — the script names them — and stop. Do not re-run with `--no-net`: it drops those signals, and its verdicts are not this skill's.
 
 ## Don't Do This
 
 - Don't cite WEAK/DROP material "for reference anyway."
-- Don't pile search-result snippets into the main context — the subagent returns URLs only.
+- Don't pile search-result snippets into the main context — the subagent hands back a file of URL records, never search-result text.
 - Don't trust content just because its domain score is high. The tier is a device for choosing what to read, not a guarantee that the content is true.
 - Don't doulbe-check socre.

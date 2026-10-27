@@ -103,6 +103,10 @@
     "/__pycache__/",
     "/(?:site-packages|anaconda3|node_modules)/"
   ],
+  "_non_content_host_path_regex": "The same, for paths that are listings only on one host: an index's page about a paper is not the paper, and the paper usually turns up under its own address too.",
+  "non_content_host_path_regex": {
+    "semanticscholar.org": ["^/paper/"]
+  },
 
   "_release_path_regex": "Package-registry pages pinned to one release. The unversioned page is the registry's own pointer at the current release.",
   "release_path_regex": {

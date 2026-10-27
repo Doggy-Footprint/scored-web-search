@@ -17,7 +17,6 @@ SCRIPTS = _pathsetup.SCRIPTS
 SRCSCORE = os.path.join(SCRIPTS, "srcscore.py")
 CHECK_POLICY = os.path.join(ROOT, "scripts", "check_policy.py")
 SKILL_MD = os.path.join(ROOT, "skills", "scored-web-search", "SKILL.md")
-MOD_MD = os.path.join(ROOT, "skills", "scored-web-search", "references", "mod.md")
 OFFICIAL_JSON = os.path.join(SCRIPTS, "modes", "official_docs.json")
 
 
@@ -279,7 +278,6 @@ class DocsTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.skill = read(SKILL_MD)
-        cls.mod = read(MOD_MD)
 
     def test_step1_site_queries(self):
         s1 = section(self.skill, "1")
@@ -300,9 +298,6 @@ class DocsTests(unittest.TestCase):
         self.assertIn("always", low)
         self.assertTrue("trac" in low and "original" in low, s5[:500])
         self.assertIn("round", low)
-
-    def test_mod_md(self):
-        self.assertIn("officialDomains", self.mod)
 
 
 if __name__ == "__main__":

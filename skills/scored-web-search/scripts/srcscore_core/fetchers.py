@@ -1,7 +1,8 @@
-"""Cache + free external lookups (OpenAlex, Semantic Scholar, GitHub, Hacker News)."""
+"""Cache + free external lookups (OpenAlex, Semantic Scholar, GitHub, Hacker News, doi.org)."""
 
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import time
@@ -16,14 +17,17 @@ VERSION = "2.0.0"
 UA = "srcscore/%s (research triage)" % VERSION
 MAILTO = os.environ.get("SRCSCORE_MAILTO", "").strip()
 
+# Every host http_json is pointed at. A sandbox has to allow all of them for scores to mean anything.
+LOOKUP_HOSTS = ("api.openalex.org", "api.semanticscholar.org", "api.github.com", "hn.algolia.com", "doi.org")
+
 CACHE_DIR = os.environ.get(
     "SRCSCORE_CACHE", os.path.join(os.path.expanduser("~"), ".cache", "srcscore")
 )
 
 __all__ = [
-    "VERSION", "UA", "MAILTO", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
+    "VERSION", "UA", "MAILTO", "LOOKUP_HOSTS", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
     "http_json", "openalex_by_doi", "openalex_by_pmid", "s2_by_arxiv", "arxiv_lookup",
-    "github_repo", "hn_item", "hn_points",
+    "github_repo", "hn_item", "hn_points", "doi_target",
 ]
 
 
@@ -95,12 +99,20 @@ def http_json(url: str, timeout: float = 12.0):
     an unreachable API must never be scored as `no-index`."""
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
-            body = r.read().decode("utf-8", "replace")
-            _count(False)
-            if r.status != 200:
-                return None
-            return json.loads(body)
+        for attempt in (0, 1):
+            try:
+                with urllib.request.urlopen(req, timeout=timeout) as r:
+                    body = r.read().decode("utf-8", "replace")
+                    status = r.status
+                break
+            except (http.client.HTTPException, ConnectionResetError):
+                # A reply cut off mid-body. Sandbox proxies do this now and then, so ask once more.
+                if attempt:
+                    raise
+        _count(False)
+        if status != 200:
+            return None
+        return json.loads(body)
     except urllib.error.HTTPError as e:
         # 404/410 = genuinely absent. 401/403/407/429/5xx = we were refused or
         # throttled, which is a reachability problem, not evidence of absence.
@@ -109,7 +121,7 @@ def http_json(url: str, timeout: float = 12.0):
             return FETCH_FAILED
         _count(False)
         return None
-    except (urllib.error.URLError, OSError, ValueError, TimeoutError):
+    except (urllib.error.URLError, OSError, ValueError, TimeoutError, http.client.HTTPException):
         _count(True)
         return FETCH_FAILED
 
@@ -155,6 +167,28 @@ def openalex_by_doi(doi: str, cache: Cache, timeout: float):
         return FETCH_FAILED
     out = _parse_openalex(j) if j else None
     cache.put(key, out or {})
+    return out
+
+
+def doi_target(doi: str, cache: Cache, timeout: float):
+    """The address doi.org redirects `doi` to, from its handle API. WebFetch does
+    not follow that cross-host redirect, so a doi.org link is read through this."""
+    key = "doi:url:" + doi.lower()
+    hit = cache.get(key)
+    if hit is not None:
+        return hit or None
+    j = http_json("https://doi.org/api/handles/%s?type=URL" % urllib.parse.quote(doi, safe="/"), timeout)
+    if j is FETCH_FAILED:
+        return FETCH_FAILED
+    out = None
+    values = j.get("values") if isinstance(j, dict) else None
+    for v in values if isinstance(values, list) else []:
+        data = v.get("data") if isinstance(v, dict) and v.get("type") == "URL" else None
+        val = data.get("value") if isinstance(data, dict) else None
+        if isinstance(val, str) and val.startswith(("http://", "https://")):
+            out = val
+            break
+    cache.put(key, out or "")
     return out
 
 

@@ -1,0 +1,25 @@
+schema_version: "1.1"
+name: p3-judge
+runs: 1
+execution:
+  model: claude-opus-5-5
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Skill, Agent, Read, WebFetch]
+  prompt: |
+    This is an environment probe, not research. Do exactly the steps below, report what happened, and do nothing else. Never work around a failure: record it and move on. Do not fetch any page yourself.
+
+    1. Invoke the Skill tool with skill "scored-web-search". Do not follow its pipeline; only note the "Base directory for this skill" it prints. Call it BASE.
+    2. Read `BASE/references/judge-rubric.md` with the Read tool.
+    3. Launch one subagent with the Agent tool: subagent_type "general-purpose", model "haiku", no fork. Give it the rubric verbatim as its only instructions, the research question "How do LLM-based autonomous agents plan and use memory?", and these five URLs in this order:
+       https://lilianweng.github.io/posts/2023-06-23-agent/
+       https://arxiv.org/pdf/2308.11432
+       https://www.ibm.com/think/topics/ai-agents
+       https://httpbin.org/status/404
+       https://ssw-probe-unresolvable.invalid/page
+    4. End your reply with the subagent's reply exactly as returned, between the lines `PROBE judge_reply_begin` and `PROBE judge_reply_end`.
+graders:
+  - name: keep-trace
+    type: regex
+    target: trace
+    pattern: "[\\s\\S]*"

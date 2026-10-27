@@ -1,0 +1,31 @@
+schema_version: "1.1"
+name: p2-urlfile
+runs: 1
+execution:
+  model: claude-opus-5-5
+  max_turns: 40
+  timeout_seconds: 900
+  allowed_tools: [Skill, Agent, Bash, Read, Write, WebSearch]
+  prompt: |
+    This is an environment probe, not research. Do exactly the steps below, report what happened, and do nothing else. Never work around a failure: record it and move on.
+
+    1. Invoke the Skill tool with skill "scored-web-search". Do not follow its pipeline; only note the "Base directory for this skill" it prints. Call it BASE.
+    2. Run `pwd; echo "$TMPDIR"` with Bash. Call the outputs CWD and TMP (if TMP is empty, use /tmp).
+    3. Read `BASE/references/searcher-prompt.md` with the Read tool.
+    4. Launch three subagents with the Agent tool, one after another: subagent_type "general-purpose", model "haiku", no fork. Each gets the searcher prompt verbatim as its instructions, the single query `transformer attention mechanism survey`, and one file path:
+       - subagent 1: `/tmp/ssw-probe/urls-1.json`
+       - subagent 2: `TMP/ssw-probe/urls-2.json`
+       - subagent 3: `CWD/ssw-probe/urls-3.json`
+       Keep each subagent's reply exactly as returned.
+    5. For each of the three paths, run this with Bash and keep the output:
+       `python3 -c "import json,sys; print(len(json.load(open(sys.argv[1]))))" "<path>" 2>&1 | tail -1`
+    6. End your reply with these lines, each value one line of plain text (N = 1, 2, 3):
+       PROBE cwd=<CWD>
+       PROBE tmp=<TMP>
+       PROBE sub<N>_reply=<the subagent's reply, newlines replaced by spaces, first 200 characters>
+       PROBE sub<N>_bash_read=<the count from step 5, or the error>
+graders:
+  - name: keep-trace
+    type: regex
+    target: trace
+    pattern: "[\\s\\S]*"

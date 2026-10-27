@@ -167,6 +167,18 @@ def validate_policy(p: dict, path: str = "policy") -> None:
             except re.error as e:
                 bad("non_content_path_regex %r is not a valid regex: %s" % (x, e))
 
+    nh = p.get("non_content_host_path_regex")
+    if nh is not None:
+        if not isinstance(nh, dict) or not all(
+                isinstance(v, list) and all(isinstance(x, str) for x in v) for v in nh.values()):
+            bad("non_content_host_path_regex must map a domain to a list of regex strings")
+        for dom, xs in nh.items():
+            for x in xs:
+                try:
+                    re.compile(x)
+                except re.error as e:
+                    bad("non_content_host_path_regex[%r] %r is not a valid regex: %s" % (dom, x, e))
+
     rr = p.get("release_path_regex")
     if rr is not None:
         if not isinstance(rr, dict):

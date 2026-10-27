@@ -1,5 +1,5 @@
 """Independent tests for issue 4: fetch_url normalisation, repeatable --in, --format compact,
---full-out, arms.py batch handling, and the SKILL.md wording. Written from the issue spec."""
+--full-out, and the SKILL.md wording. Written from the issue spec."""
 
 import json
 import os
@@ -230,23 +230,6 @@ class Compact(unittest.TestCase):
 
 # --------------------------------------------------------------------------- 4. arms.py
 
-def tool_use(i, name, inp):
-    return {"type": "tool_use", "id": i, "name": name, "input": inp}
-
-
-def a_msg(mid, parent, content):
-    return {"type": "assistant", "parent_tool_use_id": parent,
-            "message": {"id": mid, "model": "claude-opus-5-5", "content": content}}
-
-
-def result_msg(parent, tuid, content, tur=None):
-    d = {"type": "user", "parent_tool_use_id": parent,
-         "message": {"content": [{"type": "tool_result", "tool_use_id": tuid, "content": content}]}}
-    if tur is not None:
-        d["tool_use_result"] = tur
-    return d
-
-
 class ArmsNorm(unittest.TestCase):
     def test_pmc_old_and_new_same_key(self):
         self.assertEqual(arms.norm(OLD_PMC), arms.norm(NEW_PMC))
@@ -257,61 +240,6 @@ class ArmsNorm(unittest.TestCase):
 
     def test_arxiv_old_unchanged(self):
         self.assertNotEqual(arms.norm(ARXIV_OLD), arms.norm("https://arxiv.org/html/1706.03762"))
-
-
-class ArmsBatch(unittest.TestCase):
-    def setUp(self):
-        self.tmp = tempfile.mkdtemp(prefix="issue4-arms-")
-        self._old = arms.BATCH_DIR
-        arms.BATCH_DIR = arms.Path(self.tmp)
-        self.recs = [{"url": "https://batch.example.org/1", "title": "B1"},
-                     {"url": OLD_PMC, "title": "PMC"}]
-        with open(os.path.join(self.tmp, "batch-agentX1.json"), "w") as f:
-            json.dump(self.recs, f)
-
-    def tearDown(self):
-        arms.BATCH_DIR = self._old
-
-    def trace(self, reply):
-        L = [{"type": "system", "subtype": "init", "session_id": None},
-             a_msg("m1", None, [tool_use("ag1", "Agent", {"subagent_type": arms.SEARCHER, "prompt": "go"})]),
-             {"type": "system", "subtype": "task_started", "tool_use_id": "ag1",
-              "subagent_type": arms.SEARCHER, "description": "r1"},
-             result_msg(None, "ag1", [{"type": "text", "text": reply}],
-                        tur={"agentId": "agentX1", "agentType": arms.SEARCHER}),
-             {"type": "result", "subtype": "success", "result": "R"}]
-        p = os.path.join(self.tmp, "trace", "t.jsonl")
-        os.makedirs(os.path.dirname(p), exist_ok=True)
-        with open(p, "w") as f:
-            for d in L:
-                f.write(json.dumps(d) + "\n")
-        return p
-
-    def test_stub_reads_batch_file(self):
-        stub = 'searcher batch agentX1: 2 records saved (not shown). Pass batches: ["agentX1"] to score_sources.'
-        ev = arms.extract(self.trace(stub))
-        self.assertEqual(len(ev["searcher_returns"]), 1)
-        r = ev["searcher_returns"][0]
-        self.assertEqual([x["url"] for x in r["records"]], [x["url"] for x in self.recs])
-        self.assertIs(r["in_main"], False)
-        lvl = arms.arm_urls(ev)
-        self.assertEqual(lvl[arms.norm("https://batch.example.org/1")], "sub_seen")
-        self.assertEqual(lvl[arms.norm(NEW_PMC)], "sub_seen")
-        self.assertNotIn("listed", lvl.values())
-
-    def test_plain_reply_is_listed(self):
-        reply = json.dumps([{"url": "https://plain.example.org/1", "title": "P"}])
-        ev = arms.extract(self.trace(reply))
-        r = ev["searcher_returns"][0]
-        self.assertTrue(r.get("in_main", True))
-        self.assertEqual(arms.arm_urls(ev)[arms.norm("https://plain.example.org/1")], "listed")
-
-    def test_sub_seen_outranked_by_score_table(self):
-        ev = {"searches": [], "fetches": [], "judge_lines": [],
-              "searcher_returns": [{"records": [{"url": "https://batch.example.org/1"}], "in_main": False,
-                                    "extra_keys": [], "chars": 10}],
-              "score_tables": [{"rows": [{"url": "https://batch.example.org/1"}]}]}
-        self.assertEqual(arms.arm_urls(ev)[arms.norm("https://batch.example.org/1")], "listed")
 
 
 # --------------------------------------------------------------------------- 5. SKILL.md

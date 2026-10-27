@@ -3,7 +3,7 @@
 Two questions, measured on the same questions:
 
 - **A — policy.** Do `scripts/policy.json` + `scripts/modes/*.json` verdicts agree with an independent judge?
-- **B — Step 2.5 judge.** Do `judge_support` USE/SKIP decisions agree with the same judge?
+- **B — Step 2.5 judge.** Do the judge subagent's USE/SKIP decisions agree with the same judge?
 - **Arms — with vs. without the plugin.** How much low-quality material reaches the main agent's context,
   how many sources it reads, and what the whole run costs, with the plugin loaded and with no plugin at all.
 
@@ -28,9 +28,18 @@ policy's output reaches the judge, the policy grades its own exam.
    The same prompt runs twice: with the plugin from this repo, and with no plugin (temp HOME/config, no
    CLAUDE.md in either arm). The prompt names "scored web search" only as words, so the baseline is an
    ordinary research agent. `tool_used: Skill` records whether the skill fired in the with-arm.
+   Arms measure the skill working as intended, so the run grants what a real session needs. Eval Bash runs in
+   a sandbox whose network opens only to hosts named in a `WebFetch(domain:…)` grant (a bare `WebFetch` grant
+   does not open it), and without the scorer's hosts `srcscore.py` exits 4. `--keep-temp` keeps the traces
+   `arms.py ingest` copies:
+
+       claude plugin eval . --eval-dir policy-eval/arms --keep-temp --allow-tools Bash Write WebSearch WebFetch \
+         "WebFetch(domain:api.openalex.org)" "WebFetch(domain:api.semanticscholar.org)" \
+         "WebFetch(domain:api.github.com)" "WebFetch(domain:hn.algolia.com)" "WebFetch(domain:doi.org)"
 3. **Ingest** (`arms.py ingest <result.json>`). Copies each run's stream trace and session transcripts into
-   `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists the arm URLs the blind judge has not
-   labelled in `runs/<id>.union.todo.json`.
+   `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists in `runs/<id>.union.todo.json` the URLs
+   that reached either arm's main context (`listed`, `exposed`, `read`) and the blind judge has not labelled; a
+   URL only a subagent saw is never measured against a label.
 4. **Union labeller** (Workflow agent, same model and rules as 1). Labels the todo URLs, shuffled and without
    arm information, by the same criteria → `runs/<id>.union.judge.json`.
 5. **Analyze** (`arms.py analyze`, `contrast.py <id>`). Scores every URL with the real scorer and joins.
@@ -43,8 +52,8 @@ Each URL an arm touched is counted once, at the highest level it reached:
 |---|---|
 | `read` | the main agent fetched the page (WebFetch succeeded) |
 | `exposed` | the URL came back from a WebSearch the main agent ran — that tool returns a text summary of its results, so their content is in the main context |
-| `listed` | only the URL/title is in the main context: searcher hand-back, score table, or a search result with no summary |
-| `sub_read` | a subagent or the `judge_support` tool fetched it; nothing of it is in the main context |
+| `listed` | only the URL/title is in the main context: a search result with no summary, a score-table row, or a Step 1 record a search subagent handed back inline |
+| `sub_read` | a subagent fetched it; nothing of it is in the main context |
 | `sub_seen` | only a subagent's search returned it |
 
 **Contamination** = `marginal` + `junk` URLs at a main-context level (`read`, `exposed`, `listed`), reported
@@ -57,26 +66,34 @@ USD at list price (`pricing.py`). Sources, most authoritative first:
 
 - `result.modelUsage` (per model, every API call of the run, including tools' internal calls and web-search fees).
 - Session transcripts (`config/projects/<cwd>/<session>.jsonl` and `subagents/agent-*.jsonl` in the kept
-  sandbox): final per-message `usage` → cost per agent role (`main`, `searcher`, other subagents). The stream
-  trace's per-message usage is interim and is not used for cost.
-- `judge_support` calls go through `$.model.complete` and appear in no transcript; the mod writes
-  `.tmp/judge-usage-<ms>.json` (`question`, `model`, `calls[{url, line, usage}]`) and ingest matches each file
-  to the run whose `judge_support` output has the same URLs.
+  sandbox): final per-message `usage` → cost per agent role (`main`, `subagent`). The stream trace's
+  per-message usage is interim and is not used for cost.
 - `tool_internal_usd` per model = `modelUsage.costUSD` − transcript cost − web searches × $0.01. It is the
   model calls the WebSearch/WebFetch tools make on their own (WebSearch runs on the caller's model,
-  WebFetch's summariser on Haiku), plus `judge_support` if the host bills it into `modelUsage`.
+  WebFetch's summariser on Haiku).
 
 ## Measures
 
 - **A**: recall loss (`useful` scored below SUPPORT), precision loss (`junk` scored PRIMARY/SUPPORT), vendor
   pass-through, per-round split for expansion questions (`contrast.py`).
-- **B**: confusion of `judge_support` USE/SKIP/UNJUDGED against blind labels.
-- **Arms**: contamination (above); sources read (main attempted/ok, by label, by in-run verdict; subagent and
-  `judge_support` fetches apart); cost breakdown (above).
-- **Extra raw data**: in-run score/verdict/tier/signals; searcher contract (record keys beyond
-  `url`/`title`/`date`, dated records); read-URL overlap between arms; `useful` URLs reached only by the
-  baseline; main-context peak tokens; report length; fetch failures with reasons; rounds (score_sources calls);
-  skill fired.
+- **B**: confusion of the judge's USE/SKIP/UNJUDGED (UNJUDGED split by `page`/`fetch-error`) against blind labels
+  (`judge_vs_blind`).
+- **Arms**: contamination (above); sources read (main attempted/ok, by label; subagent fetches apart); cost
+  breakdown (above).
+- **Pipeline compliance** (with-arm): the main agent's reads by the verdict the run acted on
+  (`main_reads_by_in_run_verdict`: `PRIMARY`, `SUPPORT/USE`, … or `not-in-table`; anything but PRIMARY and
+  `SUPPORT/USE`, or `SUPPORT` when the judge was unavailable, is a read the skill forbids); the report's
+  `Degraded:` line held against the same items counted from the trace (`degraded`); SUPPORT judged and left
+  without a verdict; `peeks`, the main agent's Bash or Read of a file the skill keeps out of the main context (a
+  URL file, the `--full-out` table); scorer exit codes.
+- **Extra raw data**: read-URL overlap between arms; `useful` URLs reached only by the baseline; main-context
+  peak tokens; characters the score tables and subagent replies put into the main context
+  (`main_context_chars`); report length; fetch failures with reasons; skill fired.
+
+`arms.py` reads what the skill's own steps leave in a trace: the `srcscore.py` Bash results (rows, counts,
+unreachable lookups, exit), the URL files subagents write, each subagent's reply to the main agent (a URL-file
+path and count, inline records, or judge lines; taken from the subagent's last text, so a background subagent
+whose reply came as a task notification counts the same), and the report's closing summary and `Degraded:` line.
 
 ## Limits
 
@@ -126,6 +143,14 @@ of every summary is grep-verified against the page (step 7).
     an Opus main agent writes different ones. The judge's truncation calls depend on the page text, which can be
     longer than what WebFetch read.
 
+## Environment probes
+
+`policy-eval/probe/` holds short cases that check what the skill's steps can do inside an eval run, apart from any
+research: the scorer's file and network access (`p1-score`), where a subagent can write the URL file that sandboxed
+Bash then reads (`p2-urlfile`), and the Step 2.5 judge subagent's WebFetch and reply format (`p3-judge`). Each ends
+its reply with `PROBE key=value` lines. Run them with `--ablation none --keep-temp` and the grants under test, and
+read the replies from the kept traces. Re-run them when the skill's steps or the eval build change.
+
 ## Run log
 
 Dates are when each round ran. Labels age: pages change and "current version" questions go stale, so read a
@@ -134,11 +159,14 @@ result against its date.
 | Date | Round | Output |
 |---|---|---|
 | 2026-10-24 | Blind judge, 20 pilot questions | `runs/*.judge.json`, `runs/*.urls.json`, `results/a_summary.json` |
-| 2026-10-24 | Arms, with vs without | `results/pilot.summary.json` |
+| 2026-10-24 | Arms, with vs without. The Step 2.5 judge of that version fetched pages from plugin code, which `claude plugin eval` refuses, so it never judged; the current judge is a subagent that reads with WebFetch | `results/pilot.summary.json` |
 | 2026-10-25 | Fidelity round 1 (Haiku caller) and round 2 (Opus caller WebSearch) | `fidelity/*/result.json`, `result.opus.json` |
 | 2026-10-25 | WebFetch prompt A/B | `fidelity/*/result.ab.json`, `summary.json` `webfetch_ab` |
 | 2026-10-25 | URL path rules re-scored against the 2026-10-24 labels (contrast) | not tracked; regenerate with `contrast.py` |
 | 2026-10-25 | Issue #5 overlay changes re-scored against the 2026-10-24 labels (contrast, in-sample: candidates were picked from these labels) | not tracked; numbers in `handoff/be76cb7418ff8904-pending-evals.md` E2 |
+| 2026-10-26 | Environment probes (`policy-eval/probe/`). Bash reads the loaded skill's folder but not the rest of the plugin (`policy-eval/` is denied); scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
+| 2026-10-26 | Scorer under the eval proxy (`p4-score-load`) and ac1 with-arm end to end. The proxy cut 1-3 of 12 serial OpenAlex replies mid-body, which crashed `srcscore.py` (`IncompleteRead`) on a real Step 1 pool; it now retries a cut-off reply once and counts a second failure as unreachable | not tracked |
+| 2026-10-26 | Arms, 20 pilot questions + od9, with vs without, main agent Haiku (`--model claude-haiku-5-5`, `-j 2`), so not comparable with the Opus pilot. Unlabelled URLs not yet labelled (union labeller pending), so no contamination or B. With-arm reads: PRIMARY 85, USE-judged SUPPORT 48, 2 outside the rules; `Degraded:` agreed with the trace in 20 of 21. Main opened URL files or the full table in 11 of 21. Official pages read in all 5 od questions, od9 through `official-claimed` + USE. Cost $4.49 with, $0.96 without | `runs/pilot.summary.json`, `runs/*.arms.json` (not tracked); pilot artefacts moved to `runs/pilot-2026-10-24/` |
 
 The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
 or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes
