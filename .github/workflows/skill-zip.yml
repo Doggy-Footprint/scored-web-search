@@ -3,7 +3,7 @@ name: skill-zip
 on:
   push:
     branches: [master]
-    paths: ['skills/scored-web-search/**']
+    paths: ['skills/scored-web-search/**', '.claude-plugin/plugin.json']
   workflow_dispatch:
 
 permissions:
@@ -20,14 +20,7 @@ jobs:
       - run: python3 -m unittest discover tests
       - run: python3 scripts/check_policy.py
       - run: scripts/build_skill_zip.sh dist/scored-web-search.zip
-      - name: Publish latest release
+      - name: Publish releases
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          notes="Built from ${GITHUB_SHA}"
-          if gh release view latest >/dev/null 2>&1; then
-            gh release upload latest dist/scored-web-search.zip --clobber
-            gh release edit latest --notes "$notes"
-          else
-            gh release create latest dist/scored-web-search.zip --title "latest" --notes "$notes" --target "${GITHUB_SHA}"
-          fi
+        run: scripts/publish_release.sh dist/scored-web-search.zip "${GITHUB_SHA}"
