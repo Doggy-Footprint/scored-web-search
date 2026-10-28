@@ -31,7 +31,12 @@ master push 시 GitHub Action이 `skills/scored-web-search/`를 zip으로 만들
 - 모바일 앱 업로드 완료, `scored-web-search` skill 동작 확인.
 - 이슈 등록: 업데이트 자동 반영 여부 확인 필요.
 
-## 결정 필요 (CI/CD) — 해결됨: latest Release / skill 폴더 변경 트리거 / 테스트+check_policy 게이트 / README 안내
+## 진행 (2026-10-28)
+- 배포를 버전 release로 바꿨다: `scripts/publish_release.sh`가 `.claude-plugin/plugin.json` 버전의 `vX.Y.Z` release가 없을 때만 만들고 GitHub Latest로 표시한다. 이미 있으면 건드리지 않는다. `latest` release와 tag는 삭제했다.
+  - rolling `latest` release는 내용을 덮어써도 publish 날짜가 처음 날짜로 남아 목록에서 버전 release 아래로 밀렸다.
+  - 새 zip을 내려면 plugin.json 버전을 올려야 한다. README 링크(`/releases/latest/download/`)는 Latest 표시를 따라가므로 그대로 둔다.
+
+## 결정 필요 (CI/CD) — 해결됨: latest Release(2026-10-28에 버전 release로 교체) / skill 폴더 변경 트리거 / 테스트+check_policy 게이트 / README 안내
 1. 배포 형태: GitHub Release asset / Actions artifact / 고정 URL(예: `latest` release).
 2. 트리거: master push 전부 vs `skills/scored-web-search/**` 변경 시만. 버전/태그 규칙.
 3. zip 내용: 폴더 그대로? `__pycache__` 등 제외 규칙. zip 최상위가 폴더여야 하는지(claude.ai 업로드 형식 확인 필요).
