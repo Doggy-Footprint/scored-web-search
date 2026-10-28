@@ -93,7 +93,8 @@ def render_compact(rows: list) -> str:
             title = " ".join((r.get("title") or "").split())[:COMPACT_TITLE_CHARS]
             lines.append(_row_line(r) + ("  " + title if title else ""))
     counts = " | ".join("%s %d" % (v, sum(1 for r in rows if r["verdict"] == v)) for v in VERDICTS)
-    lines.append("-- %d sources | %s" % (len(rows), counts))
+    merged = sum(r.get("merged", 0) for r in rows)
+    lines.append("-- %d sources | %s%s" % (len(rows), counts, " | merged %d" % merged if merged else ""))
     return "\n".join(lines)
 
 

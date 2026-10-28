@@ -1,8 +1,10 @@
 # Raw run data is regenerated per run and is large; only reports are tracked. The blind-judge labels and their
-# URL lists are the exception: they are the regression set contrast.py re-scores, and cannot be recreated.
+# URL lists are the exception: contrast.py re-scores them, and they cannot be recreated.
 runs/*
 !runs/*.judge.json
 !runs/*.urls.json
 # Page texts and verbatim tool results are raw data; only the per-topic result*.json and summary.json are tracked.
 fidelity/*/*.txt
 fidelity/*/*.tmp
+# `claude plugin eval` writes its HTML report and aggregate result under the eval dir on every run.
+arms/results/

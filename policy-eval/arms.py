@@ -20,7 +20,7 @@ from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 import pricing
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "skills" / "scored-web-search" / "scripts"))
-from srcscore_core.identifiers import fetch_url  # noqa: E402
+from srcscore_core.identifiers import fetch_url, paper_key  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent
 RUNS = ROOT / "runs"
@@ -77,6 +77,10 @@ JUDGE_LINE_RE = re.compile(r"^\W*(https?://\S+?)\W*\s*\|\s*(USE|SKIP|UNJUDGED)\s
 FILE_REPLY_RE = re.compile(r"^\s*`?(/\S+\.json)`?\s+(\d+)\s*$", re.M)
 SUMMARY_RE = re.compile(r"(\d+) sources collected → (\d+) passed → (\d+) judged-out → (\d+) read")
 DEGRADED_RE = re.compile(r"^[\s`*>_-]*Degraded:[\s`*_]*(.*?)[\s`*_]*$", re.M)
+# What main asked a subagent to do, from the instructions SKILL.md has it pass on: the judge rubric's reply format
+# (Step 2.5), the Verify reply format (Step 5).
+JUDGE_PROMPT_RE = re.compile(r"USE\s*/\s*SKIP\s*/\s*UNJUDGED")
+VERIFY_PROMPT_RE = re.compile(r"supported\s*/\s*secondary\s*/\s*contradicted")
 
 
 def score_output(text, is_error):
@@ -165,10 +169,11 @@ def closing_lines(report):
                 items[k] = [sum(int(a) for a, _ in ms), sum(int(b) for _, b in ms)]
         ms = re.findall(r"unjudged (\d+)(?: \(([^)]*)\))?", raw)
         if ms:
-            fe = [int(x) for _, par in ms for x in re.findall(r"fetch-error (\d+)", par)]
-            pg = [int(x) for _, par in ms for x in re.findall(r"page (\d+)", par)]
-            items["unjudged"] = [sum(int(u) for u, _ in ms), sum(fe), sum(pg)]
-        items["judge_unavailable"] = "judge-unavailable" in raw
+            split = [sum(int(x) for _, par in ms for x in re.findall(k + r" (\d+)", par))
+                     for k in ("fetch-error", "page", "missing")]
+            items["unjudged"] = [sum(int(u) for u, _ in ms), *split]
+        for k in ("judge-unavailable", "judge-skipped", "verify-skipped"):
+            items[k.replace("-", "_")] = k in raw
         out["degraded"] = {"raw": raw, "none": raw.strip().lower() == "none", **items}
     return out
 
@@ -258,7 +263,11 @@ def extract(trace_path):
     # only a launch notice) its last text, else the task notification's summary.
     for i in agent_calls:
         text = handback.get(i) or final_text.get(i) or notified.get(i, "")
-        ev["agent_returns"].append({"tool_use_id": i, "chars": len(text), **agent_return(text)})
+        prompt = tool_use[i][2].get("prompt") or ""
+        task = "judge" if JUDGE_PROMPT_RE.search(prompt) else "verify" if VERIFY_PROMPT_RE.search(prompt) else None
+        ev["agent_returns"].append({"tool_use_id": i, "chars": len(text), "task": task,
+                                    "prompt_urls": sorted(set(URL_RE.findall(prompt))) if task == "judge" else [],
+                                    **agent_return(text)})
     # Files the skill keeps out of the main context: URL files and the full score table. A main-agent Bash or Read
     # that names one put (some of) it in the main context anyway.
     kept_out = {f["path"] for f in ev["url_files"]} | {r["path"] for r in ev["agent_returns"] if r["kind"] == "file"}
@@ -363,8 +372,16 @@ def cmd_ingest(result_path):
             if p.exists():
                 for u, t in arm_titles(json.loads(p.read_text())).items():
                     titles.setdefault(u, t)
-        todo = sorted((u for u in pool - labelled if alias.get(u, u) not in labelled),
-                      key=lambda u: hashlib.sha1(u.encode()).hexdigest())
+        # Copies of one paper (srcscore's merge_same_paper) share a label, so one of them is enough.
+        papers = {paper_key(u) for u in labelled} - {None}
+        todo = []
+        for u in sorted((u for u in pool - labelled if alias.get(u, u) not in labelled),
+                        key=lambda u: hashlib.sha1(u.encode()).hexdigest()):
+            k = paper_key(u)
+            if k not in papers:
+                todo.append(u)
+                if k:
+                    papers.add(k)
         (RUNS / f"{cid}.union.todo.json").write_text(json.dumps([{"url": u, "title": titles.get(u)} for u in todo], indent=1))
         print(f"{cid}: {len(pool)} arm URLs, {len(todo)} need labels")
 
@@ -373,8 +390,13 @@ def cmd_ingest(result_path):
 
 def fetch_aliases(scores):
     """norm(fetch address) -> norm(url) for rows the scorer gave another address to read (a doi.org link's
-    target), so a score-table row or a read of that address joins the URL the search returned."""
-    return {a: k for k, row in scores.items() if (a := norm(row.get("fetch_url") or k)) != k}
+    target), so a score-table row or a read of that address joins the URL the search returned. Copies of one
+    paper the scorer merged into a row (its `aliases`) join that row the same way."""
+    alias = {a: k for k, row in scores.items() if (a := norm(row.get("fetch_url") or k)) != k}
+    for k, row in scores.items():
+        for u in row.get("aliases", []):
+            alias.setdefault(norm(u), k)
+    return alias
 
 
 def is_doi_link(url):
@@ -438,38 +460,52 @@ def in_run_verdicts(ev, alias=None):
     return v
 
 
-def degraded_traced(ev):
-    """The `Degraded:` items as the trace shows them, to hold the report's own line against (SKILL.md Step 6)."""
+def degraded_traced(ev, mode=None):
+    """The `Degraded:` items as the trace shows them, to hold the report's own line against (SKILL.md Step 6).
+
+    A round is a score run's new SUPPORT rows; scoring the same URLs again is no new round. A judge attempt covers
+    a round when its prompt or its verdicts name one of them. A round no attempt covers was skipped; an attempt that
+    errored or answered fetch-error for everything left the judge unavailable; a SUPPORT row of a covered round that
+    no working reply answered is UNJUDGED `missing`. Verify is traced in academic mode only, where it is required.
+    """
     rets = ev.get("agent_returns", [])
     searchers = [r for r in rets if r["kind"] in ("file", "inline")]
-    judged = [r["verdicts"] for r in rets if r["kind"] == "judge"]
+    attempts = [r for r in rets if r["kind"] == "judge" or r.get("task") == "judge"]
+    failed_at = [r for r in attempts if r["kind"] != "judge" or all(j["kind"] == "fetch-error" for j in r["verdicts"])]
+    usable = [r for r in attempts if r not in failed_at]
     scored = [r for r in ev.get("score_runs", []) if r["exit"] == 0]
     failed = [r["lookups_failed"] for r in scored if r["lookups_failed"]]
-    all_fetch_error = [v for v in judged if all(j["kind"] == "fetch-error" for j in v)]
-    usable = [v for v in judged if v not in all_fetch_error]
-    # A round is a score run; its judge was unavailable when none of the SUPPORT rows it added got a verdict.
-    # Scoring the same URLs again is then no new round, and a round whose judge skipped one URL is not unavailable.
-    judged = {norm(j["url"]) for v in usable for j in v}
     rounds, seen = [], set()
     for r in scored:
         sup = {norm(row["url"]) for row in r["rows"] if row["verdict"] == "SUPPORT"}
         rounds.append(sup - seen)
         seen |= sup
-    un = [j for v in usable for j in v if j["verdict"] == "UNJUDGED"]
+
+    def named(rs):
+        return {norm(u) for r in rs for u in r.get("prompt_urls", []) + [j["url"] for j in r.get("verdicts", [])]}
+
+    judged = {norm(j["url"]) for r in usable for j in r["verdicts"]}
+    covered, worked = named(attempts), named(usable)
+    missing = set().union(*(sup - judged for sup in rounds if sup & worked))
+    un = [j for r in usable for j in r["verdicts"] if j["verdict"] == "UNJUDGED"]
+    main_read = any(f["role"] == "main" and f["ok"] for f in ev.get("fetches", []))
     return {"step1_inline": [sum(r["kind"] == "inline" for r in searchers), len(searchers)],
             "lookups_failed": [sum(f for f, _ in failed), sum(t for _, t in failed)],
-            "judge_unavailable": bool(all_fetch_error) or any(sup and not sup & judged for sup in rounds),
-            "unjudged": [len(un), sum(j["kind"] == "fetch-error" for j in un), sum(j["kind"] == "page" for j in un)]}
+            "judge_unavailable": bool(failed_at),
+            "judge_skipped": any(sup and not sup & covered for sup in rounds),
+            "unjudged": [len(un) + len(missing), sum(j["kind"] == "fetch-error" for j in un),
+                         sum(j["kind"] == "page" for j in un), len(missing)],
+            "verify_skipped": mode == "academic" and main_read and not any(r.get("task") == "verify" for r in rets)}
 
 
-def degraded_check(ev):
+def degraded_check(ev, mode=None):
     reported = (ev.get("closing") or {}).get("degraded")
-    traced = degraded_traced(ev)
+    traced = degraded_traced(ev, mode)
     if reported is None:
         return {"line_present": False, "traced": traced}
     agree = {"step1_inline": (reported.get("step1_inline") or [0])[0] == traced["step1_inline"][0],
              "lookups_failed": (reported.get("lookups_failed") or [0])[0] == traced["lookups_failed"][0],
-             "judge_unavailable": reported["judge_unavailable"] == traced["judge_unavailable"],
+             **{k: bool(reported.get(k)) == traced[k] for k in ("judge_unavailable", "judge_skipped", "verify_skipped")},
              # Traced UNJUDGED already leaves out rounds whose judge was unavailable, as the report must.
              "unjudged": (reported.get("unjudged") or [0])[0] == traced["unjudged"][0]}
     return {"line_present": True, "reported": reported, "traced": traced, "agree": agree}
@@ -566,7 +602,7 @@ def analyze_arm(ev, labels, scores, q):
         "main_reads_by_in_run_verdict": dict(Counter(verdicts.get(u, "not-in-table") for u in read_urls)),
         "support_without_verdict": len(support), "support_judged": len(judged),
         "peeks": ev.get("peeks", []),
-        "degraded": degraded_check(ev), "closing_summary": (ev.get("closing") or {}).get("summary"),
+        "degraded": degraded_check(ev, q["mode"]), "closing_summary": (ev.get("closing") or {}).get("summary"),
         "score_exits": [r["exit"] for r in ev.get("score_runs", [])],
         "main_context_chars": {"score_tables": sum(r["chars"] for r in ev.get("score_runs", []) if r["role"] == "main"),
                                **{"agent_" + k: sum(r["chars"] for r in rets if r["kind"] == k)

@@ -17,7 +17,7 @@ SKILL_PATH = os.path.join(SKILL, "SKILL.md")
 RUBRIC_PATH = os.path.join(SKILL, "references", "judge-rubric.md")
 PENDING_PATH = os.path.join(ROOT, "handoff", "be76cb7418ff8904-pending-evals.md")
 
-DEGRADED_ITEMS = ("step1-inline", "lookups-failed", "judge-unavailable", "unjudged")
+DEGRADED_ITEMS = ("step1-inline", "lookups-failed", "judge-unavailable", "judge-skipped", "unjudged", "verify-skipped")
 
 
 def read(p):
@@ -208,7 +208,9 @@ class SkillStep6ClosingLines(unittest.TestCase):
             "step1-inline <k>/<n>",
             "lookups-failed <f>/<t>",
             "judge-unavailable",
-            "unjudged <u> (fetch-error <f>, page <p>)",
+            "judge-skipped",
+            "unjudged <u> (fetch-error <f>, page <p>, missing <m>)",
+            "verify-skipped",
         ])
         m = {t.split()[0]: norm(d) for t, d in bullets}
         self.assertRegex(m["step1-inline"], r"search subagent")
@@ -220,7 +222,12 @@ class SkillStep6ClosingLines(unittest.TestCase):
         self.assertIn("lookup", m["lookups-failed"])
         self.assertIn("step 2.5", m["judge-unavailable"])
         self.assertRegex(m["judge-unavailable"], r"no verdicts")
-        self.assertRegex(m["judge-unavailable"], r"skipped[^.]*subagent")
+        self.assertRegex(m["judge-unavailable"], r"launched")
+        self.assertRegex(m["judge-unavailable"], r"no subagent")
+        self.assertIn("step 2.5", m["judge-skipped"])
+        self.assertRegex(m["judge-skipped"], r"subagent could be launched")
+        self.assertIn("missing", m["unjudged"])
+        self.assertIn("academic", m["verify-skipped"])
         self.assertIn("support", m["unjudged"])
         self.assertIn("unjudged", m["unjudged"])
         self.assertIn("reason", m["unjudged"])

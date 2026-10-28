@@ -17,14 +17,21 @@ policy's output reaches the judge, the policy grades its own exam.
 
 ## Runs (per question)
 
-1. **Blind judge** (Workflow agent, Opus 5.5, effort medium, no skill/plugin tools, no policy files).
-   Plain WebSearch, 40-60 URLs, each labelled `useful` / `marginal` / `junk` against the question, with
-   `vendor_interest`, `basis` (`fetched` | `snippet`), `rank`, and a short reason. Writes
-   `runs/<id>.judge.json` (with `judged_at`, the run date) and `runs/<id>.urls.json` (URL/title/search-result
-   date). These two are tracked: they are the regression set (see "Run log").
-   `expansion: true` questions are judged in two rounds: round-2 keywords come only from the body text of
-   round-1 pages the judge fetched, recorded as `expansion_keywords` `{keyword, source_url}`; entries carry `round`.
-2. **Arms** (`claude plugin eval`, one case per question, `policy-eval/arms/<id>/case.yaml`, Opus 5.5).
+1. **Blind judge** (Workflow agents, no skill/plugin tools, no policy files), collection apart from labelling:
+   - *Collection* (Haiku): plain WebSearch, 40-60 URLs, no labels. Writes `runs/<id>.urls.json` (URL/title/
+     search-result date/`rank`). `expansion: true` questions are collected in two rounds: round-2 keywords come
+     only from the body text of round-1 pages the collector fetched, recorded as `expansion_keywords`
+     `{keyword, source_url}`; entries carry `round`.
+   - *Labelling* (Sonnet 5.5, effort medium): every URL judged on its own page text, never on a search summary.
+     The text is the raw page from `fidelity/pagetext.py` (curl, no model), and WebFetch only when that yields
+     none (PDF, blocked). The labeller sees at most the first 20k characters (`truncated: true` when cut). Raw comes first because WebFetch's summariser is Haiku, the same one the skill's
+     Step 2.5 judge reads through. Not a Haiku labeller either, for the same reason. Each URL is labelled
+     `useful` / `marginal` / `junk` against the question, with `vendor_interest`, `basis: fetched`,
+     `text_source` (`raw` | `webfetch`) and a short reason. A URL with no text either way goes to the file's
+     `unreachable` list (url, reason) and is not measured. Writes `runs/<id>.judge.json` (with `judged_at`,
+     the run date).
+   `urls.json` and `judge.json` are tracked: they cannot be recreated.
+2. **Arms** (`claude plugin eval`, one case per question, `policy-eval/arms/<id>/case.yaml`, Sonnet 5.5).
    The same prompt runs twice: with the plugin from this repo, and with no plugin (temp HOME/config, no
    CLAUDE.md in either arm). The prompt names "scored web search" only as words, so the baseline is an
    ordinary research agent. `tool_used: Skill` records whether the skill fired in the with-arm.
@@ -40,8 +47,8 @@ policy's output reaches the judge, the policy grades its own exam.
    `runs/`, extracts events into `runs/<id>.<arm>.events.json`, and lists in `runs/<id>.union.todo.json` the URLs
    that reached either arm's main context (`listed`, `exposed`, `read`) and the blind judge has not labelled; a
    URL only a subagent saw is never measured against a label.
-4. **Union labeller** (Workflow agent, same model and rules as 1). Labels the todo URLs, shuffled and without
-   arm information, by the same criteria → `runs/<id>.union.judge.json`.
+4. **Union labeller** (same model, page-text rules and file format as the labelling in 1). Labels the todo URLs,
+   shuffled and without arm information → `runs/<id>.union.judge.json`.
 5. **Analyze** (`arms.py analyze`, `contrast.py <id>`). Scores every URL with the real scorer and joins.
 
 ## Exposure levels
@@ -167,7 +174,10 @@ result against its date.
 | 2026-10-26 | Environment probes (`policy-eval/probe/`). Bash reads the loaded skill's folder but not the rest of the plugin (`policy-eval/` is denied); scorer hosts reachable only with `WebFetch(domain:…)` grants; `/tmp` neither writable nor readable, `$TMPDIR` and the working directory both; judge subagent given only `judge-rubric.md` fetched, answered one line per URL, tagged UNJUDGED as `page:` (PDF, 404) or `fetch-error:` (unresolvable host), and re-read only the `fetch-error` URL once | not tracked; summary in `handoff/be76cb7418ff8904-pending-evals.md` |
 | 2026-10-26 | Scorer under the eval proxy (`p4-score-load`) and ac1 with-arm end to end. The proxy cut 1-3 of 12 serial OpenAlex replies mid-body, which crashed `srcscore.py` (`IncompleteRead`) on a real Step 1 pool; it now retries a cut-off reply once and counts a second failure as unreachable | not tracked |
 | 2026-10-26 | Arms, 20 pilot questions + od9, with vs without, main agent Haiku (`--model claude-haiku-5-5`, `-j 2`), so not comparable with the Opus pilot. Unlabelled URLs not yet labelled (union labeller pending), so no contamination or B. With-arm reads: PRIMARY 85, USE-judged SUPPORT 48, 2 outside the rules; `Degraded:` agreed with the trace in 20 of 21. Main opened URL files or the full table in 11 of 21. Official pages read in all 5 od questions, od9 through `official-claimed` + USE. Cost $4.49 with, $0.96 without | `runs/pilot.summary.json`, `runs/*.arms.json` (not tracked); pilot artefacts moved to `runs/pilot-2026-10-24/` |
+| 2026-10-27 | Models moved off Opus: arms main and blind judge / union labeller Sonnet. The 2026-10-24 Opus labels (`runs/*.judge.json`, `runs/*.urls.json`) were dropped from the repo, not re-judged; they stay in git history and locally in `runs/pilot-2026-10-24/` | — |
+| 2026-10-27 | Arms, 20 pilot questions + od9, with vs without, main agent Sonnet (`-j 2`, 28 min). No labels yet (663 URLs in union todo), so no contamination or B. Skill fired 21/21. With-arm reads: PRIMARY 63, USE-judged SUPPORT 31, 3 outside the rules (od2 read 2 SUPPORT unjudged, od1 1 not in table). Judge: USE 38, SKIP 47, UNJUDGED `page:` 21, `fetch-error:` 0; 17 SUPPORT left unjudged in 4 questions, 3 of them reporting `judge-unavailable` without trying the judge (ac2, co3, od2). Peeks 0/21. Score tables + subagent replies put 73k chars in main context (3.5k per question). `Degraded:` agreed with the trace in 20/21 (na3 under-reported lookups). Academic Step 5 Verify ran as a subagent in 0/4 (ac3, ac6 inline, ac1, ac2 skipped), so no `trace` round. Cost $6.45 with ($3.94 Sonnet, $2.51 Haiku), $4.14 without. E8 (ac1, no host grants, with-arm only): main stopped at scorer exit 4, named the five hosts, did not use `--no-net` or read unscored sources | `runs/*.arms.json`, `runs/pilot.summary.json` (not tracked) |
 
-The tracked labels are a regression set: re-run `contrast.py` after a policy change to see what it newly passes
-or drops. They are not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes
-new questions, judged in a new dated round.
+Re-run `contrast.py` on the tracked labels after a policy change to see what it newly passes or drops. Labels are
+not where new weaknesses are found; tuning to 20 questions overfits them. Finding gaps takes new questions, judged
+in a new dated round. The eval is still being built, so a change of labeller may drop the earlier labels instead
+of keeping them as a baseline.

@@ -15,7 +15,7 @@ This skill filters sub-standard sources before the main agent reads them when hi
 2.5. Judge    (lightweight subagent)        → SUPPORT only: USE / SKIP / UNJUDGED
 3.   Read     (main agent)                        → PRIMARY + USE-judged SUPPORT only
 4.   Re-search (loop back to 1 if sources are thin)
-5.   Verify / follow-up (optional; default in academic) → claims vs. evidence, trace to originals
+5.   Verify / follow-up (required in academic; optional otherwise) → claims vs. evidence, trace to originals
 6.   Write    → every claim tagged with source + score
 ```
 
@@ -50,6 +50,8 @@ SCORE VERDICT T  SIGNALS                     URL  TITLE
 -- 47 sources | PRIMARY 1 | SUPPORT 1 | SKIM 9 | WEAK 12 | DROP 22 | BLOCKED 2
 ```
 
+Copies of one paper (arXiv abs/pdf/html pages and versions, one DOI or PMID) and repeated URLs share one row, the best-scored copy; the footer ends with `merged k` when k rows were folded in.
+
 These rows are everything you choose from. The URL files and any `--full-out` table stay out of the main context: do not open, print, or grep them, not even for titles or for what scored below SUPPORT. If the rows are too thin, that is Step 4.
 
 The URL column is the address to fetch: links WebFetch cannot follow are rewritten (doi.org links to the page they resolve to, old PMC links to `pmc.ncbi.nlm.nih.gov`, recent arXiv abs/pdf pages to their HTML full text).
@@ -65,9 +67,12 @@ The URL column is the address to fetch: links WebFetch cannot follow are rewritt
 
 ### Step 2.5 — Judge: vet SUPPORT sources
 
-Hand every SUPPORT URL, with the research question, to a **lightweight subagent** (same model rule as Step 1, no `fork`) and give it `references/judge-rubric.md` verbatim as its only instructions. It reads each page with `WebFetch` and returns only one line per URL: `url | USE/SKIP/UNJUDGED | reason`. Page text never reaches you. No sub agent fallback: skip this step, read SUPPORT sources as before, and put `judge-unavailable` in the report's `Degraded:` line. With no SUPPORT rows there is nothing to judge, which is not a shortfall.
+Whenever there are SUPPORT rows, this step is required: hand every SUPPORT URL, with the research question, to a **lightweight subagent** (same model rule as Step 1, no `fork`) and give it `references/judge-rubric.md` verbatim as its only instructions. It reads each page with `WebFetch` and returns only one line per URL: `url | USE/SKIP/UNJUDGED | reason`. Page text never reaches you. With no SUPPORT rows there is nothing to judge, which is not a shortfall.
+
+No sub agent fallback: only when no subagent can be launched at all, skip this step, read SUPPORT sources as before, and put `judge-unavailable` in the report's `Degraded:` line. A run that skipped it otherwise puts `judge-skipped` there, never `judge-unavailable`.
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
+- Check the reply against the URLs you sent. Send any URL it left out to a judge once more, with the same rubric. A URL still without a verdict is UNJUDGED with the reason `missing:`.
 - A verdict on a source is final for this run: SKIP and UNJUDGED sources stay out of Step 3, and you do not open them to second-guess the judge. An UNJUDGED reason starting `page:` means the site gave nothing to judge; `fetch-error:` means WebFetch failed on it twice. Some sources failing to fetch is still a set of verdicts.
 - A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED with `fetch-error`: the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line.
 
@@ -88,13 +93,13 @@ Two re-search rounds max. Beyond that, **ask the user explicitly** before search
 
 Follow-up: as with any web search, terms found in sources you read may be searched. Never run that search yourself; send it through Step 1 and Steps 2-2.5. It counts toward the two re-search rounds.
 
-Verify: in `academic` mode, by default. In other modes, only when the user has stressed accuracy, or the report carries a lot of figures. Give the URLs you read in Step 3 to a **lightweight subagent** and have it do **this and nothing else**:
+Verify: required in `academic` mode whenever Step 3 read anything; a run that did not run it puts `verify-skipped` in the report's `Degraded:` line. In other modes, only when the user has stressed accuracy, or the report carries a lot of figures. Give the URLs you read in Step 3 to a **lightweight subagent** and have it do **this and nothing else**:
 
 > For each figure or claim: (a) does this document actually state that figure, (b) is this document the original source of the figure or is it citing someone else, (c) are sample size, time period, and measurement method stated. Answer only in the format `claim | supported/secondary/contradicted | location of evidence`.
 
-When a figure turns out to be secondary, the document you read is not its source. Take the URL of the original it cites — a new source, not yet scored — and run that through steps 2-2.5 (when it names the original without a URL, find it through Step 1); if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source. Tracing originals is one round of its own (`trace`); it does not count toward the two re-search rounds.
+When a figure turns out to be secondary, the document you read is not its source, and tracing it is required. Take the URL of the original it cites — a new source, not yet scored — and run that through steps 2-2.5 (when it names the original without a URL, find it through Step 1); if it passes, read it and attribute the figure to it. If the original is paywalled, dead, or fails step 2, keep the figure attributed to the document you read and mark it as a re-report — never present a re-report as a primary source. Tracing originals is one round of its own (`trace`); it does not count toward the two re-search rounds.
 
-No sub agent fallback: run the same claim-vs-evidence check yourself instead of delegating it. This step doesn't reintroduce the context-pollution problem Step 1 guards against — the sources are already open and being read — so there's no quality loss from doing it inline.
+No sub agent fallback: only when no subagent can be launched, run the same claim-vs-evidence check yourself instead of delegating it. This step doesn't reintroduce the context-pollution problem Step 1 guards against — the sources are already open and being read — so there's no quality loss from doing it inline.
 
 ### Step 6 — Write
 
@@ -108,11 +113,13 @@ Degraded: none
 Keywords: <round>: q1, q2 / <round>: q3
 ```
 
-`j` counts the SUPPORT sources the judge kept out (SKIP and UNJUDGED); it is 0 when the judge was unavailable, since those sources were read. `Degraded:` is always there, so a reader can tell a clean run from a line left out. It lists, joined by ` · ` and summed over all rounds, every way this run fell short of the pipeline, and says `none` only when nothing did:
+`j` counts the SUPPORT sources the judge kept out (SKIP and UNJUDGED); it is 0 when the judge was unavailable or skipped, since those sources were read. `Degraded:` is always there, so a reader can tell a clean run from a line left out. It lists, joined by ` · ` and summed over all rounds, every way this run fell short of the pipeline, and says `none` only when nothing did:
 - `step1-inline <k>/<n>`: k of n search subagents returned their records instead of writing the file.
 - `lookups-failed <f>/<t>`: srcscore's stderr reported f of t external lookups unreachable, so those rows were scored without their signals.
-- `judge-unavailable`: Step 2.5 gave no verdicts, or was skipped for lack of subagents.
-- `unjudged <u> (fetch-error <f>, page <p>)`: SUPPORT sources the judge left UNJUDGED, by reason. Not listed in a round whose judge was unavailable; `judge-unavailable` covers it.
+- `judge-unavailable`: the Step 2.5 judge was launched and gave no verdicts, or no subagent could be launched at all.
+- `judge-skipped`: SUPPORT rows got no Step 2.5 judge although a subagent could be launched.
+- `unjudged <u> (fetch-error <f>, page <p>, missing <m>)`: SUPPORT sources the judge left UNJUDGED, by reason; `missing` counts those it left unanswered twice. Not listed in a round whose judge was unavailable; `judge-unavailable` covers it.
+- `verify-skipped`: `academic` mode, and Step 5 Verify did not run.
 
 `Keywords:` lists the keywords given to Step 1, in round order including re-search, follow-up and trace rounds.
 
