@@ -6,10 +6,10 @@ import argparse
 import json
 import sys
 
-from .fetchers import CACHE_DIR, LOOKUP_HOSTS, STATS, Cache
+from .fetchers import CACHE_DIR, FAILURES, LOOKUP_HOSTS, STATS, Cache
 from .io_format import parse_input, render_compact, render_md, render_table
 from .policy import PolicyError, apply_mode, load_policy, validate_policy
-from .scoring import score_many
+from .scoring import merge_same_paper, score_many
 
 __all__ = ["main"]
 
@@ -138,7 +138,8 @@ def main(argv=None):
 
     cache = Cache(CACHE_DIR, float(policy["defaults"].get("cache_ttl_days", 14)))
     workers = a.workers or int(policy["defaults"].get("workers", 8))
-    rows = score_many(items, policy, cache, field, not a.no_net, workers)
+    FAILURES.clear()
+    rows = merge_same_paper(score_many(items, policy, cache, field, not a.no_net, workers))
     cache.flush()
 
     # A blocked or offline API would otherwise degrade every academic source to
@@ -146,12 +147,15 @@ def main(argv=None):
     if STATS["failed"]:
         msg = ("srcscore: %d of %d external lookups could not be reached"
                % (STATS["failed"], STATS["lookups"]))
+        by = "srcscore: failed lookups: " + ", ".join(
+            "%s %s x%d" % (host, reason, n) for (host, reason), n in
+            sorted(FAILURES.items(), key=lambda kv: (-kv[1], kv[0])))
         if STATS["failed"] * 2 >= STATS["lookups"]:
             print("%s.\nScores would rest on the domain tier alone and mislead. Allow network "
-                  "access to %s, then run again." % (msg, ", ".join(LOOKUP_HOSTS)), file=sys.stderr)
+                  "access to %s, then run again.\n%s" % (msg, ", ".join(LOOKUP_HOSTS), by), file=sys.stderr)
             return 4
         print("%s; rows scored without their signals are flagged `lookup-failed`, and a doi.org "
-              "link that could not be resolved keeps its doi.org address." % msg, file=sys.stderr)
+              "link that could not be resolved keeps its doi.org address.\n%s" % (msg, by), file=sys.stderr)
 
     rows.sort(key=lambda r: -r["score"])
     if a.min is not None:

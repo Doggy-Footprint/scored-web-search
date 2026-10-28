@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from .fetchers import FETCH_FAILED, arxiv_lookup, doi_target, github_repo, hn_item, hn_points, \
     openalex_by_doi, openalex_by_pmid
 from .identifiers import arxiv_id_age_years, extract_hn_item_id, extract_ids, fetch_url, \
-    extract_person_handle
+    extract_person_handle, paper_key
 from .policy import blocked_name, signal_enabled, tier_base, verdict_for
 from .util import age_years, date_age_years, now_year_frac, host_matches, host_path, human, norm_host
 
@@ -18,7 +18,7 @@ __all__ = [
     "match_tier", "citation_points", "recency_points", "engagement_points",
     "engagement_floor_points", "path_penalty", "regex_path_penalty", "version_penalty",
     "variant_penalty",
-    "trusted_person_points", "official_claim", "score_one", "score_many",
+    "trusted_person_points", "official_claim", "score_one", "score_many", "merge_same_paper",
 ]
 
 
@@ -522,3 +522,32 @@ def score_many(items, policy, cache, field, use_net, workers=8):
         rows = list(ex.map(
             lambda it: score_one(it, policy, cache, field, use_net), items))
     return rows
+
+
+def _read_rank(row):
+    """arXiv's HTML rendering is the full text; its abs page only the abstract; a PDF reads worst."""
+    path = urllib.parse.urlsplit(row["fetch_url"]).path
+    for i, part in enumerate(("/html/", "/abs/", "/pdf/")):
+        if path.startswith(part):
+            return i
+    return 3
+
+
+def merge_same_paper(rows):
+    """One row per paper (`paper_key`) and per repeated URL, so copies of one paper do not take
+    several table slots and judge calls. The best-scored copy stays, the most readable on a tie;
+    it lists the others under `aliases` and how many rows it absorbed under `merged`."""
+    groups = {}
+    for i, r in enumerate(rows):
+        groups.setdefault(paper_key(r["url"]) or ("url:" + r["url"]), []).append((i, r))
+    out = []
+    for members in groups.values():
+        i, keep = min(members, key=lambda m: (-m[1]["score"], _read_rank(m[1]), m[0]))
+        if len(members) > 1:
+            aliases = []
+            for _, r in members:
+                if r["url"] != keep["url"] and r["url"] not in aliases:
+                    aliases.append(r["url"])
+            keep = dict(keep, aliases=aliases, merged=len(members) - 1)
+        out.append((i, keep))
+    return [r for _, r in sorted(out, key=lambda m: m[0])]

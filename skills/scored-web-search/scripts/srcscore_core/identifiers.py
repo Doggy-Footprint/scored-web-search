@@ -10,7 +10,7 @@ from .util import age_years, host_path, norm_host
 __all__ = [
     "ARXIV_RE", "DOI_RE", "GITHUB_RE", "PUBMED_RE", "OPENREVIEW_RE", "BIORXIV_RE",
     "GITHUB_NON_REPO", "HN_ITEM_RE", "extract_ids", "arxiv_id_age_years",
-    "extract_hn_item_id", "extract_person_handle", "fetch_url",
+    "extract_hn_item_id", "extract_person_handle", "fetch_url", "paper_key",
 ]
 
 ARXIV_RE = re.compile(
@@ -62,6 +62,28 @@ def extract_ids(url: str) -> dict:
     if m:
         ids["openreview"] = m.group(1)
     return ids
+
+
+_ARXIV_DOI_RE = re.compile(r"^10\.48550/arxiv\.(.+)$", re.I)
+
+
+def paper_key(url: str):
+    """The paper a URL is a copy of, from identifiers in the URL alone, or None.
+
+    arXiv abs/pdf/html pages and versions, and the arXiv DOI, are one paper; so are
+    a doi.org link and a publisher page carrying the same DOI. Pattern-only: a page
+    with no identifier in its URL (a Semantic Scholar page) is never grouped.
+    """
+    ids = extract_ids(url)
+    if "arxiv" in ids:
+        return "arxiv:" + ids["arxiv"].lower()
+    if "doi" in ids:
+        doi = ids["doi"].lower()
+        m = _ARXIV_DOI_RE.match(doi)
+        return ("arxiv:" + re.sub(r"v\d+$", "", m.group(1))) if m else "doi:" + doi
+    if "pmid" in ids:
+        return "pmid:" + ids["pmid"]
+    return None
 
 
 _ARXIV_NEW_ID_RE = re.compile(r"^(\d{2})(\d{2})\.\d{4,5}$")

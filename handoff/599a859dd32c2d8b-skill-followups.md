@@ -1,28 +1,14 @@
 # Handoff: skill 후속 작업과 배포
 
-2026-10-26 arms 실행(21문항, main Haiku), 2026-10-27 arms 실행(main Sonnet), probe에서 드러났지만 아직 손대지 않은 skill 동작 문제와 배포에 남은 일이다. 평가 항목은 `handoff/be76cb7418ff8904-pending-evals.md`에 있다. 여기 항목을 고치면 그쪽 다음 실행 묶음에서 함께 잰다.
+2026-10-26 arms 실행(21문항, main Haiku), 2026-10-27 arms 실행(main Sonnet), probe에서 드러난 skill 동작 문제를 어떻게 반영했는지와 배포에 남은 일이다. 평가 항목은 `handoff/be76cb7418ff8904-pending-evals.md`에 있다.
 
 ## skill 동작
-
-### judge가 SUPPORT 일부를 빠뜨림
-- 현상: nw6에서 judge subagent가 SUPPORT 20건 중 2건에 답하지 않았다. 2026-10-27에는 nw2에서 14건 중 5건이 판정 없이 남았다. main은 그중 1건을 판정 없이 읽었다(`main_reads_by_in_run_verdict`의 `SUPPORT`). 전체로는 SUPPORT 165건 중 7건이 판정 없이 남았다(`support_without_verdict`).
-- SKILL.md Step 2.5는 판정이 없는 URL을 어떻게 할지 말하지 않는다. "답에 없는 URL은 judge에게 한 번 다시 보낸다"와 "UNJUDGED처럼 Step 3에서 뺀다" 중 정한다.
-
-### main이 Step 2.5 judge를 시도하지 않고 건너뜀
-- 현상(2026-10-27, Sonnet main): ac2, co3, od2에서 main이 judge subagent를 띄우지 않았다. 그런데도 `Degraded:`에는 `judge-unavailable`이라고 적었다. 판정 없이 남은 SUPPORT는 ac2 3건, co3 1건, od2 8건이고, od2는 그중 2건을 읽었다. `judge-unavailable`은 subagent를 쓸 수 없을 때를 위한 값인데, 단계를 생략할 때 쓰였다.
-- SKILL.md Step 2.5에 "subagent를 띄울 수 있으면 반드시 띄운다"를 분명히 적는다. `judge-unavailable`은 시도가 실패했을 때만 쓰게 한다. 생략하면 그 사실이 따로 드러나게 할지도 정한다.
-
-### academic Step 5 Verify가 돌지 않음
-- 현상(2026-10-27, Sonnet main): academic 4문항 모두 Verify subagent를 띄우지 않았다. ac3와 ac6은 main이 inline으로 확인했다고 적었고, ac1과 ac2는 건너뛰었다. ac2는 `Degraded:`에 "Step 5 not run"이라고 적었다. 그래서 2차 수치의 원 출처 추적(`trace` 라운드)이 한 번도 없었고, pending-evals E4는 측정할 것이 없었다.
-- SKILL.md Step 5가 academic에서 기본이라는 점과 subagent로 한다는 점이 지켜지지 않는다. inline 대체를 허용할지, `Degraded:`에 올릴 항목(예: `verify-skipped`)을 둘지 정한다.
-
-### 같은 논문이 여러 행을 차지함
-- 현상: arXiv `abs`·`pdf`·`html`·버전 접미사(`v1`), 출판사 주소, S2 페이지가 같은 논문으로 따로 채점된다. ac1에서는 2307.13702가 SUPPORT 4행이었다. 표의 자리와 judge 호출이 낭비된다. na6에서 표에는 `pdf`가 있는데 main이 `abs`를 읽어 표 밖 읽기로 잡혔다.
-- 후보: `srcscore.py`가 식별자(arXiv id, DOI)가 같은 행을 하나로 묶고 가장 읽기 좋은 주소를 남긴다. `arms.norm`도 같은 기준으로 묶어야 label과 이어진다.
-
-### 조회 실패 원인 미확인
-- 현상: 2026-10-26 arms with-arm의 `lookups-failed`가 합계 39건(문항별 최대 12/69)이다. S2 API의 429(키 없이 부르면 자주 남)인지, eval proxy의 응답 끊김이 재시도 뒤에도 남은 것인지 모른다. `srcscore.py` stderr는 host별 실패 수를 말하지 않는다.
-- 할 일: 실패를 host와 사유별로 세서 stderr에 남기거나, `--format json` 행에 실패 host를 적는다. S2라면 `SRCSCORE_S2_KEY` 같은 키 지원이나 OpenAlex 우선을 검토한다.
+2026-10-26·27 arms와 probe에서 드러난 다섯 문제는 2026-10-28에 반영했다. 효과는 `handoff/be76cb7418ff8904-pending-evals.md` E9에서 다음 arms 때 잰다.
+- **judge 누락:** 답에 없는 SUPPORT URL은 judge에게 한 번 더 보낸다. 그래도 없으면 UNJUDGED `missing:`이다(SKILL.md Step 2.5). `Degraded:`는 `unjudged <u> (fetch-error <f>, page <p>, missing <m>)`다. `arms.degraded_traced`는 judge를 부른 라운드에서 판정이 없는 SUPPORT를 `missing`으로 센다.
+- **judge 생략:** SUPPORT가 있고 subagent를 띄울 수 있으면 Step 2.5는 필수다. `judge-unavailable`은 띄운 judge가 판정을 못 냈거나 subagent가 아예 없을 때만 쓴다. 그 밖의 생략은 `judge-skipped`다. arms는 Agent prompt의 rubric 답 형식(`USE/SKIP/UNJUDGED`)으로 judge 호출을 알아보고, 라운드의 SUPPORT URL을 prompt나 판정에 하나도 담지 않은 라운드를 skipped로 센다.
+- **academic Verify:** academic에서 Step 3이 읽은 것이 있으면 Step 5 Verify는 필수다. subagent를 쓸 수 있으면 subagent, 없을 때만 inline이다. 2차 수치의 trace도 필수다. 돌리지 않으면 `verify-skipped`다. arms는 prompt의 `supported/secondary/contradicted` 형식으로 Verify 호출을 알아본다. eval에서는 subagent를 늘 쓸 수 있으므로 inline 대체도 skipped로 잡힌다.
+- **같은 논문 중복:** `srcscore`가 URL의 식별자(arXiv id, DOI, PMID, arXiv DOI는 arXiv id로)와 같은 URL 반복을 한 행으로 묶는다(`scoring.merge_same_paper`, `identifiers.paper_key`). 점수가 가장 높은 행이 남고, 같으면 arXiv html > abs > pdf 순이다. compact footer 끝에 `merged k`가 붙고, json 행에는 `aliases`와 `merged`가 붙는다. arms는 `fetch_aliases`로 `aliases`를 남은 행에 잇고, ingest todo는 이미 라벨된 논문의 다른 사본을 뺀다. 식별자가 URL에 없는 S2 페이지는 묶지 않는다.
+- **조회 실패 원인:** `srcscore`가 기존 경고 줄 아래에 `srcscore: failed lookups: <host> <reason> x<n>, ...`을 남긴다(사유: `http-<code>`, `timeout`, `cut-off`, `unreachable`, `bad-json`). OpenAlex 우선은 이미 되어 있었다(`arxiv_lookup`). `SRCSCORE_S2_KEY` 같은 키 지원은 다음 arms에서 실패가 S2 429로 확인되면 정한다.
 
 ## 배포
 - **PR:** `setup/eval` → master.

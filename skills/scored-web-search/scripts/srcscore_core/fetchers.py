@@ -9,6 +9,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections import Counter
 from threading import Lock
 
 from .util import date_age_years
@@ -25,7 +26,7 @@ CACHE_DIR = os.environ.get(
 )
 
 __all__ = [
-    "VERSION", "UA", "MAILTO", "LOOKUP_HOSTS", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS",
+    "VERSION", "UA", "MAILTO", "LOOKUP_HOSTS", "CACHE_DIR", "Cache", "NullCache", "FETCH_FAILED", "STATS", "FAILURES",
     "http_json", "openalex_by_doi", "openalex_by_pmid", "s2_by_arxiv", "arxiv_lookup",
     "github_repo", "hn_item", "hn_points", "doi_target",
 ]
@@ -83,14 +84,17 @@ class NullCache(Cache):
 FETCH_FAILED = object()   # transport error: "we could not ask", not "no such record"
 
 STATS = {"lookups": 0, "failed": 0}
+# (host, reason) -> count of failed lookups. A total alone cannot tell S2 throttling from a proxy cutting replies off.
+FAILURES = Counter()
 _STATS_LOCK = Lock()
 
 
-def _count(failed: bool):
+def _count(url: str, reason=None):
     with _STATS_LOCK:
         STATS["lookups"] += 1
-        if failed:
+        if reason:
             STATS["failed"] += 1
+            FAILURES[(urllib.parse.urlsplit(url).netloc.lower(), reason)] += 1
 
 
 def http_json(url: str, timeout: float = 12.0):
@@ -109,21 +113,32 @@ def http_json(url: str, timeout: float = 12.0):
                 # A reply cut off mid-body. Sandbox proxies do this now and then, so ask once more.
                 if attempt:
                     raise
-        _count(False)
         if status != 200:
+            _count(url)
             return None
-        return json.loads(body)
+        j = json.loads(body)
     except urllib.error.HTTPError as e:
         # 404/410 = genuinely absent. 401/403/407/429/5xx = we were refused or
         # throttled, which is a reachability problem, not evidence of absence.
         if e.code in (401, 403, 407, 429) or e.code >= 500:
-            _count(True)
+            _count(url, "http-%d" % e.code)
             return FETCH_FAILED
-        _count(False)
+        _count(url)
         return None
-    except (urllib.error.URLError, OSError, ValueError, TimeoutError, http.client.HTTPException):
-        _count(True)
+    except (http.client.HTTPException, ConnectionResetError):
+        _count(url, "cut-off")
         return FETCH_FAILED
+    except ValueError:
+        _count(url, "bad-json")
+        return FETCH_FAILED
+    except TimeoutError:
+        _count(url, "timeout")
+        return FETCH_FAILED
+    except (urllib.error.URLError, OSError) as e:
+        _count(url, "timeout" if isinstance(getattr(e, "reason", None), TimeoutError) else "unreachable")
+        return FETCH_FAILED
+    _count(url)
+    return j
 
 
 def _oa(path: str) -> str:

@@ -9,7 +9,8 @@ from the implementation. Under test:
 2. cmd_ingest: <cid>.union.todo.json leaves out a target whose doi.org link <cid>.judge.json labelled; only those
    doi.org links are scored, with the case's mode and field.
 3. degraded_check's `unjudged` agreement: usable rounds' UNJUDGED verdicts must be reported.
-4. degraded_traced's `judge_unavailable`: per round of new SUPPORT URLs.
+4. degraded_traced's `judge_unavailable` and `judge_skipped`: per round of new SUPPORT URLs; a round no judge
+   reply names was skipped.
 
 No test touches the network or the repo: arms.score_all and arms.case_list are stubbed and arms.RUNS points
 at a temp dir.
@@ -408,7 +409,8 @@ def ev_of(score_runs=(), rets=(), degraded=None):
 
 
 def reported(raw, **items):
-    d = {"raw": raw, "none": raw == "none", "judge_unavailable": "judge-unavailable" in raw}
+    d = {"raw": raw, "none": raw == "none", "judge_unavailable": "judge-unavailable" in raw,
+         "judge_skipped": "judge-skipped" in raw}
     d.update(items)
     return d
 
@@ -421,8 +423,12 @@ class TestJudgeUnavailableRounds(unittest.TestCase):
     def unavailable(self, runs, rets):
         return arms.degraded_traced(ev_of(runs, rets))["judge_unavailable"]
 
+    def skipped(self, runs, rets):
+        d = arms.degraded_traced(ev_of(runs, rets))
+        return d["judge_skipped"] and not d["judge_unavailable"]
+
     def test_spec_example_new_support_url_without_judge(self):
-        self.assertIs(self.unavailable([sr([(A, "SUPPORT")]), sr([(A, "SUPPORT"), (C, "SUPPORT")])],
+        self.assertIs(self.skipped([sr([(A, "SUPPORT")]), sr([(A, "SUPPORT"), (C, "SUPPORT")])],
                                        [jv((A, "USE"))]), True)
 
     def test_rescoring_seen_support_urls_is_no_new_round(self):
@@ -436,11 +442,11 @@ class TestJudgeUnavailableRounds(unittest.TestCase):
 
     def test_new_urls_judged_only_in_earlier_seen_set_do_not_count(self):
         # Round 2 adds C and D; the second judge reply only re-judges A.
-        self.assertIs(self.unavailable([sr([(A, "SUPPORT")]), sr([(C, "SUPPORT"), (Dd, "SUPPORT")])],
+        self.assertIs(self.skipped([sr([(A, "SUPPORT")]), sr([(C, "SUPPORT"), (Dd, "SUPPORT")])],
                                        [jv((A, "USE")), jv((A, "SKIP"))]), True)
 
     def test_url_seen_earlier_below_support_is_new_support(self):
-        self.assertIs(self.unavailable([sr([(A, "SUPPORT"), (B, "PRIMARY")]), sr([(B, "SUPPORT")])],
+        self.assertIs(self.skipped([sr([(A, "SUPPORT"), (B, "PRIMARY")]), sr([(B, "SUPPORT")])],
                                        [jv((A, "USE"))]), True)
 
     def test_failed_score_run_is_not_a_round(self):
@@ -448,7 +454,7 @@ class TestJudgeUnavailableRounds(unittest.TestCase):
                                        [jv((A, "USE"))]), False)
 
     def test_first_round_unjudged(self):
-        self.assertIs(self.unavailable([sr([(A, "SUPPORT")]), sr([(A, "SUPPORT"), (C, "SUPPORT")])],
+        self.assertIs(self.skipped([sr([(A, "SUPPORT")]), sr([(A, "SUPPORT"), (C, "SUPPORT")])],
                                        [jv((C, "USE"))]), True)
 
     def test_new_url_judged_only_by_all_fetch_error_reply(self):
@@ -473,43 +479,44 @@ class TestJudgeUnavailableRounds(unittest.TestCase):
         t.agent(JUDGE, A + " | USE | direct")
         t.score(compact([row(70.0, "SUPPORT", "2", A), row(69.0, "SUPPORT", "2", C)], {"SUPPORT": 2}),
                 path="/tmp/ssw/urls-2.json")
-        t.report("Report.\nDegraded: judge-unavailable")
+        t.report("Report.\nDegraded: judge-skipped")
         tmp = tempfile.mkdtemp(prefix="arms-fixes-")
         try:
             ev = arms.extract(t.dump(os.path.join(tmp, "trace", "trace.jsonl")))
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
-        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], True)
+        self.assertIs(arms.degraded_traced(ev)["judge_skipped"], True)
+        self.assertIs(arms.degraded_check(ev)["agree"]["judge_skipped"], True)
         self.assertIs(arms.degraded_check(ev)["agree"]["judge_unavailable"], True)
 
 
 class TestUnjudgedAgreement(unittest.TestCase):
 
     def two_rounds(self, degraded):
-        """Round 1's judge worked and left B page-UNJUDGED; round 2 added C and had no judge."""
+        """Round 1's judge worked and left B page-UNJUDGED; round 2 added C and skipped the judge."""
         return ev_of([sr([(A, "SUPPORT"), (B, "SUPPORT")]), sr([(A, "SUPPORT"), (B, "SUPPORT"), (C, "SUPPORT")])],
                      [jv((A, "USE"), (B, "page"))], degraded)
 
     def test_traced_counts_usable_round(self):
         d = arms.degraded_traced(self.two_rounds(None))
-        self.assertIs(d["judge_unavailable"], True)
-        self.assertEqual(d["unjudged"], [1, 0, 1])
+        self.assertIs(d["judge_skipped"], True)
+        self.assertEqual(d["unjudged"], [1, 0, 1, 0])
 
     def test_report_listing_usable_round_unjudged_agrees(self):
-        ev = self.two_rounds(reported("judge-unavailable · unjudged 1 (page 1)", unjudged=[1, 0, 1]))
+        ev = self.two_rounds(reported("judge-skipped · unjudged 1 (page 1)", unjudged=[1, 0, 1, 0]))
         a = arms.degraded_check(ev)["agree"]
-        self.assertIs(a["judge_unavailable"], True)
+        self.assertIs(a["judge_skipped"], True)
         self.assertIs(a["unjudged"], True)
 
     def test_report_omitting_usable_round_unjudged_disagrees(self):
-        a = arms.degraded_check(self.two_rounds(reported("judge-unavailable")))["agree"]
-        self.assertIs(a["judge_unavailable"], True)
+        a = arms.degraded_check(self.two_rounds(reported("judge-skipped")))["agree"]
+        self.assertIs(a["judge_skipped"], True)
         self.assertIs(a["unjudged"], False)
 
     def test_only_judge_unavailable_and_no_unjudged_item_agrees(self):
         ev = ev_of([sr([(A, "SUPPORT"), (B, "SUPPORT")])], [jv((A, "fetch-error"), (B, "fetch-error"))],
                    reported("judge-unavailable"))
-        self.assertEqual(arms.degraded_traced(ev)["unjudged"], [0, 0, 0])
+        self.assertEqual(arms.degraded_traced(ev)["unjudged"], [0, 0, 0, 0])
         a = arms.degraded_check(ev)["agree"]
         self.assertIs(a["judge_unavailable"], True)
         self.assertIs(a["unjudged"], True)
@@ -520,8 +527,9 @@ class TestUnjudgedAgreement(unittest.TestCase):
         self.assertIs(arms.degraded_check(ev)["agree"]["unjudged"], False)
 
     def test_skipped_judge_and_no_unjudged_item_agrees(self):
-        ev = ev_of([sr([(A, "SUPPORT")])], [], reported("judge-unavailable"))
+        ev = ev_of([sr([(A, "SUPPORT")])], [], reported("judge-skipped"))
         a = arms.degraded_check(ev)["agree"]
+        self.assertIs(a["judge_skipped"], True)
         self.assertIs(a["judge_unavailable"], True)
         self.assertIs(a["unjudged"], True)
 

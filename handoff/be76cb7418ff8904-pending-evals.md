@@ -1,6 +1,6 @@
 # Handoff: 대기 중인 평가 모음
 
-변경은 반영했지만 아직 평가하지 않은 항목을 한곳에 모은다. 아직 고치지 않은 skill 동작 문제는 `handoff/599a859dd32c2d8b-skill-followups.md`에 있다. 비싼 실행(arms, blind judge, union labeller)은 한 번에 묶어 돌린다.
+변경은 반영했지만 아직 평가하지 않은 항목을 한곳에 모은다. skill 동작 문제와 배포에 남은 일은 `handoff/599a859dd32c2d8b-skill-followups.md`에 있다. 비싼 실행(arms, blind judge, union labeller)은 한 번에 묶어 돌린다.
 항목을 끝내면 결과를 `policy-eval/METHODOLOGY.md` Run log에 남기고 여기서 지운다. 관련 이슈에도 결과를 남긴다.
 
 ## 실행 환경 (확인됨)
@@ -32,9 +32,9 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 - 측정: `official-claimed`와 신규·재배치 tier 2 도메인에서 judge의 USE/SKIP 비율. union label 대비 SKIP이 junk를 잡는지(`judge_vs_blind`)를 본다.
 
 ### E4. academic 원 출처 추적 (issue #5)
-- 변경: academic에서 Step 5 Verify를 기본으로 수행한다(사용자가 끌 수 있다). 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
+- 변경: academic에서 Step 5 Verify를 기본으로 수행한다. 2026-10-28부터는 필수이고, 돌리지 않으면 `verify-skipped`다(E9). 2차 수치는 원 출처를 Steps 2-2.5로 다시 거친다. 재검색과 별개로 1회(`trace`)다.
 - 측정: trace 라운드 발생률, 원 출처를 찾아 읽은 비율, 추가 비용.
-- 2026-10-27(Sonnet main): academic 4문항 모두 Step 5 Verify subagent를 돌리지 않았다(ac3·ac6은 inline으로 대신했고, ac1·ac2는 건너뛰었다). 그래서 trace 라운드는 0이고 측정할 것이 없다. skill 동작 문제로 볼지는 아직 정하지 않았다. `arms.py`는 아직 round 종류(`trace`)를 구분하지 않는다. 보고서의 `Keywords:` 줄에서 읽는 방안을 먼저 정한다.
+- 2026-10-27(Sonnet main): academic 4문항 모두 Step 5 Verify subagent를 돌리지 않았다(ac3·ac6은 inline으로 대신했고, ac1·ac2는 건너뛰었다). 그래서 trace 라운드는 0이고 측정할 것이 없다. 이를 skill 동작 문제로 보고 2026-10-28에 Verify를 필수로 바꿨다. `arms.py`는 아직 round 종류(`trace`)를 구분하지 않는다. 보고서의 `Keywords:` 줄에서 읽는 방안을 먼저 정한다.
 
 ### E5. 메인 context 오버헤드와 fetch 실패 (issue #4 완료 조건)
 - 변경: `srcscore.py --format compact`는 PRIMARY/SUPPORT 행(40자로 자른 제목 포함)과 verdict별 개수만 돌려주고, 전체 표는 `--full-out` 파일에 남긴다. Step 1 subagent는 URL 파일을 쓰고 경로와 개수만 돌려준다. 표의 URL은 fetch 주소다(doi.org → 대상 주소, PMC 구 주소 → `pmc.ncbi.nlm.nih.gov`, 2312 이후 arXiv abs/pdf → html). Step 3은 WebFetch 잘림 note가 있으면 필요할 때만 `offset`으로 이어 읽게 한다.
@@ -48,3 +48,12 @@ eval은 skill이 의도대로 동작할 때의 효과를 잰다. repo 루트 plu
 - 주의: WebFetch에는 이미 Haiku 요약기가 들어 있다. Haiku agent가 WebFetch로 판정하면 Haiku 요약을 보고 Haiku가 판정하게 된다. skill의 Step 2.5 judge와 with-arm도 WebFetch로 읽으므로, labeller와 오류가 서로 상관될 수 있다. `fidelity/pagetext.py`(curl, 모델 없음)는 PDF를 추출하지 못한다.
 - 결정(2026-10-27), METHODOLOGY Runs 1·4에 반영함: 수집(Haiku)과 판정(Sonnet)을 나눈다. 본문은 pagetext raw를 먼저 쓰고, 텍스트가 없으면 WebFetch를 쓴다. 둘 다 없으면 `unreachable`로 측정에서 뺀다. union labeller에도 같은 방식을 쓴다. 2026-10-24 라벨은 버렸으므로 pilot 21문항은 blind judge를 새로 돌리고, 남는 arms URL은 union labeller가 맡는다.
 - 완료 조건: METHODOLOGY Runs 1·4를 갱신한다. 정한 범위로 다시 판정하고 Run log에 기록한다. `arms.py`의 산출 항목은 2026-10-26에 바뀌었으므로(`listed`에 표 행 포함, 비용 역할은 `main`/`subagent`, skill 단계 측정 추가) tracked `results/pilot.summary.json`과 직접 비교하지 않는다.
+
+### E9. skill 후속 반영의 효과 (2026-10-28, `handoff/599a859dd32c2d8b-skill-followups.md`)
+- 변경: judge 누락 재요청과 `missing`, `judge-skipped`, academic Verify 필수와 `verify-skipped`, 같은 논문 행 병합, 조회 실패의 host·사유별 stderr 줄.
+- 측정:
+  - judge: `support_without_verdict`(2026-10-27 165건 중 7건), `degraded.traced`의 `judge_skipped`·`unjudged` missing 수, `degraded.agree`의 `judge_unavailable`·`judge_skipped`(2026-10-27에는 생략을 `judge-unavailable`로 적었다).
+  - Verify: academic 문항의 `verify_skipped`와 그 agree, trace 라운드 수(E4).
+  - 병합: 점수표 footer의 `merged` 합계, 문항당 SUPPORT 행 수와 judge 호출 수, 표 밖 읽기(`main_reads_by_in_run_verdict`의 `not-in-table`).
+  - 조회 실패: with-arm `lookups-failed` 합계(2026-10-26 39건)와 trace의 `srcscore: failed lookups:` 줄. `arms.py`는 이 줄을 아직 파싱하지 않는다. trace에서 읽거나 필요하면 `score_output`에 더한다. S2 `http-429`가 대부분이면 키 지원을 정한다.
+- 기준선: 2026-10-27 events는 Agent prompt를 담지 않아 다시 ingest해야 `judge_skipped`·`verify_skipped`가 맞게 나온다.

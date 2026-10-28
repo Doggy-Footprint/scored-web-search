@@ -122,14 +122,14 @@ class Trace:
         self.L.append(a_msg(self._id("m"), parent, [{"type": "text", "text": text}]))
 
     def agent(self, subtype, replies=(), body=None, background=False, tool="Agent", parent=None,
-              is_error=False, result=None, summary=None):
+              is_error=False, result=None, summary=None, prompt="go"):
         """An Agent call: task_started, the subagent's own calls (body(tid)), its text messages, then
         either the foreground tool_result (hand-back frame around the last reply, or `result` verbatim) or,
         in the background, the launch notice right away and a task_notification at the end (its summary the
         last reply's start, or `summary`)."""
         tid = self._id("ag")
         self.L.append(a_msg(self._id("m"), parent, [tool_use(tid, tool, {
-            "subagent_type": subtype, "prompt": "go", "run_in_background": background})]))
+            "subagent_type": subtype, "prompt": prompt, "run_in_background": background})]))
         self.L.append({"type": "system", "subtype": "task_started", "tool_use_id": tid,
                        "subagent_type": subtype, "is_backgrounded": background, "description": "d"})
         aid = "agent" + tid
@@ -615,7 +615,7 @@ class TestClosing(TraceCase):
         self.assertIs(d["judge_unavailable"], True)
         self.assertEqual(d["step1_inline"], [1, 3])
         self.assertEqual(d["lookups_failed"], [4, 40])
-        self.assertEqual(d["unjudged"], [3, 2, 1])
+        self.assertEqual(d["unjudged"], [3, 2, 1, 0])
 
     def test_degraded_partial_items(self):
         d = self.closing("Degraded: lookups-failed 2/30")["degraded"]
@@ -625,14 +625,14 @@ class TestClosing(TraceCase):
         self.assertIsNone(d.get("unjudged"))
 
     def test_unjudged_split_lenient(self):
-        for item, want in (("unjudged 4 (page 4)", [4, 0, 4]),
-                           ("unjudged 1 (page 1, fetch-error 0)", [1, 0, 1]),
-                           ("unjudged 2 (fetch-error 2)", [2, 2, 0]),
-                           ("unjudged 3 (fetch-error 2, page 1)", [3, 2, 1]),
-                           ("unjudged 2", [2, 0, 0]),
-                           ("lookups-failed 1/9 · unjudged 5", [5, 0, 0]),
-                           ("unjudged 1 (page 1) · unjudged 2 (fetch-error 1, page 1)", [3, 1, 2]),
-                           ("unjudged 2 · unjudged 1 (fetch-error 1)", [3, 1, 0])):
+        for item, want in (("unjudged 4 (page 4)", [4, 0, 4, 0]),
+                           ("unjudged 1 (page 1, fetch-error 0)", [1, 0, 1, 0]),
+                           ("unjudged 2 (fetch-error 2)", [2, 2, 0, 0]),
+                           ("unjudged 3 (fetch-error 2, page 1)", [3, 2, 1, 0]),
+                           ("unjudged 2", [2, 0, 0, 0]),
+                           ("lookups-failed 1/9 · unjudged 5", [5, 0, 0, 0]),
+                           ("unjudged 1 (page 1) · unjudged 2 (fetch-error 1, page 1)", [3, 1, 2, 0]),
+                           ("unjudged 2 · unjudged 1 (fetch-error 1)", [3, 1, 0, 0])):
             with self.subTest(item=item):
                 d = self.closing("Body.\nDegraded: " + item + "\nKeywords: r1: q")["degraded"]
                 self.assertEqual(d["raw"], item)
@@ -657,7 +657,7 @@ class TestClosing(TraceCase):
             with self.subTest(line=line):
                 d = self.closing("Body.\n" + line + "\nKeywords: r1: q")["degraded"]
                 self.assertIsNotNone(d)
-                self.assertEqual(d["unjudged"], [3, 2, 1])
+                self.assertEqual(d["unjudged"], [3, 2, 1, 0])
                 self.assertTrue(d["raw"].rstrip().endswith(")"), d["raw"])
                 self.assertIs(d["none"], False)
 
@@ -809,7 +809,8 @@ class TestDegradedTraced(unittest.TestCase):
         ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT"))],
                    agent_returns=[FILE_RET, jv("USE", "SKIP", urls=[R[1], "https://j.org/x"])])
         self.assertEqual(arms.degraded_traced(ev), {"step1_inline": [0, 1], "lookups_failed": [0, 0],
-                                                    "judge_unavailable": False, "unjudged": [0, 0, 0]})
+                                                    "judge_unavailable": False, "judge_skipped": False,
+                                                    "unjudged": [0, 0, 0, 0], "verify_skipped": False})
 
     def test_no_support_rows_needs_no_judge(self):
         ev = ev_of(score_runs=[sr(verdicts=("PRIMARY",))])
@@ -821,14 +822,16 @@ class TestDegradedTraced(unittest.TestCase):
                                   jv("page", "fetch-error", "USE", urls=["https://j.org/0", "https://j.org/1", R[0]])])
         d = arms.degraded_traced(ev)
         self.assertIs(d["judge_unavailable"], True)
-        self.assertEqual(d["unjudged"], [2, 1, 1])
+        self.assertEqual(d["unjudged"], [2, 1, 1, 0])
 
     def test_missing_judge_for_a_support_run(self):
         # The first round's SUPPORT row was judged; the second round's (a different URL) got no verdict.
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), urls=["https://r.org/a"]),
                                sr(verdicts=("SUPPORT", "PRIMARY"), urls=["https://r.org/b", "https://r.org/c"])],
                    agent_returns=[jv("USE", urls=["https://r.org/a"])])
-        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], True)
+        d = arms.degraded_traced(ev)
+        self.assertIs(d["judge_skipped"], True)
+        self.assertIs(d["judge_unavailable"], False)
 
     def test_failed_score_run_does_not_need_a_judge(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(exit=4, verdicts=("SUPPORT",), urls=["https://r.org/z"])],
@@ -838,7 +841,8 @@ class TestDegradedTraced(unittest.TestCase):
     def test_exact_keys(self):
         for ev in (ev_of(), ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[1, 2])], agent_returns=[jv("page")])):
             self.assertEqual(set(arms.degraded_traced(ev)),
-                             {"step1_inline", "lookups_failed", "judge_unavailable", "unjudged"})
+                             {"step1_inline", "lookups_failed", "judge_unavailable", "judge_skipped", "unjudged",
+                              "verify_skipped"})
 
     def test_same_support_urls_scored_again_after_judging(self):
         ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT", "SUPPORT")),
@@ -858,7 +862,7 @@ class TestDegradedTraced(unittest.TestCase):
 
     def test_judge_verdicts_on_other_urls_only(self):
         ev = ev_of(score_runs=[sr(verdicts=("PRIMARY", "SUPPORT"))], agent_returns=[jv("USE", "SKIP", urls=[R[0], R[3]])])
-        self.assertIs(arms.degraded_traced(ev)["judge_unavailable"], True)
+        self.assertIs(arms.degraded_traced(ev)["judge_skipped"], True)
 
     def test_verdict_only_in_an_all_fetch_error_reply_does_not_count(self):
         # Round 1 judged by a usable reply; round 2's URL only appears in an all-fetch-error reply.
@@ -866,7 +870,7 @@ class TestDegradedTraced(unittest.TestCase):
                    agent_returns=[jv("USE", urls=[R[0]]), jv("fetch-error", urls=["https://r.org/b"])])
         d = arms.degraded_traced(ev)
         self.assertIs(d["judge_unavailable"], True)
-        self.assertEqual(d["unjudged"], [0, 0, 0])
+        self.assertEqual(d["unjudged"], [0, 0, 0, 0])
 
     def test_judge_unavailable_per_round_via_trace(self):
         """Two rounds in a real trace: round 2 rescored round 1's SUPPORT URL plus a new one, and its judge
@@ -891,14 +895,15 @@ class TestDegradedTraced(unittest.TestCase):
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
         self.assertIs(arms.degraded_traced(ev_two)["judge_unavailable"], False)
-        self.assertEqual(arms.degraded_traced(ev_two)["unjudged"], [1, 0, 1])
+        self.assertEqual(arms.degraded_traced(ev_two)["unjudged"], [1, 0, 1, 0])
         # A third round with a new SUPPORT URL and no judge.
-        self.assertIs(arms.degraded_traced(ev_three)["judge_unavailable"], True)
+        self.assertIs(arms.degraded_traced(ev_three)["judge_skipped"], True)
+        self.assertIs(arms.degraded_traced(ev_three)["judge_unavailable"], False)
 
     def test_errored_judge_via_trace(self):
         t = Trace()
         t.score(compact([row(60.0, "SUPPORT", "2", "", "https://s.org/a")], {"SUPPORT": 1}))
-        t.agent(JUDGE, [], is_error=True)
+        t.agent(JUDGE, [], is_error=True, prompt="Return `url | USE/SKIP/UNJUDGED | reason`.\nhttps://s.org/a")
         t.report("Degraded: judge-unavailable")
         tmp = tempfile.mkdtemp(prefix="arms-skill-")
         try:
@@ -933,52 +938,61 @@ class TestDegradedCheck(unittest.TestCase):
         self.assertEqual(c["reported"], ev["closing"]["degraded"])
         self.assertEqual(c["traced"], arms.degraded_traced(ev))
         self.assertEqual(c["agree"], {"step1_inline": True, "lookups_failed": True,
-                                      "judge_unavailable": True, "unjudged": True})
+                                      "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                      "unjudged": True})
 
     def test_none_disagrees_with_degraded_trace(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
                    agent_returns=[INLINE_RET, jv("USE", "page", urls=[R[0], "https://j.org/p"])],
                    degraded=reported("none"))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": False, "lookups_failed": False,
-                                                            "judge_unavailable": True, "unjudged": False})
+                                                            "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                                            "unjudged": False})
 
     def test_counts_compared_by_first_number(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
                    agent_returns=[INLINE_RET, FILE_RET, jv("USE", "page", "fetch-error", urls=R[:3])],
                    degraded=reported("x", step1_inline=[1, 5], lookups_failed=[3, 99], unjudged=[2, 0, 2]))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": True, "lookups_failed": True,
-                                                            "judge_unavailable": True, "unjudged": True})
+                                                            "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                                            "unjudged": True})
 
     def test_count_mismatch(self):
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",), lf=[3, 30])],
                    agent_returns=[INLINE_RET, jv("USE", "page", urls=R[:2])],
                    degraded=reported("x", step1_inline=[2, 2], lookups_failed=[4, 30], unjudged=[3, 0, 3]))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": False, "lookups_failed": False,
-                                                            "judge_unavailable": True, "unjudged": False})
+                                                            "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                                            "unjudged": False})
 
     def test_judge_unavailable_bool_and_unjudged_zeroed(self):
         # Judge unreachable (all fetch-error): report says judge-unavailable and lists no unjudged item.
-        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",))], agent_returns=[jv("fetch-error", "fetch-error")],
+        ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",))],
+                   agent_returns=[jv("fetch-error", "fetch-error", urls=[R[0], R[1]])],
                    degraded=reported("judge-unavailable", judge_unavailable=True))
         self.assertEqual(arms.degraded_check(ev)["agree"], {"step1_inline": True, "lookups_failed": True,
-                                                            "judge_unavailable": True, "unjudged": True})
+                                                            "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                                            "unjudged": True})
         # Usable judge left 1 page UNJUDGED and a second SUPPORT run (new URL) had no judge: the usable round's
-        # unjudged item is still reported (SKILL.md Step 6 leaves out only the unavailable round's).
+        # unjudged item is still reported next to judge-skipped.
         ev = ev_of(score_runs=[sr(verdicts=("SUPPORT",)), sr(verdicts=("SUPPORT",), urls=["https://r.org/new"])],
                    agent_returns=[jv("page", "USE", urls=["https://j.org/p", R[0]])],
-                   degraded=reported("judge-unavailable · unjudged 1 (page 1)", judge_unavailable=True,
-                                     unjudged=[1, 0, 1]))
+                   degraded=reported("judge-skipped · unjudged 1 (page 1)", judge_skipped=True,
+                                     unjudged=[1, 0, 1, 0]))
         a = arms.degraded_check(ev)["agree"]
+        self.assertIs(a["judge_skipped"], True)
         self.assertIs(a["judge_unavailable"], True)
         self.assertIs(a["unjudged"], True)
         # Omitting the usable round's unjudged item disagrees.
+        ev["closing"]["degraded"] = reported("judge-skipped", judge_skipped=True)
+        a = arms.degraded_check(ev)["agree"]
+        self.assertIs(a["judge_skipped"], True)
+        self.assertIs(a["unjudged"], False)
+        # Calling the skipped judge unavailable disagrees on both.
         ev["closing"]["degraded"] = reported("judge-unavailable", judge_unavailable=True)
         a = arms.degraded_check(ev)["agree"]
-        self.assertIs(a["judge_unavailable"], True)
-        self.assertIs(a["unjudged"], False)
-        # Report misses judge-unavailable.
-        ev["closing"]["degraded"] = reported("none")
-        self.assertIs(arms.degraded_check(ev)["agree"]["judge_unavailable"], False)
+        self.assertIs(a["judge_skipped"], False)
+        self.assertIs(a["judge_unavailable"], False)
 
 
 # --------------------------------------------------------------------------- 10. analyze_arm
@@ -1034,11 +1048,14 @@ class TestAnalyzeArmSkill(TraceCase):
 
     def test_degraded(self):
         d = self.out["degraded"]
-        self.assertEqual(d, arms.degraded_check(self.ev))
+        self.assertEqual(d, arms.degraded_check(self.ev, "academic"))
+        # s.org/5 is a SUPPORT row the judge never answered (`missing`), and no Verify subagent ran.
         self.assertEqual(d["traced"], {"step1_inline": [1, 2], "lookups_failed": [2, 30],
-                                       "judge_unavailable": False, "unjudged": [2, 1, 1]})
+                                       "judge_unavailable": False, "judge_skipped": False,
+                                       "unjudged": [3, 1, 1, 1], "verify_skipped": True})
         self.assertEqual(d["agree"], {"step1_inline": True, "lookups_failed": False,
-                                      "judge_unavailable": True, "unjudged": True})
+                                      "judge_unavailable": True, "judge_skipped": True, "verify_skipped": False,
+                                      "unjudged": False})
 
     def assertUrls(self, got, want):
         """The spec names these 'SUPPORT URLs ...' without saying count or collection: accept either."""
@@ -1148,7 +1165,7 @@ class TestEndToEndSkillRun(TraceCase):
         self.assertEqual(ev["closing"]["summary"], {"collected": 5, "passed": 5, "judged_out": 2, "read": 3})
         d = ev["closing"]["degraded"]
         self.assertEqual(d["raw"], "unjudged 1 (fetch-error 0, page 1)")
-        self.assertEqual((d["none"], d["judge_unavailable"], d["unjudged"]), (False, False, [1, 0, 1]))
+        self.assertEqual((d["none"], d["judge_unavailable"], d["unjudged"]), (False, False, [1, 0, 1, 0]))
 
         roles = {(f["role"], n(f["url"])) for f in ev["fetches"]}
         self.assertIn((JUDGE, n("https://s2.org/b")), roles)
@@ -1167,9 +1184,11 @@ class TestEndToEndSkillRun(TraceCase):
 
         c = arms.degraded_check(ev)
         self.assertEqual(c["traced"], {"step1_inline": [0, 2], "lookups_failed": [0, 0],
-                                       "judge_unavailable": False, "unjudged": [1, 0, 1]})
+                                       "judge_unavailable": False, "judge_skipped": False,
+                                       "unjudged": [1, 0, 1, 0], "verify_skipped": False})
         self.assertEqual(c["agree"], {"step1_inline": True, "lookups_failed": True,
-                                      "judge_unavailable": True, "unjudged": True})
+                                      "judge_unavailable": True, "judge_skipped": True, "verify_skipped": True,
+                                      "unjudged": True})
 
 
 if __name__ == "__main__":
