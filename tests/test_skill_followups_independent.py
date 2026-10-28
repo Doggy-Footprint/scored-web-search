@@ -1325,14 +1325,11 @@ class TestSkillMd(unittest.TestCase):
         self.assertIn("judge-unavailable", s)
         self.assertRegex(s, r"(?i)no subagent can be launched")
         self.assertRegex(s, r"(?i)gave no verdicts")
-        self.assertRegex(s, r"(?i)only uses of `judge-unavailable`")
 
     def test_step25_judge_skipped(self):
         s = squash(section(self.md, r"Step 2\.5"))
         self.assertRegex(s, r"(?i)`judge-skipped`")
-        self.assertRegex(s, r"(?i)skipped it[^.]*`judge-skipped`")
-        self.assertRegex(s, r"(?i)subagent can be launched[^.]*judge-skipped|judge-skipped[^.]*could be launched|"
-                            r"subagent can be launched, never skip")
+        self.assertRegex(s, r"(?i)skipped it[^.]*`judge-skipped`[^.]*never `judge-unavailable`")
 
     def test_step25_missing_retry(self):
         s = squash(section(self.md, r"Step 2\.5"))

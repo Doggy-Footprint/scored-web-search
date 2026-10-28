@@ -69,12 +69,12 @@ The URL column is the address to fetch: links WebFetch cannot follow are rewritt
 
 Whenever there are SUPPORT rows, this step is required: hand every SUPPORT URL, with the research question, to a **lightweight subagent** (same model rule as Step 1, no `fork`) and give it `references/judge-rubric.md` verbatim as its only instructions. It reads each page with `WebFetch` and returns only one line per URL: `url | USE/SKIP/UNJUDGED | reason`. Page text never reaches you. With no SUPPORT rows there is nothing to judge, which is not a shortfall.
 
-No sub agent fallback: only when no subagent can be launched at all, skip this step, read SUPPORT sources as before, and put `judge-unavailable` in the report's `Degraded:` line. When a subagent can be launched, never skip the judge; a run that skipped it anyway puts `judge-skipped` in the `Degraded:` line, not `judge-unavailable`.
+No sub agent fallback: only when no subagent can be launched at all, skip this step, read SUPPORT sources as before, and put `judge-unavailable` in the report's `Degraded:` line. A run that skipped it otherwise puts `judge-skipped` there, never `judge-unavailable`.
 
 - Only SUPPORT is judged. PRIMARY is never judged, and nothing at SKIM or below is ever promoted.
 - Check the reply against the URLs you sent. Send any URL it left out to a judge once more, with the same rubric. A URL still without a verdict is UNJUDGED with the reason `missing:`.
 - A verdict on a source is final for this run: SKIP and UNJUDGED sources stay out of Step 3, and you do not open them to second-guess the judge. An UNJUDGED reason starting `page:` means the site gave nothing to judge; `fetch-error:` means WebFetch failed on it twice. Some sources failing to fetch is still a set of verdicts.
-- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED with `fetch-error`: the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line. This, and having no subagent at all, are the only uses of `judge-unavailable`.
+- A judge that could not work at all gave no verdicts. That is when it errors, or when every source is UNJUDGED with `fetch-error`: the judge could not reach the network, which says nothing about the pages. Then read SUPPORT sources as before and put `judge-unavailable` in the report's `Degraded:` line.
 
 ### Step 3 — Read: open only what passed
 `WebFetch` only PRIMARY sources and USE-judged SUPPORT sources. **Open nothing else.** The moment you open a source that did not pass to judge it for yourself, the savings are gone — that is the exact problem this skill exists to solve.
